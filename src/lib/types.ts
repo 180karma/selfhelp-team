@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export type DiaryEntry = {
   id: string;
   userId: string;
@@ -28,5 +30,5 @@ export type AiMentalHealthNote = {
     id: string;
     userId: string; // Denormalized for collectionGroup query
     noteData: string;
-    timestamp: string;
+    timestamp: Timestamp | string;
 }

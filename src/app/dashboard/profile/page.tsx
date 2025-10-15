@@ -7,8 +7,8 @@ import { agents } from '@/lib/agents';
 import { Users, MessageSquareText } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useEffect, useState, useMemo } from 'react';
-import { useUser, useFirestore, useCollection } from '@/firebase';
-import { collection, collectionGroup, query, where, orderBy } from 'firebase/firestore';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, collectionGroup, query, where, orderBy, getDocs } from 'firebase/firestore';
 
 
 export default function ProfilePage() {
@@ -16,51 +16,69 @@ export default function ProfilePage() {
   const firestore = useFirestore();
 
   const [profiles, setProfiles] = useState<AiMentalHealthProfile[]>([]);
-  const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
+  const [notes, setNotes] = useState<AiMentalHealthNote[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Note: localStorage access has been removed in favor of fetching from Firestore.
-  // This hook will now fetch AI Mental Health Profiles from firestore.
-  const profilesQuery = useMemo(() => {
-    if (!user || !firestore) return null;
-    return query(collection(firestore, 'users', user.uid, 'aiMentalHealthProfiles'));
-  }, [user, firestore]);
-  const { data: fetchedProfiles, isLoading: isLoadingFetchedProfiles } = useCollection<AiMentalHealthProfile>(profilesQuery);
+  useEffect(() => {
+    if (!user || !firestore) {
+      setIsLoading(false);
+      return;
+    }
 
-  const notesQuery = useMemo(() => {
-    if (!user || !firestore) return null;
-    return query(
-        collectionGroup(firestore, 'aiMentalHealthNotes'),
-        where('userId', '==', user.uid),
-        orderBy('timestamp', 'desc')
-    );
+    const fetchAllData = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch profiles
+        const profilesQuery = query(collection(firestore, 'users', user.uid, 'aiMentalHealthProfiles'));
+        const profileSnapshot = await getDocs(profilesQuery);
+        const fetchedProfiles = profileSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as AiMentalHealthProfile[];
+        setProfiles(fetchedProfiles);
+
+        // Fetch notes using collectionGroup
+        const notesQuery = query(
+          collectionGroup(firestore, 'aiMentalHealthNotes'),
+          where('userId', '==', user.uid),
+          orderBy('timestamp', 'desc')
+        );
+        const notesSnapshot = await getDocs(notesQuery);
+        const fetchedNotes = notesSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.ref.path, // Use the full path as the ID for collectionGroup items
+                ...data
+            }
+        }) as AiMentalHealthNote[];
+        setNotes(fetchedNotes);
+
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+        // Here you could emit a contextual error if this were a permission issue
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAllData();
   }, [user, firestore]);
-  const { data: notes, isLoading: isLoadingNotes } = useCollection<AiMentalHealthNote>(notesQuery);
   
   const notesByProfile = useMemo(() => {
-    if (!notes) return {};
     return notes.reduce((acc, note) => {
-        const agentId = note.id.split('/')[0]; // This is a hacky way to get agentId, need a better way.
-        if (!acc[agentId]) {
-            acc[agentId] = [];
+        // e.g., users/uid/aiMentalHealthProfiles/agentId/aiMentalHealthNotes/noteId
+        const pathSegments = note.id.split('/');
+        const agentId = pathSegments.length > 3 ? pathSegments[3] : undefined;
+        if (agentId) {
+            if (!acc[agentId]) {
+                acc[agentId] = [];
+            }
+            acc[agentId].push(note);
         }
-        acc[agentId].push(note);
         return acc;
     }, {} as Record<string, AiMentalHealthNote[]>);
   }, [notes]);
 
-
-  useEffect(() => {
-    if (!isLoadingFetchedProfiles) {
-        setProfiles(fetchedProfiles || []);
-        setIsLoadingProfiles(false);
-    }
-  }, [fetchedProfiles, isLoadingFetchedProfiles]);
-
   const getAgentInfo = (agentId: string) => {
     return agents.find(agent => agent.id === agentId);
   }
-
-  const isLoading = isLoadingProfiles || isLoadingNotes;
 
   if (isLoading) {
     return (
@@ -111,19 +129,22 @@ export default function ProfilePage() {
                             <h3 className="font-headline text-lg font-semibold pt-4">Conversation Notes</h3>
                              {agentNotes.length > 0 ? (
                                 <div className="space-y-4">
-                                    {agentNotes.map(note => (
-                                         <Card key={note.id}>
-                                            <CardHeader>
-                                                <CardTitle className="text-md flex items-center gap-2">
-                                                    <MessageSquareText className="h-4 w-4" />
-                                                    Note from {new Date(note.timestamp).toLocaleDateString()}
-                                                </CardTitle>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <p style={{ whiteSpace: 'pre-wrap' }} className="text-sm">{note.noteData}</p>
-                                            </CardContent>
-                                        </Card>
-                                    ))}
+                                    {agentNotes.map(note => {
+                                        const timestamp = (note.timestamp as any).toDate ? (note.timestamp as any).toDate() : new Date(note.timestamp);
+                                        return (
+                                            <Card key={note.id}>
+                                                <CardHeader>
+                                                    <CardTitle className="text-md flex items-center gap-2">
+                                                        <MessageSquareText className="h-4 w-4" />
+                                                        Note from {timestamp.toLocaleDateString()}
+                                                    </CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <p style={{ whiteSpace: 'pre-wrap' }} className="text-sm">{note.noteData}</p>
+                                                </CardContent>
+                                            </Card>
+                                        );
+                                    })}
                                 </div>
                              ) : (
                                 <p className="text-sm text-muted-foreground">No conversation notes from {agent.givenName} yet.</p>
