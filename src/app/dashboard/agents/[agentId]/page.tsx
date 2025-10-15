@@ -3,7 +3,7 @@
 import { agentChat } from '@/ai/flows/agent-chat';
 import { summarizeConversation } from '@/ai/flows/summarize-conversation';
 import { agents } from '@/lib/agents';
-import { notFound, useParams } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +16,6 @@ import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
 import { doc, addDoc, collection, DocumentData, serverTimestamp } from 'firebase/firestore';
-import { useToast } from '@/hooks/use-toast';
 
 type ChatMessage = {
   role: 'user' | 'model';
@@ -46,7 +45,6 @@ export default function AgentChatPage() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
   const firestore = useFirestore();
-  const { toast } = useToast();
 
   const assessmentRef = useMemoFirebase(() => {
     if (!user || !firestore) return null;
@@ -135,10 +133,11 @@ export default function AgentChatPage() {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent) {
         setIntroSent(true);
-        handleAgentResponse("Hello, please introduce yourself based on my profile.", [], assessment);
+        handleAgentResponse("Hello, please introduce yourself based on my profile and ask a relevant first question to start our conversation.", [], assessment);
       }
     }
-  }, [assessment, isLoadingAssessment, introSent]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assessment, isLoadingAssessment]);
 
 
   useEffect(() => {
@@ -174,7 +173,7 @@ export default function AgentChatPage() {
   const handleQuestionnaireComplete = (data: DocumentData) => {
     setShowQuestionnaire(false);
     setIntroSent(true);
-    handleAgentResponse("Hello, please introduce yourself based on my profile.", [], {answers: data});
+    handleAgentResponse("Hello, please introduce yourself based on my profile and ask a relevant first question to start our conversation.", [], {answers: data});
   };
 
   if (showQuestionnaire) {
