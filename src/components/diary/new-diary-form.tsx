@@ -12,9 +12,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useUser } from '@/firebase';
-import { createEntryAction } from '@/app/actions/diary';
+import { useFirestore, useUser } from '@/firebase';
 import { Loader2 } from 'lucide-react';
+import { categorizeDiaryEntry } from '@/ai/flows/categorize-diary-entry';
+import { addDoc, collection } from 'firebase/firestore';
 
 
 const formSchema = z.object({
@@ -26,6 +27,7 @@ const formSchema = z.object({
 export function NewDiaryForm() {
   const { toast } = useToast();
   const { user } = useUser();
+  const firestore = useFirestore();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,21 +50,31 @@ export function NewDiaryForm() {
       return;
     }
 
-    const result = await createEntryAction({ ...values, userId: user.uid });
+    try {
+      const { categories } = await categorizeDiaryEntry({ diaryEntry: values.content });
 
-    if (result.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: result.error,
+      const entriesCollection = collection(firestore, 'users', user.uid, 'diaryEntries');
+
+      await addDoc(entriesCollection, {
+        ...values,
+        categories,
+        createdAt: new Date().toISOString(),
+        userId: user.uid,
       });
-    } else {
+
       toast({
         title: 'Entry Saved!',
         description: 'Your diary entry has been successfully saved.',
       });
       form.reset();
       router.push('/dashboard/diary');
+    } catch (error: any) {
+      console.error('Error creating entry:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'Failed to save entry.',
+      });
     }
   }
 
