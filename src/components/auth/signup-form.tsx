@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,9 +15,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useAuth, initiateEmailSignUp } from '@/firebase';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Name is required.' }),
@@ -40,14 +41,18 @@ export function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await initiateEmailSignUp(auth, values.email, values.password);
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
       // We can also update the user's profile with the name here
       router.push('/dashboard');
     } catch (error: any) {
+       let description = 'An unexpected error occurred.';
+       if (error.code === 'auth/email-already-in-use') {
+         description = 'This email is already associated with an account.';
+       }
        toast({
         variant: 'destructive',
         title: 'Sign Up Failed',
-        description: error.message,
+        description: description,
       });
     }
   }
