@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useFirestore, useUser } from '@/firebase';
+import { useFirestore, useUser, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { Loader2 } from 'lucide-react';
 import { categorizeDiaryEntry } from '@/ai/flows/categorize-diary-entry';
 import { addDoc, collection } from 'firebase/firestore';
@@ -41,7 +41,7 @@ export function NewDiaryForm() {
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!user) {
+    if (!user || !firestore) {
       toast({
         variant: 'destructive',
         title: 'Not Authenticated',
@@ -54,13 +54,22 @@ export function NewDiaryForm() {
       const { categories } = await categorizeDiaryEntry({ diaryEntry: values.content });
 
       const entriesCollection = collection(firestore, 'users', user.uid, 'diaryEntries');
-
-      await addDoc(entriesCollection, {
+      const entryData = {
         ...values,
         categories,
         createdAt: new Date().toISOString(),
         userId: user.uid,
-      });
+      };
+
+      addDoc(entriesCollection, entryData)
+        .catch(async (serverError) => {
+          const permissionError = new FirestorePermissionError({
+            path: entriesCollection.path,
+            operation: 'create',
+            requestResourceData: entryData,
+          });
+          errorEmitter.emit('permission-error', permissionError);
+        });
 
       toast({
         title: 'Entry Saved!',

@@ -1,142 +1,201 @@
+/**
+ * @file Firestore Security Rules
+ * @description This ruleset enforces a strict user-ownership model for most data,
+ *   with a public read-only collection for AI Agents. It prioritizes secure access
+ *   to user-specific data while allowing controlled access to AI Agent information.
+ *
+ * Data Structure:
+ * - /users/{userId}/...:  All data nested under a user ID is considered private
+ *   and accessible only to that user.
+ * - /aiAgents/{aiAgentId}: This collection stores public information about AI Agents
+ *   and is readable by all users, but write access is restricted.
+ *
+ * Key Security Decisions:
+ * - Strict user ownership:  All data under /users/{userId} is accessible only to
+ *   the authenticated user with a matching UID.
+ * - No user listing: Listing all users is not permitted for privacy reasons.
+ * - AI Agents are publicly readable: The /aiAgents collection is readable by all
+ *   users, including unauthenticated users.
+ * - AI Agents are non-modifiable by users: Create, Update, Delete operations are
+ *   not permitted for regular users on `/aiAgents`.
+ */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /**
-     * @description Checks if the user is signed in.
-     */
+    // Helper function to check if the user is signed in
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /**
-     * @description Checks if the authenticated user ID matches the provided user ID.
-     */
+    // Helper function to check if the authenticated user is the owner of the resource
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    /**
-     * @description Checks if the user is the owner and the resource exists.
-     */
+    // Helper function to check if the authenticated user is the owner of the existing resource
     function isExistingOwner(userId) {
-        return isSignedIn() && isOwner(userId) && resource.data != null;
+      return isOwner(userId) && resource != null;
     }
 
     /**
-     * @description Enforces document ownership for writes.
+     * @description Manages user profiles, ensuring only the user can access their own profile data.
      * @path /users/{userId}/userProfiles/{userProfileId}
-     * @allow (create) User with UID 'user123' creates a profile with ID 'user123'.
-     * @deny (create) User with UID 'user123' tries to create a profile with ID 'user456'.
-     * @principle Enforces path-based ownership; users can only create/modify profiles under their own user ID.
+     * @allow (create) User with ID 'user123' can create their own profile under /users/user123/userProfiles/profile456.
+     * @allow (get) User with ID 'user123' can retrieve their own profile from /users/user123/userProfiles/profile456.
+     * @deny (create) User with ID 'user123' cannot create a profile under /users/otherUser/userProfiles/profile456.
+     * @deny (get) User with ID 'user123' cannot retrieve a profile from /users/otherUser/userProfiles/profile456.
+     * @principle Enforces document ownership for writes.
      */
     match /users/{userId}/userProfiles/{userProfileId} {
+      // Read permissions: only the owner can get/list
       allow get: if isOwner(userId);
       allow list: if isOwner(userId);
-      allow create: if isOwner(userId);
-      allow update: if isExistingOwner(userId);
+
+      // Write permissions: only the owner can create/update/delete
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Enforces document ownership for writes.
+     * @description Manages diary entries for each user, ensuring only the user can access their own diary entries.
      * @path /users/{userId}/diaryEntries/{diaryEntryId}
-     * @allow (create) User with UID 'user123' creates a diary entry.
-     * @deny (create) User with UID 'user456' tries to create a diary entry under 'user123'.
-     * @principle Enforces path-based ownership; users can only create/modify entries under their own user ID.
+     * @allow (create) User with ID 'user123' can create a diary entry under /users/user123/diaryEntries/entry456.
+     * @allow (get) User with ID 'user123' can retrieve their own diary entry from /users/user123/diaryEntries/entry456.
+     * @deny (create) User with ID 'user123' cannot create a diary entry under /users/otherUser/diaryEntries/entry456.
+     * @deny (get) User with ID 'user123' cannot retrieve a diary entry from /users/otherUser/diaryEntries/entry456.
+     * @principle Enforces document ownership for writes.
      */
     match /users/{userId}/diaryEntries/{diaryEntryId} {
+      // Read permissions: only the owner can get/list
       allow get: if isOwner(userId);
       allow list: if isOwner(userId);
-      allow create: if isOwner(userId);
-      allow update: if isExistingOwner(userId);
+
+      // Write permissions: only the owner can create/update/delete
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Enforces document ownership for writes.
-     * @path /users/{userId}/psychologicalAssessments/{assessmentId}
-     * @allow (create) User with UID 'user123' creates an assessment.
-     * @deny (create) User with UID 'user456' tries to create an assessment under 'user123'.
-     * @principle Enforces path-based ownership; users can only create/modify assessments under their own user ID.
+     * @description Manages psychological assessments for each user, keyed by agent ID. Only the user can access their psychological assessment data.
+     * @path /users/{userId}/psychologicalAssessments/{agentId}
+     * @allow (create) User with ID 'user123' can create an assessment under /users/user123/psychologicalAssessments/agentA.
+     * @allow (get) User with ID 'user123' can retrieve their own assessment from /users/user123/psychologicalAssessments/agentA.
+     * @deny (create) User with ID 'user123' cannot create an assessment under /users/otherUser/psychologicalAssessments/agentA.
+     * @deny (get) User with ID 'user123' cannot retrieve an assessment from /users/otherUser/psychologicalAssessments/agentA.
+     * @principle Enforces document ownership for writes.
      */
-    match /users/{userId}/psychologicalAssessments/{assessmentId} {
+    match /users/{userId}/psychologicalAssessments/{agentId} {
+      // Read permissions: only the owner can get/list
       allow get: if isOwner(userId);
       allow list: if isOwner(userId);
+
+      // Write permissions: only the owner can create/update/delete
       allow create: if isOwner(userId);
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Allows public read access, restricts write access.
+     * @description Stores AI agent data. This collection would be read-only for clients and managed by admins.
      * @path /aiAgents/{aiAgentId}
-     * @allow (get, list) Any user can read the AI agent data.
-     * @deny (create, update, delete) No client can create, update or delete an AI agent.
-     * @principle Public read access for agent metadata, restricted write access.
+     * @allow (get) Any user can retrieve AI agent data from /aiAgents/agent1.
+     * @allow (list) Any user can list AI agents from /aiAgents.
+     * @deny (create) User with ID 'user123' cannot create an AI agent under /aiAgents/agent1.
+     * @deny (update) User with ID 'user123' cannot update an AI agent under /aiAgents/agent1.
+     * @deny (delete) User with ID 'user123' cannot delete an AI agent under /aiAgents/agent1.
+     * @principle Restricts write access to AI agent data, allowing only read access for all users.
      */
     match /aiAgents/{aiAgentId} {
-      allow get, list: if true;
-      allow create, update, delete: if false;
+      // Read permissions: public read
+      allow get: if true;
+      allow list: if true;
+
+      // Write permissions: no one can create/update/delete
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Enforces document ownership for writes.
+     * @description Stores interactions between users and AI agents. Path-based ownership ensures that only the user can access their interaction data.
      * @path /users/{userId}/aiAgentInteractions/{aiAgentInteractionId}
-     * @allow (create) User with UID 'user123' creates an AI agent interaction.
-     * @deny (create) User with UID 'user456' tries to create an interaction under 'user123'.
-     * @principle Enforces path-based ownership; users can only create/modify interactions under their own user ID.
+     * @allow (create) User with ID 'user123' can create an interaction under /users/user123/aiAgentInteractions/interaction456.
+     * @allow (get) User with ID 'user123' can retrieve their own interaction from /users/user123/aiAgentInteractions/interaction456.
+     * @deny (create) User with ID 'user123' cannot create an interaction under /users/otherUser/aiAgentInteractions/interaction456.
+     * @deny (get) User with ID 'user123' cannot retrieve an interaction from /users/otherUser/aiAgentInteractions/interaction456.
+     * @principle Enforces document ownership for writes.
      */
     match /users/{userId}/aiAgentInteractions/{aiAgentInteractionId} {
+      // Read permissions: only the owner can get/list
       allow get: if isOwner(userId);
       allow list: if isOwner(userId);
-      allow create: if isOwner(userId);
-      allow update: if isExistingOwner(userId);
+
+      // Write permissions: only the owner can create/update/delete
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Enforces document ownership for writes.
-     * @path /users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}
-     * @allow (create) User with UID 'user123' creates a mental health profile.
-     * @deny (create) User with UID 'user456' tries to create a profile under 'user123'.
-     * @principle Enforces path-based ownership; users can only create/modify profiles under their own user ID.
+     * @description Stores AI mental health profiles for each user, partitioned by agent. Path-based ownership ensures that only the user can access their AI mental health profile.
+     * @path /users/{userId}/aiMentalHealthProfiles/{agentId}
+     * @allow (create) User with ID 'user123' can create a profile under /users/user123/aiMentalHealthProfiles/agentA.
+     * @allow (get) User with ID 'user123' can retrieve their own profile from /users/user123/aiMentalHealthProfiles/agentA.
+     * @deny (create) User with ID 'user123' cannot create a profile under /users/otherUser/aiMentalHealthProfiles/agentA.
+     * @deny (get) User with ID 'user123' cannot retrieve a profile from /users/otherUser/aiMentalHealthProfiles/agentA.
+     * @principle Enforces document ownership for writes.
      */
-    match /users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId} {
+    match /users/{userId}/aiMentalHealthProfiles/{agentId} {
+      // Read permissions: only the owner can get/list
       allow get: if isOwner(userId);
       allow list: if isOwner(userId);
-      allow create: if isOwner(userId);
-      allow update: if isExistingOwner(userId);
+
+      // Write permissions: only the owner can create/update/delete
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Enforces document ownership for writes.
+     * @description Stores notes related to AI mental health profiles, nested under the profile. Path-based ownership ensures that only the user can access their AI mental health notes.
      * @path /users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}/aiMentalHealthNotes/{aiMentalHealthNoteId}
-     * @allow (create) User with UID 'user123' creates a mental health note.
-     * @deny (create) User with UID 'user456' tries to create a note under 'user123'.
-     * @principle Enforces path-based ownership; users can only create/modify notes under their own user ID.
+     * @allow (create) User with ID 'user123' can create a note under /users/user123/aiMentalHealthProfiles/profile456/aiMentalHealthNotes/note789.
+     * @allow (get) User with ID 'user123' can retrieve their own note from /users/user123/aiMentalHealthProfiles/profile456/aiMentalHealthNotes/note789.
+     * @deny (create) User with ID 'user123' cannot create a note under /users/otherUser/aiMentalHealthProfiles/profile456/aiMentalHealthNotes/note789.
+     * @deny (get) User with ID 'user123' cannot retrieve a note from /users/otherUser/aiMentalHealthProfiles/profile456/aiMentalHealthNotes/note789.
+     * @principle Enforces document ownership for writes.
      */
     match /users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}/aiMentalHealthNotes/{aiMentalHealthNoteId} {
+      // Read permissions: only the owner can get/list
       allow get: if isOwner(userId);
       allow list: if isOwner(userId);
+
+      // Write permissions: only the owner can create/update/delete
       allow create: if isOwner(userId);
       allow update: if isExistingOwner(userId);
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Enforces document ownership for writes.
+     * @description Stores subscription details for each user. Path-based ownership ensures that only the user can access their subscription data.
      * @path /users/{userId}/subscriptions/{subscriptionId}
-     * @allow (create) User with UID 'user123' creates a subscription.
-     * @deny (create) User with UID 'user456' tries to create a subscription under 'user123'.
-     * @principle Enforces path-based ownership; users can only create/modify subscriptions under their own user ID.
+     * @allow (create) User with ID 'user123' can create a subscription under /users/user123/subscriptions/sub456.
+     * @allow (get) User with ID 'user123' can retrieve their own subscription from /users/user123/subscriptions/sub456.
+     * @deny (create) User with ID 'user123' cannot create a subscription under /users/otherUser/subscriptions/sub456.
+     * @deny (get) User with ID 'user123' cannot retrieve a subscription from /users/otherUser/subscriptions/sub456.
+     * @principle Enforces document ownership for writes.
      */
     match /users/{userId}/subscriptions/{subscriptionId} {
+      // Read permissions: only the owner can get/list
       allow get: if isOwner(userId);
       allow list: if isOwner(userId);
-      allow create: if isOwner(userId);
-      allow update: if isExistingOwner(userId);
+
+      // Write permissions: only the owner can create/update/delete
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
       allow delete: if isExistingOwner(userId);
     }
   }

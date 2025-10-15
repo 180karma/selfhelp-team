@@ -208,15 +208,11 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "AiMentalHealthNote",
       "type": "object",
-      "description": "Represents a note created by an AI agent about a user.",
+      "description": "Represents a note created by an AI agent about a user, summarizing a conversation.",
       "properties": {
-        "id": {
+        "userId": {
           "type": "string",
-          "description": "Unique identifier for the AI mental health note."
-        },
-        "aiMentalHealthProfileId": {
-          "type": "string",
-          "description": "Reference to AiMentalHealthProfile."
+          "description": "Denormalized reference to UserProfile for collection group queries."
         },
         "noteData": {
           "type": "string",
@@ -229,8 +225,7 @@
         }
       },
       "required": [
-        "id",
-        "aiMentalHealthProfileId",
+        "userId",
         "noteData",
         "timestamp"
       ]
@@ -403,7 +398,7 @@
         }
       },
       {
-        "path": "/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}/aiMentalHealthNotes/{aiMentalHealthNoteId}",
+        "path": "/users/{userId}/aiMentalHealthProfiles/{agentId}/aiMentalHealthNotes/{aiMentalHealthNoteId}",
         "definition": {
           "entityName": "AiMentalHealthNote",
           "schema": {
@@ -416,8 +411,8 @@
               "description": "The unique identifier for the user."
             },
             {
-              "name": "aiMentalHealthProfileId",
-              "description": "The unique identifier for the AI mental health profile."
+              "name": "agentId",
+              "description": "The unique identifier for the AI agent managing this profile."
             },
             {
               "name": "aiMentalHealthNoteId",
