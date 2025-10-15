@@ -6,13 +6,15 @@ import { notFound, useParams } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bot, User } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useUser } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Questionnaire } from '@/components/agents/questionnaire';
+import { doc, DocumentData } from 'firebase/firestore';
 
 type ChatMessage = {
   role: 'user' | 'model';
@@ -40,13 +42,33 @@ export default function AgentChatPage() {
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+  const firestore = useFirestore();
 
-  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[]) => {
+  const assessmentRef = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    return doc(firestore, 'users', user.uid, 'psychologicalAssessments', agentId);
+  }, [user, firestore, agentId]);
+
+  const { data: assessment, isLoading: isLoadingAssessment } = useDoc<DocumentData>(assessmentRef);
+
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+
+
+  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[], profileData?: DocumentData | null) => {
     setIsLoading(true);
     try {
+
+      let personaWithProfile = agent!.persona;
+      if (profileData) {
+        const profileSummary = Object.entries(profileData)
+          .map(([key, value]) => `- ${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`)
+          .join('\n');
+        personaWithProfile += `\n\nHere is the user's profile based on their questionnaire answers. Use this to tailor your conversation:\n${profileSummary}`;
+      }
+
       const genkitHistory = toGenkitHistory(currentHistory);
       const { response } = await agentChat({
-        persona: agent!.persona,
+        persona: personaWithProfile,
         history: genkitHistory,
         message: message,
       });
@@ -61,13 +83,16 @@ export default function AgentChatPage() {
   };
 
   useEffect(() => {
-    if (agent && history.length === 0) {
-      // Send an initial, silent message to the agent to get the introduction and questions.
-      handleAgentResponse("Hello, please introduce yourself and ask your initial questions.", []);
+    if (!isLoadingAssessment) {
+      if (!assessment) {
+        setShowQuestionnaire(true);
+      } else if (history.length === 0) {
+        handleAgentResponse("Hello, please introduce yourself.", [], assessment);
+      }
     }
     // We only want this to run once on mount, so we disable the exhaustive-deps rule.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agent]);
+  }, [agent, assessment, isLoadingAssessment]);
 
 
   useEffect(() => {
@@ -84,12 +109,30 @@ export default function AgentChatPage() {
     notFound();
   }
 
+  if (isLoadingAssessment) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Skeleton className="h-24 w-1/2" />
+      </div>
+    );
+  }
+
+  const handleQuestionnaireComplete = (data: DocumentData) => {
+    setShowQuestionnaire(false);
+    handleAgentResponse("Hello, please introduce yourself.", [], data);
+  };
+
+  if (showQuestionnaire) {
+    return <Questionnaire agentId={agentId} onComplete={handleQuestionnaireComplete} />;
+  }
+
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const userMessage: ChatMessage = { role: 'user', content: data.message };
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
     reset();
-    handleAgentResponse(data.message, newHistory);
+    handleAgentResponse(data.message, newHistory, assessment);
   };
 
   return (
