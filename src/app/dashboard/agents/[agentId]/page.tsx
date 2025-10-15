@@ -141,9 +141,14 @@ export default function AgentChatPage() {
 
       setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error chatting with agent:', error);
-      setHistory((prev) => [...prev, { role: 'model', content: "I'm having trouble responding right now. Please try again later." }]);
+      const errorMessage = error.message || '';
+      if (errorMessage.includes('429') || errorMessage.toLowerCase().includes('quota')) {
+        setHistory((prev) => [...prev, { role: 'model', content: "It looks like we've hit our request limit for the day. To continue our conversation, you may need to upgrade your plan or wait until the quota resets. You can find more information on API usage and billing in your cloud provider's console." }]);
+      } else {
+        setHistory((prev) => [...prev, { role: 'model', content: "I'm having trouble responding right now. Please try again later." }]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -326,6 +331,7 @@ export default function AgentChatPage() {
                           </Button>
                          ))}
                        </div>
+                       <p className="text-xs text-muted-foreground italic mt-2">Or type your own response below.</p>
                     </div>
                   )}
                 </div>
