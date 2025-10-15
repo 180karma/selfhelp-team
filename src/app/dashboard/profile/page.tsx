@@ -6,62 +6,35 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { agents } from '@/lib/agents';
 import { Users, MessageSquareText } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
-import { useEffect, useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, collectionGroup, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { collection, collectionGroup, query, where, orderBy } from 'firebase/firestore';
 
 
 export default function ProfilePage() {
   const { user } = useUser();
   const firestore = useFirestore();
 
-  const [profiles, setProfiles] = useState<AiMentalHealthProfile[]>([]);
-  const [notes, setNotes] = useState<AiMentalHealthNote[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (!user || !firestore) {
-      setIsLoading(false);
-      return;
-    }
-
-    const fetchAllData = async () => {
-      setIsLoading(true);
-      try {
-        // Fetch profiles
-        const profilesQuery = query(collection(firestore, 'users', user.uid, 'aiMentalHealthProfiles'));
-        const profileSnapshot = await getDocs(profilesQuery);
-        const fetchedProfiles = profileSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as AiMentalHealthProfile[];
-        setProfiles(fetchedProfiles);
-
-        // Fetch notes using collectionGroup
-        const notesQuery = query(
-          collectionGroup(firestore, 'aiMentalHealthNotes'),
-          where('userId', '==', user.uid),
-          orderBy('timestamp', 'desc')
-        );
-        const notesSnapshot = await getDocs(notesQuery);
-        const fetchedNotes = notesSnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-                id: doc.ref.path, // Use the full path as the ID for collectionGroup items
-                ...data
-            }
-        }) as AiMentalHealthNote[];
-        setNotes(fetchedNotes);
-
-      } catch (error) {
-        console.error("Error fetching profile data:", error);
-        // Here you could emit a contextual error if this were a permission issue
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAllData();
+  const profilesQuery = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    return query(collection(firestore, 'users', user.uid, 'aiMentalHealthProfiles'));
   }, [user, firestore]);
+  const { data: profiles, isLoading: isLoadingProfiles } = useCollection<AiMentalHealthProfile>(profilesQuery);
+
+  const notesQuery = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    return query(
+      collectionGroup(firestore, 'aiMentalHealthNotes'),
+      where('userId', '==', user.uid),
+      orderBy('timestamp', 'desc')
+    );
+  }, [user, firestore]);
+  const { data: notes, isLoading: isLoadingNotes } = useCollection<AiMentalHealthNote>(notesQuery);
+
+  const isLoading = isLoadingProfiles || isLoadingNotes;
   
   const notesByProfile = useMemo(() => {
+    if (!notes) return {};
     return notes.reduce((acc, note) => {
         // e.g., users/uid/aiMentalHealthProfiles/agentId/aiMentalHealthNotes/noteId
         const pathSegments = note.id.split('/');
@@ -130,7 +103,7 @@ export default function ProfilePage() {
                              {agentNotes.length > 0 ? (
                                 <div className="space-y-4">
                                     {agentNotes.map(note => {
-                                        const timestamp = (note.timestamp as any).toDate ? (note.timestamp as any).toDate() : new Date(note.timestamp);
+                                        const timestamp = (note.timestamp as any)?.toDate ? (note.timestamp as any).toDate() : new Date(note.timestamp);
                                         return (
                                             <Card key={note.id}>
                                                 <CardHeader>
