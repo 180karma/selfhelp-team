@@ -3,3 +3,4 @@ config();
 
 import '@/ai/flows/summarize-diary-entry.ts';
 import '@/ai/flows/categorize-diary-entry.ts';
+import '@/ai/flows/agent-chat.ts';

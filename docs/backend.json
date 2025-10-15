@@ -61,7 +61,7 @@
         },
         "type": {
           "type": "string",
-          "description": "The type of journal (e.g., 'daily', 'dream').",
+description": "The type of journal (e.g., 'daily', 'dream').",
           "enum": ["daily", "dream"]
         },
         "categories": {
@@ -151,13 +151,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "persona": {
+          "type": "string",
+          "description": "A detailed prompt defining the agent's personality and behavior."
         }
       },
       "required": [
         "id",
         "name",
         "type",
-        "categories"
+        "categories",
+        "persona"
       ]
     },
     "AiAgentInteraction": {

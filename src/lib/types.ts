@@ -7,3 +7,12 @@ export type DiaryEntry = {
   createdAt: string;
   categories: string[];
 };
+
+export type AiAgentInteraction = {
+  id: string;
+  userId: string;
+  aiAgentId: string;
+  timestamp: string;
+  userMessage: string;
+  aiResponse: string;
+};
