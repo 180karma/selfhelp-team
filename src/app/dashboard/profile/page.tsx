@@ -108,23 +108,31 @@ export default function ProfilePage() {
                             </Card>
 
                             {profile.roadmap && (
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle className="text-lg font-semibold">Clinical Roadmap</CardTitle>
-                                        <CardDescription>This is the agent's plan for your sessions.</CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="pt-0 prose prose-sm max-w-none text-foreground prose-li:my-0 prose-ul:my-0">
-                                      <ReactMarkdown
-                                         components={{
-                                            input: ({ checked }) => {
-                                                return checked ? <CheckSquare className="h-4 w-4 inline-block mr-2" /> : <Square className="h-4 w-4 inline-block mr-2" />;
-                                            },
-                                        }}
-                                      >
-                                        {profile.roadmap}
-                                      </ReactMarkdown>
-                                    </CardContent>
-                                </Card>
+                                <Accordion type="single" collapsible className="w-full">
+                                    <AccordionItem value="roadmap">
+                                        <Card>
+                                            <AccordionTrigger className="w-full p-6">
+                                                <CardHeader className="p-0 text-left">
+                                                    <CardTitle className="text-lg font-semibold">Clinical Roadmap</CardTitle>
+                                                    <CardDescription>This is the agent's plan for your sessions. Click to expand.</CardDescription>
+                                                </CardHeader>
+                                            </AccordionTrigger>
+                                            <AccordionContent>
+                                                <CardContent className="pt-0 prose prose-sm max-w-none text-foreground prose-li:my-0 prose-ul:my-0">
+                                                <ReactMarkdown
+                                                    components={{
+                                                        input: ({ checked }) => {
+                                                            return checked ? <CheckSquare className="h-4 w-4 inline-block mr-2" /> : <Square className="h-4 w-4 inline-block mr-2" />;
+                                                        },
+                                                    }}
+                                                >
+                                                    {profile.roadmap}
+                                                </ReactMarkdown>
+                                                </CardContent>
+                                            </AccordionContent>
+                                        </Card>
+                                    </AccordionItem>
+                                </Accordion>
                             )}
 
                             <h3 className="font-headline text-lg font-semibold pt-4">Conversation Notes</h3>
