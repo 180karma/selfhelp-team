@@ -85,7 +85,7 @@ export default function AgentChatPage() {
     historyRef.current = history;
   }, [history]);
 
-  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[], profileData?: DocumentData | null, isFirstMessage: boolean = false) => {
+  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[], profileData?: DocumentData | null) => {
     setIsLoading(true);
     try {
       let personaWithProfile = agent!.persona;
@@ -122,14 +122,9 @@ export default function AgentChatPage() {
         persona: personaWithProfile,
         history: genkitHistory,
         message: message,
-        firstMessage: isFirstMessage,
       });
 
-      if ('question' in result) {
-         setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
-      } else {
-         setHistory((prev) => [...prev, { role: 'model', content: result.response }]);
-      }
+      setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
 
 
     } catch (error) {
@@ -187,7 +182,7 @@ export default function AgentChatPage() {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent) {
         setIntroSent(true);
-        handleAgentResponse("Hello, please introduce yourself based on my profile.", [], assessment, true);
+        handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question.", [], assessment);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -228,7 +223,7 @@ export default function AgentChatPage() {
     setShowQuestionnaire(false);
     setIntroSent(true);
     // Pass the raw answers object which is what handleAgentResponse now expects
-    handleAgentResponse("Hello, please introduce yourself based on my profile.", [], data, true);
+    handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question.", [], data);
   };
 
   if (showQuestionnaire) {

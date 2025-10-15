@@ -17,7 +17,6 @@ const AgentChatInputSchema = z.object({
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history.'),
   message: z.string().describe('The latest user message.'),
-  firstMessage: z.boolean().optional().describe('Flag indicating if this is the first message to generate a greeting.'),
 });
 type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
@@ -30,33 +29,14 @@ const AgentChatOutputSchema = z.object({
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
 
-const GreetingOutputSchema = z.object({
-  response: z.string().describe("The AI agent's introductory greeting."),
-});
-
-
 const agentChatFlow = ai.defineFlow(
   {
     name: 'agentChatFlow',
     inputSchema: AgentChatInputSchema,
-    outputSchema: z.union([AgentChatOutputSchema, GreetingOutputSchema]),
+    outputSchema: AgentChatOutputSchema,
   },
   async (input) => {
-    const { persona, history, message, firstMessage } = input;
-
-    if (firstMessage) {
-       const llmResponse = await ai.generate({
-        prompt: message,
-        history: [],
-        system: persona,
-        output: {
-          schema: GreetingOutputSchema,
-        }
-      });
-      // The output will not have a question for the first message
-      return llmResponse.output! as z.infer<typeof GreetingOutputSchema>;
-    }
-
+    const { persona, history, message } = input;
 
     const llmResponse = await ai.generate({
       prompt: message,
@@ -67,11 +47,11 @@ const agentChatFlow = ai.defineFlow(
       }
     });
 
-    return llmResponse.output! as AgentChatOutput;
+    return llmResponse.output!;
   }
 );
 
 // Only export the async function.
-export async function agentChat(input: AgentChatInput): Promise<AgentChatOutput | GreetingOutputSchema> {
+export async function agentChat(input: AgentChatInput): Promise<AgentChatOutput> {
   return agentChatFlow(input);
 }
