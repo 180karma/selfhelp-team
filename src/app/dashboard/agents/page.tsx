@@ -25,8 +25,8 @@ export default function AgentsPage() {
                   <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="font-headline">{agent.givenName}</CardTitle>
-                  <CardDescription>{agent.role}</CardDescription>
+                  <CardTitle className="font-headline">{agent.role}</CardTitle>
+                  <CardDescription>{agent.givenName}</CardDescription>
                 </div>
                 <ChevronRight className="ml-auto h-5 w-5 text-muted-foreground" />
               </CardHeader>
