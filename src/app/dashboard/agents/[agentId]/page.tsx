@@ -320,14 +320,18 @@ export default function AgentChatPage() {
               <div key={index} className={cn(`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`, animationClass)}>
                 {message.role === 'model' && (
                   <div className="flex flex-col items-center gap-1">
-                   <Avatar>
+                    <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
+                    <Avatar>
                       <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                       <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <p className="text-[8px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                   </div>
                 )}
-                <div className={`max-w-prose rounded-lg p-3 ${message.role === 'user' ? 'bg-secondary text-secondary-foreground' : 'bg-muted'}`}>
+                <div className={cn('rounded-lg p-3', 
+                    message.role === 'user' 
+                    ? 'bg-secondary text-secondary-foreground max-w-xs' 
+                    : 'bg-muted max-w-prose'
+                )}>
                   <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{message.content}</p>
                    {message.role === 'model' && message.question && (
                     <div className="mt-4 space-y-2">
@@ -362,11 +366,11 @@ export default function AgentChatPage() {
             {isLoading && (
               <div className="flex items-start gap-4 animate-fade-in">
                 <div className="flex flex-col items-center gap-1">
+                   <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                   <Avatar>
                     <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                     <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                   </Avatar>
-                  <p className="text-[8px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                 </div>
                 <div className="max-w-prose rounded-lg p-3 bg-muted">
                   <Skeleton className="h-4 w-24" />
