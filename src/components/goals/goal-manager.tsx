@@ -10,11 +10,31 @@ import type { Goal, GoalCategory } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlusCircle, Loader2, Bot } from 'lucide-react';
+import { PlusCircle, Loader2, Bot, ArrowUpDown } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '../ui/badge';
+
 
 const goalSchema = z.object({
   title: z.string().min(3, { message: 'Goal must be at least 3 characters long.' }),
@@ -25,10 +45,20 @@ const goalSchema = z.object({
 
 type GoalInput = z.infer<typeof goalSchema>;
 
+const noteSchema = z.object({
+  note: z.string().min(1, { message: 'Please enter a note.' }),
+});
+
+type NoteInput = z.infer<typeof noteSchema>;
+
 export function GoalManager() {
   const { user } = useUser();
   const [goals, setGoals] = useState<Goal[]>([]);
   const { toast } = useToast();
+  const [goalToComplete, setGoalToComplete] = useState<Goal | null>(null);
+
+  const activeGoals = goals.filter(g => !g.completed);
+  const completedGoals = goals.filter(g => g.completed).sort((a,b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime());
 
   useEffect(() => {
     if (user) {
@@ -42,6 +72,13 @@ export function GoalManager() {
     defaultValues: {
       title: '',
       category: 'Daily Task',
+    },
+  });
+
+  const noteForm = useForm<NoteInput>({
+    resolver: zodResolver(noteSchema),
+    defaultValues: {
+      note: '',
     },
   });
 
@@ -64,18 +101,38 @@ export function GoalManager() {
     form.reset();
   };
 
-  const toggleGoal = (id: string) => {
+  const handleCompleteGoal = (note: string) => {
+    if (!goalToComplete || !user) return;
+
     const updatedGoals = goals.map((goal) =>
-      goal.id === id ? { ...goal, completed: !goal.completed } : goal
+      goal.id === goalToComplete.id
+        ? {
+            ...goal,
+            completed: true,
+            completionNote: note,
+            completedAt: new Date().toISOString(),
+          }
+        : goal
     );
     setGoals(updatedGoals);
-    if (user) {
-      localStorage.setItem(`thrivewell-goals-${user.uid}`, JSON.stringify(updatedGoals));
-    }
+    localStorage.setItem(`thrivewell-goals-${user.uid}`, JSON.stringify(updatedGoals));
+    toast({ title: 'Goal Completed!', description: `Great job on "${goalToComplete.title}"!` });
+    setGoalToComplete(null);
+    noteForm.reset();
   };
 
+  const handleOpenDialog = (goal: Goal) => {
+    setGoalToComplete(goal);
+  };
+  
+  const handleCloseDialog = () => {
+    setGoalToComplete(null);
+    noteForm.reset();
+  };
+
+
   const renderGoalList = (category: GoalCategory) => {
-    const filteredGoals = goals.filter((goal) => goal.category === category);
+    const filteredGoals = activeGoals.filter((goal) => goal.category === category);
     return (
       <Card>
         <CardHeader>
@@ -88,17 +145,15 @@ export function GoalManager() {
                 <div key={goal.id} className="flex items-start space-x-3">
                   <Checkbox
                     id={goal.id}
-                    checked={goal.completed}
-                    onCheckedChange={() => toggleGoal(goal.id)}
-                    aria-label={`Mark goal "${goal.title}" as ${goal.completed ? 'incomplete' : 'complete'}`}
+                    checked={false} // Checkbox only triggers dialog
+                    onCheckedChange={() => handleOpenDialog(goal)}
+                    aria-label={`Complete goal "${goal.title}"`}
                     className="mt-1"
                   />
                   <div className="flex-1">
                     <label
                       htmlFor={goal.id}
-                      className={`text-sm font-medium leading-none ${
-                        goal.completed ? 'line-through text-muted-foreground' : ''
-                      } peer-disabled:cursor-not-allowed peer-disabled:opacity-70`}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                       {goal.title}
                     </label>
@@ -113,7 +168,7 @@ export function GoalManager() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No {category.toLowerCase()} yet.</p>
+            <p className="text-sm text-muted-foreground">No active {category.toLowerCase()} yet.</p>
           )}
         </CardContent>
       </Card>
@@ -122,6 +177,46 @@ export function GoalManager() {
 
   return (
     <div className="space-y-8">
+      <Dialog open={!!goalToComplete} onOpenChange={(open) => !open && handleCloseDialog()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Complete: {goalToComplete?.title}</DialogTitle>
+            <DialogDescription>
+              Great job! Add a quick note about how you achieved this goal.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...noteForm}>
+            <form onSubmit={noteForm.handleSubmit((data) => handleCompleteGoal(data.note))} className="space-y-4">
+               <FormField
+                  control={noteForm.control}
+                  name="note"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Completion Note</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="e.g., I went for a 30-minute walk during my lunch break." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="button" variant="secondary">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type="submit" disabled={noteForm.formState.isSubmitting}>
+                  {noteForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Complete Task
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+
        <Card>
         <CardHeader>
           <CardTitle className="font-headline">Add a New Goal</CardTitle>
@@ -179,6 +274,49 @@ export function GoalManager() {
         {renderGoalList('Short-Term Goal')}
         {renderGoalList('Long-Term Goal')}
       </div>
+
+       <Card>
+        <CardHeader>
+          <CardTitle className="font-headline">Completed Goals</CardTitle>
+          <CardDescription>A log of your achievements. Keep up the great work!</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Task</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Source</TableHead>
+                <TableHead>Completed On</TableHead>
+                <TableHead>My Note</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {completedGoals.length > 0 ? (
+                completedGoals.map((goal) => (
+                  <TableRow key={goal.id}>
+                    <TableCell className="font-medium">{goal.title}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{goal.category}</Badge>
+                    </TableCell>
+                    <TableCell>{goal.addedBy ?? 'Me'}</TableCell>
+                    <TableCell>
+                      {new Date(goal.completedAt!).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>{goal.completionNote}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-24 text-center">
+                    No completed goals yet.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
