@@ -36,10 +36,8 @@ const agentChatFlow = ai.defineFlow(
     const { persona, history, message } = input;
 
     const llmResponse = await ai.generate({
-      prompt: [
-        ...history,
-        { role: 'user', content: [{ text: message }] }
-      ],
+      prompt: message,
+      history: history,
       system: persona,
     });
 
