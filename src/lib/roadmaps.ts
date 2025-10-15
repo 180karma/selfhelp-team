@@ -1,4 +1,5 @@
 
+
 export const roadmaps: Record<string, string> = {
   nutritionist: `
 - [ ] Explore your current relationship with food. What does a typical day of eating look like?
@@ -157,55 +158,55 @@ export const roadmaps: Record<string, string> = {
 - [ ] Discuss maintenance and how to continue using CBT skills independently.
 `,
   'trauma-therapist': `
-- [ ] Introduce the concept of a 'window of tolerance'. What does it feel like to be inside it?
-- [ ] Explore the idea of grounding. What's one thing you can see, hear, or touch right now?
-- [ ] Practice a simple 5-4-3-2-1 grounding exercise.
-- [ ] Discuss the concept of a 'safe place' visualization.
-- [ ] Explore what safety feels like in your body. Where do you feel it?
-- [ ] Talk about the 'inner critic'. What kinds of things does it say?
-- [ ] Practice speaking to the inner critic with a bit of curiosity or compassion.
-- [ ] Discuss the difference between shame ('I am bad') and guilt ('I did something bad').
-- [ ] Explore the concept of 'resourcing'. What is one personal strength you possess?
-- [ ] Identify a person, place, or memory that brings a feeling of peace or strength.
-- [ ] Discuss the idea of 'pendulation' - gently touching on a difficult feeling and then returning to a resource.
-- [ ] Explore a moment of 'glimmer' - a small moment of joy or connection.
-- [ ] Talk about the role of the nervous system (fight, flight, freeze).
-- [ ] Identify any 'freeze' responses you notice in your daily life (e.g., spacing out, feeling numb).
-- [ ] Practice a simple orientation exercise: slowly looking around the room to notice you are safe in the present.
-- [ ] Discuss the concept of 'titration' - working with small, manageable pieces of an issue.
-- [ ] Explore a very small, low-stakes feeling of irritation or annoyance.
-- [ ] Talk about healthy anger. What is its purpose?
-- [ ] Discuss the concept of boundaries. What does a healthy boundary feel like?
-- [ ] Practice visualizing a protective bubble around yourself.
-- [ ] Explore a simple self-compassion phrase, like "This is a moment of suffering."
-- [ ] Talk about your relationship with your body. Do you feel at home in it?
-- [ ] Practice noticing your feet on the floor.
-- [ ] Discuss the concept of 'dual awareness' - being aware of the past and the present simultaneously.
-- [ ] Explore the idea of the 'wise adult self' or 'compassionate self'.
-- [ ] Imagine what your wise adult self would say to you in a difficult moment.
-- [ ] Talk about a part of you that feels young or vulnerable. What does that part need?
-- [ ] Discuss the difference between self-care and self-soothing.
-- [ ] Explore one small act of self-soothing you could do this week (e.g., wrap in a warm blanket).
-- [ ] Talk about the concept of 'earned secure attachment'.
-- [ ] Identify one person in your life with whom you feel relatively safe.
-- [ ] Explore what makes that relationship feel safe.
-- [ ] Discuss the 'felt sense' - the physical sensation associated with an emotion.
-- [ ] Practice noticing a felt sense without needing to name it or fix it.
-- [ ] Explore a time you felt resilient or strong.
-- [ ] Talk about your relationship with rest. Is it okay to do nothing?
-- [ ] Discuss the concept of 'foreboding joy'. Do you ever feel anxious when things are going well?
-- [ ] Practice savoring a small, positive experience for 30 seconds.
-- [ ] Explore the idea of 'co-regulation'. How do you feel around calm people?
-- [ ] Talk about your personal values and what truly matters to you.
-- [ ] Discuss how you say 'no' to things.
-- [ ] Explore a feeling of gratitude for one part of your body.
-- [ ] Talk about the concept of 'reclaiming' parts of yourself you may have disowned.
-- [ ] Discuss what it would mean to 'befriend' a difficult emotion.
-- [ ] Explore the difference between reacting and responding.
-- [ ] Practice taking one conscious breath before responding in a conversation.
-- [ ] Talk about your hopes for your future self.
-- [ ] Discuss a simple ritual that could bring you comfort.
-- [ ] Review the resources and grounding techniques we've discussed.
+- [ ] Gently explore the concept of safety. What does 'feeling safe' mean to you, and where do you feel it in your body?
+- [ ] Introduce grounding. Let's name three things you can see and two things you can hear right now.
+- [ ] Discuss your 'Window of Tolerance'. How do you know when you're feeling calm versus overwhelmed or shut down?
+- [ ] Talk about your caregivers from childhood. What was it like to be comforted by them when you were upset?
+- [ ] Explore your 'inner critic.' What is its tone? Does it sound like anyone you know?
+- [ ] Discuss the difference between 'shame' (I am bad) and 'guilt' (I did something bad). Which one feels more familiar?
+- [ ] Identify a 'glimmer'—a very small moment of peace or joy you've experienced recently.
+- [ ] Talk about the nervous system's responses: fight, flight, and freeze. Do you recognize these in yourself?
+- [ ] Explore 'freeze' responses like feeling numb, zoned out, or disconnected. When do these happen?
+- [ ] Discuss 'attachment styles'. In relationships, do you tend to seek closeness, prefer distance, or feel uncertain?
+- [ ] Explore your relationship with anger. Was it a 'safe' emotion to express in your family?
+- [ ] Talk about boundaries. What does a 'good' boundary feel like in your body?
+- [ ] Gently explore the idea of an 'inner child'. What does that younger part of you need to hear?
+- [ ] Discuss patterns in your adult relationships. Do they echo any feelings from your childhood?
+- [ ] Explore the feeling of 'longing'. What is it that you find yourself longing for?
+- [ ] Talk about self-compassion. What would it be like to treat yourself as you would a dear friend?
+- [ ] Identify a core belief about yourself that might be linked to past experiences (e.g., 'I am too much,' 'I am unlovable').
+- [ ] Discuss the feeling of depression. Is it a heavy, empty, or agitated feeling for you?
+- [ ] Explore how depression might serve as a form of protection, like a 'shutdown' response.
+- [ ] Talk about 'unspoken rules' from your childhood. What was not okay to talk about?
+- [ ] Explore what it feels like to trust someone. Is it easy or difficult for you?
+- [ ] Discuss the concept of 'resourcing'—identifying people, places, or things that help you feel stronger.
+- [ ] Identify a personal strength that has helped you survive difficult times.
+- [ ] Explore the concept of 'foreboding joy'—the fear that something bad will happen when things feel good.
+- [ ] Talk about what it means to 'co-regulate' with someone—to feel calmed by their presence.
+- [ ] Discuss your relationship with your body. Does it feel like a safe place to be?
+- [ ] Explore how you experience dissociation. Is it like daydreaming, or something else?
+- [ ] Talk about perfectionism. Is it a way to try to stay safe or earn love?
+- [ ] Explore what it would mean to 'reparent' your inner child.
+- [ ] Discuss the physical symptoms of trauma. Where does stress live in your body?
+- [ ] Explore the concept of 'earned secure attachment'. Can we build safety in adult relationships?
+- [- ] Talk about hypervigilance. Are you often scanning for danger?
+- [ ] Discuss the 'fawn' response—people-pleasing as a way to stay safe.
+- [ ] Explore a time you felt truly seen and understood. What was that like?
+- [ ] Talk about your relationship with rest and productivity. Is it okay to do nothing?
+- [ ] Discuss the concept of 'post-traumatic growth'. Have any strengths emerged from your struggles?
+- [ ] Explore how shame might manifest physically for you (e.g., wanting to hide, feeling small).
+- [ ] Talk about a small, achievable act of self-care you can commit to this week.
+- [ ] Discuss what it would mean to set a small boundary in a low-stakes relationship.
+- [ ] Explore your feelings around vulnerability. Is it scary, or a sign of strength?
+- [ ] Talk about how you handle compliments or positive feedback.
+- [ ] Discuss the narrative you tell yourself about your life story. Can we add a chapter of resilience?
+- [ ] Explore the connection between your attachment patterns and your current coping mechanisms.
+- [ ] Talk about what it would feel like to 'take up space' and prioritize your own needs.
+- [ ] Discuss the process of grieving past losses, including the loss of a felt sense of safety.
+- [ ] Explore how you could create a 'safe space' in your home or mind.
+- [ ] Talk about the difference between being alone and being lonely.
+- [ ] Discuss your hopes for healing. What would a 'healed' future look like to you?
+- [ ] Review the coping skills we've discussed and identify one to practice.
 `,
   'fitness-instructor': `
 - [ ] Let's talk about your "why". What's your single biggest motivation for wanting to focus on fitness?
