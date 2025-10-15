@@ -268,7 +268,15 @@ export default function AgentChatPage() {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent) {
         setIntroSent(true);
-        handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question based on your clinical roadmap.", []);
+        const allNotes = JSON.parse(localStorage.getItem('thrivewell-notes') || '[]');
+        const myNotes = allNotes.filter((note: AiMentalHealthNote) => note.aiAgentId === agentId);
+        if (myNotes.length === 0) {
+          // This is the first session
+          handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question based on your new clinical roadmap.", []);
+        } else {
+          // This is a returning session
+          handleAgentResponse("Hello again, please review my file, including your previous notes and any relevant briefings from the team. Let's pick up where we left off based on your clinical roadmap.", []);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -307,6 +315,7 @@ export default function AgentChatPage() {
     setAssessment({ answers: data }); // Update local state with new assessment data
     setShowQuestionnaire(false);
     setIntroSent(true);
+     // After completing questionnaire, it's always the first session
     handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question based on your new clinical roadmap.", []);
   };
 
