@@ -137,7 +137,6 @@ export default function AgentChatPage() {
         persona: personaWithContext,
         history: genkitHistory,
         message: message,
-        userName: user?.displayName || 'the user',
       });
 
       setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
@@ -307,14 +306,8 @@ export default function AgentChatPage() {
           <div className="space-y-6 pr-4">
             {history.map((message, index) => {
               const isLastMessage = index === history.length - 1;
-              const isSecondToLast = index === history.length - 2;
-              const isOlder = index < history.length - 2;
               
-              const animationClass = isLastMessage
-                  ? 'animate-fade-in'
-                  : isOlder
-                  ? 'animate-fade-out'
-                  : isSecondToLast ? 'animate-quick-fade-in' : '';
+              const animationClass = isLastMessage ? 'animate-fade-in' : '';
 
               return (
               <div key={index} className={cn(`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`, animationClass)}>
