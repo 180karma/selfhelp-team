@@ -16,19 +16,19 @@ export default function ProfilePage() {
   const firestore = useFirestore();
 
   const profilesQuery = useMemoFirebase(() => {
-    if (!user || !firestore) return null;
+    if (!user?.uid || !firestore) return null;
     return query(collection(firestore, 'users', user.uid, 'aiMentalHealthProfiles'));
-  }, [user, firestore]);
+  }, [user?.uid, firestore]);
   const { data: profiles, isLoading: isLoadingProfiles } = useCollection<AiMentalHealthProfile>(profilesQuery);
 
   const notesQuery = useMemoFirebase(() => {
-    if (!user || !firestore) return null;
+    if (!user?.uid || !firestore) return null;
     return query(
       collectionGroup(firestore, 'aiMentalHealthNotes'),
       where('userId', '==', user.uid),
       orderBy('timestamp', 'desc')
     );
-  }, [user, firestore]);
+  }, [user?.uid, firestore]);
   const { data: notes, isLoading: isLoadingNotes } = useCollection<AiMentalHealthNote>(notesQuery);
 
   const isLoading = isLoadingProfiles || isLoadingNotes;
