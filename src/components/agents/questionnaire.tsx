@@ -55,6 +55,11 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     if (currentQuestionIndex < questionnaire.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       form.reset();
+    } else {
+      // If it's the last question, we also need to trigger the final submit logic
+      const latestAnswers = { ...data };
+      sessionStorage.setItem(`q_${agentId}_${currentQuestion.id}`, latestAnswers[currentQuestion.id]);
+      handleSubmit();
     }
   };
 
@@ -78,12 +83,12 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     
     const assessmentRef = doc(firestore, 'users', user.uid, 'psychologicalAssessments', agentId);
     
-    setDoc(assessmentRef, answers)
+    setDoc(assessmentRef, { answers })
       .catch(async (serverError) => {
         const permissionError = new FirestorePermissionError({
           path: assessmentRef.path,
           operation: 'write',
-          requestResourceData: answers,
+          requestResourceData: { answers },
         });
         errorEmitter.emit('permission-error', permissionError);
       });
@@ -104,7 +109,7 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <Form {...form}>
-        <form onSubmit={currentQuestionIndex < questionnaire.questions.length - 1 ? form.handleSubmit(handleNext) : form.handleSubmit(handleSubmit)}>
+        <form onSubmit={form.handleSubmit(handleNext)}>
           <CardHeader>
             <CardTitle className="font-headline">{questionnaire.title}</CardTitle>
             <CardDescription>{questionnaire.description}</CardDescription>

@@ -60,7 +60,7 @@ export default function AgentChatPage() {
 
       let personaWithProfile = agent!.persona;
       if (profileData) {
-        const profileSummary = Object.entries(profileData)
+        const profileSummary = Object.entries(profileData.answers)
           .map(([key, value]) => `- ${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`)
           .join('\n');
         personaWithProfile += `\n\nHere is the user's profile based on their questionnaire answers. Use this to tailor your conversation:\n${profileSummary}`;
@@ -87,7 +87,7 @@ export default function AgentChatPage() {
       if (!assessment) {
         setShowQuestionnaire(true);
       } else if (history.length === 0) {
-        handleAgentResponse("Hello, please introduce yourself.", [], assessment);
+        handleAgentResponse("Hello, please introduce yourself based on my profile.", [], assessment);
       }
     }
     // We only want this to run once on mount, so we disable the exhaustive-deps rule.
@@ -119,7 +119,7 @@ export default function AgentChatPage() {
 
   const handleQuestionnaireComplete = (data: DocumentData) => {
     setShowQuestionnaire(false);
-    handleAgentResponse("Hello, please introduce yourself.", [], data);
+    handleAgentResponse("Hello, please introduce yourself based on my profile.", [], {answers: data});
   };
 
   if (showQuestionnaire) {
@@ -144,6 +144,7 @@ export default function AgentChatPage() {
         <div>
           <CardTitle className="font-headline text-2xl">{agent.name}</CardTitle>
           <p className="text-sm text-muted-foreground">{agent.type}</p>
+          <p className="text-xs text-muted-foreground italic mt-1">AI agents are not a replacement for professional medical or mental health advice.</p>
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-4 p-6">
