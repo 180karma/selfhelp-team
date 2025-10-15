@@ -22,7 +22,7 @@ interface QuestionnaireProps {
 
 export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
   const { toast } = useToast();
-  const { user } = use-user();
+  const { user } = useUser();
   const firestore = useFirestore();
 
   const questionnaire = questionnaires.find((q) => q.agentId === agentId);
