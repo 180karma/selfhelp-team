@@ -8,7 +8,7 @@ import { Users, MessageSquareText } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useEffect, useState, useMemo } from 'react';
 import { useUser, useFirestore, useCollection } from '@/firebase';
-import { collectionGroup, query, where, orderBy } from 'firebase/firestore';
+import { collection, collectionGroup, query, where, orderBy } from 'firebase/firestore';
 
 
 export default function ProfilePage() {
