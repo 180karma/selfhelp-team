@@ -10,11 +10,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Loader2 } from 'lucide-react';
-import { useFirestore, useUser, errorEmitter, FirestorePermissionError } from '@/firebase';
-import { doc, setDoc, DocumentData } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { analyzeUserProfile } from '@/ai/flows/analyze-user-profile';
 import { agents } from '@/lib/agents';
+import { DocumentData } from 'firebase/firestore';
 
 
 interface QuestionnaireProps {
@@ -24,9 +23,7 @@ interface QuestionnaireProps {
 
 export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
   const { toast } = useToast();
-  const { user } = useUser();
-  const firestore = useFirestore();
-
+  
   const questionnaire = questionnaires.find((q) => q.agentId === agentId);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   
@@ -51,7 +48,7 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
 
   const handleNext = (data: z.infer<typeof formSchema>) => {
     form.clearErrors(); 
-    // Persist answer temporarily
+    // Persist answer temporarily in session storage
     sessionStorage.setItem(`q_${agentId}_${currentQuestion.id}`, data[currentQuestion.id]);
     
     if (currentQuestionIndex < questionnaire.questions.length - 1) {
@@ -66,15 +63,6 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
   };
 
   const handleSubmit = async () => {
-    if (!user || !firestore) {
-       toast({
-        variant: 'destructive',
-        title: 'Not Authenticated',
-        description: 'You must be logged in to submit.',
-      });
-      return;
-    }
-
     const answers: { [key: string]: string } = {};
     questionnaire.questions.forEach(q => {
       const answer = sessionStorage.getItem(`q_${agentId}_${q.id}`);
@@ -83,19 +71,10 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
       }
     });
     
-    const assessmentRef = doc(firestore, 'users', user.uid, 'psychologicalAssessments', agentId);
-    
-    setDoc(assessmentRef, { answers })
-      .catch(async (serverError) => {
-        const permissionError = new FirestorePermissionError({
-          path: assessmentRef.path,
-          operation: 'write',
-          requestResourceData: { answers },
-        });
-        errorEmitter.emit('permission-error', permissionError);
-      });
+    // Save answers to local storage
+    localStorage.setItem(`thrivewell-assessment-${agentId}`, JSON.stringify({ answers }));
       
-    // Generate AI profile
+    // Generate AI profile and save to local storage
     try {
         const agent = agents.find(a => a.id === agentId);
         if (agent) {
@@ -104,19 +83,12 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
                 questionnaireAnswers: answers,
             });
 
-            const profileRef = doc(firestore, 'users', user.uid, 'aiMentalHealthProfiles', agentId);
-            setDoc(profileRef, {
-                userId: user.uid,
+            const profileKey = `thrivewell-profile-${agentId}`;
+            const profileToSave = {
                 aiAgentId: agentId,
                 profileData: profileData,
-            }).catch(async (serverError) => {
-                 const permissionError = new FirestorePermissionError({
-                    path: profileRef.path,
-                    operation: 'write',
-                    requestResourceData: { userId: user.uid, aiAgentId: agentId, profileData },
-                });
-                errorEmitter.emit('permission-error', permissionError);
-            })
+            };
+            localStorage.setItem(profileKey, JSON.stringify(profileToSave));
         }
     } catch (error) {
         console.error("Failed to generate AI profile:", error);
@@ -127,14 +99,14 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
         });
     }
 
-
+    // Clean up session storage
     questionnaire.questions.forEach(q => {
       sessionStorage.removeItem(`q_${agentId}_${q.id}`);
     });
 
     toast({
       title: 'Profile Updated!',
-      description: "Your answers have been saved and analyzed.",
+      description: "Your answers have been saved to this browser.",
     });
 
     onComplete(answers);

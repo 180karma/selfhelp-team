@@ -12,11 +12,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useUser, useFirestore, useDoc, useMemoFirebase, useCollection } from '@/firebase';
+import { useUser, useFirestore } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
-import { doc, addDoc, collection, DocumentData, serverTimestamp, query, orderBy, limit } from 'firebase/firestore';
-import type { AiMentalHealthNote, DiaryEntry } from '@/lib/types';
+import { doc, addDoc, collection, DocumentData, serverTimestamp } from 'firebase/firestore';
 
 
 type ChatMessage = {
@@ -55,27 +54,18 @@ export default function AgentChatPage() {
   const { user } = useUser();
   const firestore = useFirestore();
 
-  // Fetch initial assessment
-  const assessmentRef = useMemoFirebase(() => {
-    if (!user || !firestore) return null;
-    return doc(firestore, 'users', user.uid, 'psychologicalAssessments', agentId);
-  }, [user, firestore, agentId]);
-  const { data: assessment, isLoading: isLoadingAssessment } = useDoc<DocumentData>(assessmentRef);
+  const [assessment, setAssessment] = useState<DocumentData | null>(null);
+  const [isLoadingAssessment, setIsLoadingAssessment] = useState(true);
 
-  // Fetch past conversation notes
-  const notesRef = useMemoFirebase(() => {
-    if (!user || !firestore) return null;
-    const profileRef = doc(firestore, 'users', user.uid, 'aiMentalHealthProfiles', agentId);
-    return query(collection(profileRef, 'aiMentalHealthNotes'), orderBy('timestamp', 'desc'), limit(5));
-  }, [user, firestore, agentId]);
-  const { data: pastNotes, isLoading: isLoadingNotes } = useCollection<AiMentalHealthNote>(notesRef);
+  // Fetch initial assessment from localStorage
+  useEffect(() => {
+    const assessmentData = localStorage.getItem(`thrivewell-assessment-${agentId}`);
+    if (assessmentData) {
+      setAssessment(JSON.parse(assessmentData));
+    }
+    setIsLoadingAssessment(false);
+  }, [agentId]);
 
-  // Fetch all diary entries
-  const diaryEntriesRef = useMemoFirebase(() => {
-    if (!user || !firestore) return null;
-    return collection(firestore, 'users', user.uid, 'diaryEntries');
-  }, [user, firestore]);
-  const { data: diaryEntries, isLoading: isLoadingDiary } = useCollection<DiaryEntry>(diaryEntriesRef);
 
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [introSent, setIntroSent] = useState(false);
@@ -85,37 +75,19 @@ export default function AgentChatPage() {
     historyRef.current = history;
   }, [history]);
 
-  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[], profileData?: DocumentData | null) => {
+  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[]) => {
     setIsLoading(true);
     try {
       let personaWithProfile = agent!.persona;
 
-      // 1. Add questionnaire data to persona
-      if (profileData) {
-        const answers = profileData.answers || profileData;
+      // 1. Add questionnaire data from local state to persona
+      if (assessment) {
+        const answers = assessment.answers || assessment;
         const profileSummary = Object.entries(answers)
           .map(([key, value]) => `- ${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`)
           .join('\n');
         personaWithProfile += `\n\nHere is the user's profile based on their questionnaire answers:\n${profileSummary}`;
       }
-
-      // 2. Add past conversation notes to persona
-      if (pastNotes && pastNotes.length > 0) {
-        const notesSummary = pastNotes.map(note => `On ${new Date(note.timestamp).toLocaleDateString()}, we discussed: ${note.noteData}`).join('\n\n');
-        personaWithProfile += `\n\nHere are summaries of our recent conversations to give you memory:\n${notesSummary}`;
-      }
-
-      // 3. Add relevant diary entries to persona
-      if (diaryEntries && diaryEntries.length > 0 && agent) {
-        const relevantEntries = diaryEntries.filter(entry =>
-          agent.categories.some(cat => entry.categories.includes(cat))
-        );
-        if (relevantEntries.length > 0) {
-          const diarySummary = relevantEntries.map(entry => `On ${new Date(entry.createdAt).toLocaleDateString()}, the user wrote a diary entry titled "${entry.title}" with the categories [${entry.categories.join(', ')}]. Content: ${entry.content.substring(0, 300)}...`).join('\n\n');
-          personaWithProfile += `\n\nHere are some of the user's recent diary entries that are relevant to your specialty. Use them to understand the user's state of mind:\n${diarySummary}`;
-        }
-      }
-
 
       const genkitHistory = toGenkitHistory(currentHistory);
       const result = await agentChat({
@@ -171,22 +143,21 @@ export default function AgentChatPage() {
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
     // Let the agent respond to the selected option
-    handleAgentResponse(userMessage.content, newHistory, assessment);
+    handleAgentResponse(userMessage.content, newHistory);
   };
 
 
   useEffect(() => {
-    const isLoadingData = isLoadingAssessment || isLoadingNotes || isLoadingDiary;
-    if (!isLoadingData) {
+    if (!isLoadingAssessment) {
       if (!assessment) {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent) {
         setIntroSent(true);
-        handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question.", [], assessment);
+        handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question.", []);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assessment, isLoadingAssessment, isLoadingNotes, isLoadingDiary, introSent]);
+  }, [assessment, isLoadingAssessment, introSent]);
 
 
   useEffect(() => {
@@ -209,9 +180,7 @@ export default function AgentChatPage() {
     notFound();
   }
 
-  const isLoadingData = isLoadingAssessment || isLoadingNotes || isLoadingDiary;
-
-  if (isLoadingData) {
+  if (isLoadingAssessment) {
     return (
       <div className="flex justify-center items-center h-full">
         <Skeleton className="h-24 w-1/2" />
@@ -220,10 +189,10 @@ export default function AgentChatPage() {
   }
 
   const handleQuestionnaireComplete = (data: DocumentData) => {
+    setAssessment({ answers: data }); // Update local state with new assessment data
     setShowQuestionnaire(false);
     setIntroSent(true);
-    // Pass the raw answers object which is what handleAgentResponse now expects
-    handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question.", [], data);
+    handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question.", []);
   };
 
   if (showQuestionnaire) {
@@ -237,7 +206,7 @@ export default function AgentChatPage() {
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
     reset();
-    handleAgentResponse(data.message, newHistory, assessment);
+    handleAgentResponse(data.message, newHistory);
   };
 
   return (

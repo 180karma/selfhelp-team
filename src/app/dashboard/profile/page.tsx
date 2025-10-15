@@ -1,7 +1,5 @@
 'use client';
 
-import { useFirestore, useUser, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, collectionGroup, query, where, getDocs } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -12,55 +10,28 @@ import { useEffect, useState } from 'react';
 
 
 export default function ProfilePage() {
-  const { user } = useUser();
-  const firestore = useFirestore();
-
-  const profilesCollection = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
-    return collection(firestore, 'users', user.uid, 'aiMentalHealthProfiles');
-  }, [firestore, user]);
-
-  const { data: profiles, isLoading: isLoadingProfiles } = useCollection<AiMentalHealthProfile>(profilesCollection);
-
+  const [profiles, setProfiles] = useState<AiMentalHealthProfile[]>([]);
+  const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
   const [notesByProfile, setNotesByProfile] = useState<Record<string, AiMentalHealthNote[]>>({});
   const [isLoadingNotes, setIsLoadingNotes] = useState(false);
 
   useEffect(() => {
-    const fetchAllNotes = async () => {
-        if (!user || !firestore) return;
-        
-        setIsLoadingNotes(true);
-        const notesGroup = collectionGroup(firestore, 'aiMentalHealthNotes');
-        const q = query(notesGroup, where('userId', '==', user.uid));
-        
-        const querySnapshot = await getDocs(q);
-        const notesMap: Record<string, AiMentalHealthNote[]> = {};
+    // Load profiles from localStorage
+    const loadedProfiles: AiMentalHealthProfile[] = [];
+    agents.forEach(agent => {
+      const profileData = localStorage.getItem(`thrivewell-profile-${agent.id}`);
+      if (profileData) {
+        loadedProfiles.push({ id: agent.id, ...JSON.parse(profileData) } as AiMentalHealthProfile);
+      }
+    });
+    setProfiles(loadedProfiles);
+    setIsLoadingProfiles(false);
 
-        querySnapshot.forEach((doc) => {
-            const note = { id: doc.id, ...doc.data() } as AiMentalHealthNote;
-            const agentId = doc.ref.parent.parent?.id;
-            if (agentId) {
-                if (!notesMap[agentId]) {
-                    notesMap[agentId] = [];
-                }
-                notesMap[agentId].push(note);
-            }
-        });
-
-         // Sort notes by timestamp
-        for (const agentId in notesMap) {
-            notesMap[agentId].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-        }
-
-        setNotesByProfile(notesMap);
-        setIsLoadingNotes(false);
-    }
-    
-    if(user?.uid) {
-        fetchAllNotes();
-    }
-  }, [user, firestore, profiles]); // Re-fetch notes if profiles change as well
-  
+    // Note: Loading notes from localStorage would require a more complex setup
+    // as they are saved under user-specific paths in Firestore.
+    // For this example, we will assume notes are not available in the non-auth flow.
+    setIsLoadingNotes(false);
+  }, []);
 
   const getAgentName = (agentId: string) => {
     return agents.find(agent => agent.id === agentId)?.name || 'Unknown Agent';
@@ -85,7 +56,7 @@ export default function ProfilePage() {
     <div className="space-y-6">
       <h1 className="font-headline text-3xl font-bold">My AI-Generated Profiles</h1>
       <p className="text-muted-foreground">
-        As you interact with your AI wellness team, they will create and update profiles and notes based on your diary entries and conversations. Here are their current assessments.
+        As you interact with your AI wellness team, they will create and update profiles based on your answers. These are saved in your browser.
       </p>
 
       {profiles && profiles.length > 0 ? (
@@ -111,27 +82,7 @@ export default function ProfilePage() {
                         </Card>
 
                         <h3 className="font-headline text-lg font-semibold pt-4">Conversation Notes</h3>
-                        
-                        {notesByProfile[profile.aiAgentId] && notesByProfile[profile.aiAgentId].length > 0 ? (
-                           <div className="space-y-3">
-                                {notesByProfile[profile.aiAgentId].map(note => (
-                                    <Card key={note.id}>
-                                       <CardHeader className="flex-row gap-4 items-center">
-                                            <MessageSquareText className="h-5 w-5 text-primary" />
-                                            <div>
-                                               <CardTitle className="text-base font-semibold">Note from {new Date(note.timestamp).toLocaleDateString()}</CardTitle>
-                                                <CardDescription>{new Date(note.timestamp).toLocaleTimeString()}</CardDescription>
-                                            </div>
-                                       </CardHeader>
-                                       <CardContent className="pt-0">
-                                            <p className="text-sm text-muted-foreground" style={{whiteSpace: 'pre-wrap'}}>{note.noteData}</p>
-                                       </CardContent>
-                                    </Card>
-                                ))}
-                           </div>
-                        ) : (
-                           <p className="text-sm text-muted-foreground">No conversation notes have been saved for this agent yet. Notes are saved automatically when you leave a chat session.</p>
-                        )}
+                        <p className="text-sm text-muted-foreground">Conversation notes are saved with your account when you log in. They are not available in this mode.</p>
                       </div>
                     </AccordionContent>
                 </AccordionItem>
@@ -141,7 +92,7 @@ export default function ProfilePage() {
         <Card>
           <CardContent className="p-6">
             <p className="text-muted-foreground">
-              No AI profiles have been generated yet. Complete an agent questionnaire or write a diary entry to get started.
+              No AI profiles have been generated yet. Complete an agent questionnaire to get started.
             </p>
           </CardContent>
         </Card>
