@@ -16,6 +16,7 @@ import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
 import { DocumentData } from 'firebase/firestore';
+import type { AiMentalHealthNote } from '@/lib/types';
 
 
 type ChatMessage = {
@@ -77,7 +78,7 @@ export default function AgentChatPage() {
   const handleAgentResponse = async (message: string, currentHistory: ChatMessage[]) => {
     setIsLoading(true);
     try {
-      let personaWithProfile = agent!.persona;
+      let personaWithContext = agent!.persona;
 
       // 1. Add AI-generated profile from local storage
       const profileKey = `thrivewell-profile-${agentId}`;
@@ -85,13 +86,45 @@ export default function AgentChatPage() {
       if (savedProfile) {
         const profile = JSON.parse(savedProfile);
         if (profile.profileData) {
-          personaWithProfile += `\n\nHere is my internal profile summary about the user:\n${profile.profileData}`;
+          personaWithContext += `\n\n## My Internal Profile Summary About the User:\n${profile.profileData}`;
         }
+      }
+
+      // 2. Load all notes and create briefings
+      const notesKey = 'thrivewell-notes';
+      const allNotes: AiMentalHealthNote[] = JSON.parse(localStorage.getItem(notesKey) || '[]');
+      
+      const myNotes = allNotes.filter(note => note.aiAgentId === agentId);
+      const otherAgentsNotes = allNotes.filter(note => note.aiAgentId !== agentId);
+
+      // Create "My Previous Notes" section
+      if (myNotes.length > 0) {
+        const myNotesText = myNotes
+          .map(note => `On ${new Date(note.timestamp as string).toLocaleDateString()}, I noted:\n${note.noteData}`)
+          .join('\n\n');
+        personaWithContext += `\n\n## My Previous Notes (To pick up where I left off):\n${myNotesText}`;
+      }
+      
+      // Create "Cross-Functional Briefing" from relevant other agents
+      const relevantOtherNotes = otherAgentsNotes.filter(note => {
+        const otherAgent = agents.find(a => a.id === note.aiAgentId);
+        // Check for shared categories between current agent and the note's agent
+        return otherAgent && otherAgent.categories.some(cat => agent!.categories.includes(cat));
+      });
+
+      if (relevantOtherNotes.length > 0) {
+        const briefingText = relevantOtherNotes
+          .map(note => {
+            const otherAgent = agents.find(a => a.id === note.aiAgentId);
+            return `On ${new Date(note.timestamp as string).toLocaleDateString()}, my colleague ${otherAgent?.givenName} (${otherAgent?.role}) noted:\n${note.noteData}`;
+          })
+          .join('\n\n');
+        personaWithContext += `\n\n## Cross-Functional Briefing (For context from the team):\n${briefingText}`;
       }
 
       const genkitHistory = toGenkitHistory(currentHistory);
       const result = await agentChat({
-        persona: personaWithProfile,
+        persona: personaWithContext,
         history: genkitHistory,
         message: message,
       });
@@ -122,7 +155,7 @@ export default function AgentChatPage() {
         history: genkitHistory,
       });
       
-      const note = {
+      const note: AiMentalHealthNote = {
         id: `note-${agentId}-${Date.now()}`,
         aiAgentId: agentId,
         noteData,
