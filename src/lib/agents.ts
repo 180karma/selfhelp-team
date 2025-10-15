@@ -21,7 +21,7 @@ export const agents: AIAgent[] = [
 
 You have been provided with context:
 1.  **My Internal Profile Summary About the User:** Your initial analysis based on their questionnaire.
-2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. Your primary goal is to address the FIRST UNCHECKED item on this list.
+2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. This is a dynamic document you can edit. Your primary goal is to address the FIRST UNCHECKED item on this list.
 3.  **My Previous Notes:** Summaries of your own past conversations. Use these to pick up where you left off.
 4.  **Cross-Functional Briefing:** Notes from other AI agents. Use this for broader context.
 5.  **User's Active Goals:** A list of tasks the user is currently working on. Do NOT suggest a goal that is already on this list.
@@ -45,7 +45,7 @@ You MUST follow this structured appointment format:
 
 You have been provided with context:
 1.  **My Internal Profile Summary About the User:** Your initial analysis based on their questionnaire.
-2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. Your primary goal is to address the FIRST UNCHECKED item on this list.
+2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. This is a dynamic document you can edit. Your primary goal is to address the FIRST UNCHECKED item on this list.
 3.  **My Previous Notes:** Summaries of your own past conversations. Use these to pick up where you left off.
 4.  **Cross-Functional Briefing:** Notes from other AI agents. Use this for broader context.
 5.  **User's Active Goals:** A list of tasks the user is currently working on. Do NOT suggest a goal that is already on this list.
@@ -69,7 +69,7 @@ You MUST follow this structured appointment format:
 
 You have been provided with context:
 1.  **My Internal Profile Summary About the User:** Your initial analysis based on their questionnaire.
-2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. Your primary goal is to address the FIRST UNCHECKED item on this list.
+2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. This is a dynamic document you can edit. Your primary goal is to address the FIRST UNCHECKED item on this list.
 3.  **My Previous Notes:** Summaries of your own past conversations. Use these to pick up where you left off.
 4.  **Cross-Functional Briefing:** Notes from other AI agents. Use this for broader context.
 5.  **User's Active Goals:** A list of tasks the user is currently working on. Do NOT suggest a goal that is already on this list.
@@ -93,7 +93,7 @@ You MUST follow this structured appointment format:
 
 You have been provided with context:
 1.  **My Internal Profile Summary About the User:** Your initial analysis based on their questionnaire.
-2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. Your primary goal is to address the FIRST UNCHECKED item on this list.
+2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. This is a dynamic document you can edit. Your primary goal is to address the FIRST UNCHECKED item on this list.
 3.  **My Previous Notes:** Summaries of your own past conversations. Use these to pick up where you left off.
 4.  **Cross-Functional Briefing:** Notes from other AI agents. Use this for broader context.
 5.  **User's Active Goals:** A list of tasks the user is currently working on. Do NOT suggest a goal that is already on this list.
@@ -117,7 +117,7 @@ You MUST follow this structured, trauma-informed appointment format:
 
 You have been provided with context:
 1.  **My Internal Profile Summary About the User:** Your initial analysis based on their questionnaire.
-2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. Your primary goal is to address the FIRST UNCHECKED item on this list.
+2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. This is a dynamic document you can edit. Your primary goal is to address the FIRST UNCHECKED item on this list.
 3.  **My Previous Notes:** Summaries of your own past conversations. Use these to pick up where you left off.
 4.  **Cross-Functional Briefing:** Notes from other AI agents. Use this for broader context.
 5.  **User's Active Goals:** A list of tasks the user is currently working on. Do NOT suggest a goal that is already on this list.
@@ -141,7 +141,7 @@ You MUST follow this structured appointment format:
 
 You have been provided with context:
 1.  **My Internal Profile Summary About the User:** Your initial analysis based on their questionnaire.
-2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. Your primary goal is to address the FIRST UNCHECKED item on this list.
+2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of topics to explore. This is a dynamic document you can edit. Your primary goal is to address the FIRST UNCHECKED item on this list.
 3.  **My Previous Notes:** Summaries of your own past conversations. Use these to pick up where you left off.
 4.  **Cross-Functional Briefing:** Notes from other AI agents. Use this for broader context.
 5.  **User's Active Goals:** A list of tasks the user is currently working on. Do NOT suggest a goal that is already on this list.

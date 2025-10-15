@@ -21,7 +21,7 @@ type SummarizeConversationInput = z.infer<typeof SummarizeConversationInputSchem
 
 const SummarizeConversationOutputSchema = z.object({
   noteData: z.string().describe("A concise summary of the conversation, focusing on key issues, user responses, and resolution practices discussed."),
-  updatedRoadmap: z.string().describe("The updated version of the clinical roadmap. The agent should check off the item that was discussed in the conversation, for example: - [x] Discussed topic."),
+  updatedRoadmap: z.string().describe("The updated version of the clinical roadmap. The agent should check off the item that was discussed in the conversation, for example: - [x] Discussed topic. The agent can also add, remove, or rephrase items based on the conversation to better tailor the long-term plan."),
 });
 type SummarizeConversationOutput = z.infer<typeof SummarizeConversationOutputSchema>;
 
@@ -39,16 +39,17 @@ const prompt = ai.definePrompt({
   output: { schema: SummarizeConversationOutputSchema },
   prompt: `You are an AI agent with the following persona: {{{persona}}}
 
-Your task is to create a concise clinical-style note summarizing the provided conversation history with a user. The note should be objective and focus on the key points of the interaction.
+Your two main tasks are:
+1.  **Create a Clinical Note:** Write a concise, objective clinical-style note summarizing the key points of the provided conversation history. Structure it to include:
+    *   **Key Issues:** Main problems or topics the user raised.
+    *   **User Responses:** User's feelings, thoughts, and behaviors.
+    *   **Resolution Practices:** Strategies, suggestions, or action items discussed.
 
-Structure the note to include:
-1.  **Key Issues:** What were the main problems or topics the user brought up?
-2.  **User Responses:** How did the user describe their feelings, thoughts, and behaviors related to these issues?
-3.  **Resolution Practices:** What strategies, suggestions, or action items were discussed to address the issues?
+2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Clinical Roadmap." Your goal is to evolve this plan.
+    *   **Mark Completion:** Find the primary topic that was discussed and mark the corresponding item as complete (e.g., change \`- [ ]\` to \`- [x]\`).
+    *   **Edit & Add (If Necessary):** Based on what you learned, you can add new follow-up items, rephrase existing ones for clarity, or adjust the order to better fit the user's journey. Return the entire, updated roadmap markdown.
 
-Also, review the conversation and the provided "Clinical Roadmap." Identify the primary topic that was discussed and update the roadmap by marking the corresponding item as complete (e.g., changing \`- [ ]\` to \`- [x]\`). Return this updated roadmap.
-
-Do not include conversational filler in the note. This is an internal note for tracking progress.
+Do not include conversational filler. This is an internal process for tracking progress and refining the user's plan.
 
 Conversation History:
 {{#each history}}
