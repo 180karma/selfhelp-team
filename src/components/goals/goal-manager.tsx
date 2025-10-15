@@ -116,7 +116,19 @@ export function GoalManager() {
     );
     setGoals(updatedGoals);
     localStorage.setItem(`thrivewell-goals-${user.uid}`, JSON.stringify(updatedGoals));
-    toast({ title: 'Goal Completed!', description: `Great job on "${goalToComplete.title}"!` });
+    
+    if (goalToComplete.addedBy) {
+        toast({ 
+            title: `A message from ${goalToComplete.addedBy.split(' ')[0]} 🎉`, 
+            description: `Great job on completing your goal, ${user.displayName?.split(' ')[0]}!` 
+        });
+    } else {
+        toast({ 
+            title: 'Goal Completed!', 
+            description: `You did it! Great job on completing "${goalToComplete.title}".`
+        });
+    }
+
     setGoalToComplete(null);
     noteForm.reset();
   };
@@ -160,7 +172,7 @@ export function GoalManager() {
                     {goal.addedBy && (
                        <div className="flex items-center text-xs text-muted-foreground mt-1">
                         <Bot className="h-3 w-3 mr-1" />
-                        <span>Added by {goal.addedBy}</span>
+                        <span>Added by {goal.addedBy.split(' ')[0]}</span>
                        </div>
                     )}
                   </div>
@@ -299,7 +311,7 @@ export function GoalManager() {
                     <TableCell>
                       <Badge variant="outline">{goal.category}</Badge>
                     </TableCell>
-                    <TableCell>{goal.addedBy ?? 'Me'}</TableCell>
+                    <TableCell>{goal.addedBy ? goal.addedBy.split(' ')[0] : 'Me'}</TableCell>
                     <TableCell>
                       {new Date(goal.completedAt!).toLocaleDateString()}
                     </TableCell>
@@ -320,3 +332,5 @@ export function GoalManager() {
     </div>
   );
 }
+
+    
