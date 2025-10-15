@@ -18,6 +18,7 @@ import { DocumentData } from 'firebase/firestore';
 import type { AiMentalHealthNote, Goal, GoalCategory } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 
 type ProposedTask = {
@@ -304,8 +305,19 @@ export default function AgentChatPage() {
       <CardContent className="flex flex-1 flex-col gap-4 p-6">
         <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="space-y-6 pr-4">
-            {history.map((message, index) => (
-              <div key={index} className={`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`}>
+            {history.map((message, index) => {
+              const isLastMessage = index === history.length - 1;
+              const isSecondToLast = index === history.length - 2;
+              const isOlder = index < history.length - 2;
+              
+              const animationClass = isLastMessage
+                  ? 'animate-fade-in'
+                  : isOlder
+                  ? 'animate-fade-out'
+                  : isSecondToLast ? 'animate-quick-fade-in' : '';
+
+              return (
+              <div key={index} className={cn(`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`, animationClass)}>
                 {message.role === 'model' && (
                    <Avatar>
                       <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
@@ -342,9 +354,10 @@ export default function AgentChatPage() {
                   </Avatar>
                  )}
               </div>
-            ))}
+              )
+            })}
             {isLoading && (
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 animate-fade-in">
                  <Avatar>
                     <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                     <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
