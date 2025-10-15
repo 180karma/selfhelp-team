@@ -1,0 +1,467 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user's profile.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user profile."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "The user's full name."
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "description": "The user's date of birth.",
+          "format": "date-time"
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "fullName",
+        "dateOfBirth",
+        "email"
+      ]
+    },
+    "DiaryEntry": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DiaryEntry",
+      "type": "object",
+      "description": "Represents a single diary entry by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the diary entry."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N DiaryEntry)"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the diary entry.",
+          "format": "date-time"
+        },
+        "gratitudeList": {
+          "type": "string",
+          "description": "User's list of gratitudes for the day."
+        },
+        "dreamDiary": {
+          "type": "string",
+          "description": "User's dream diary entry."
+        },
+        "dailyRecord": {
+          "type": "string",
+          "description": "User's daily record of events."
+        },
+        "feelingsOfUpset": {
+          "type": "string",
+          "description": "User's feelings of upset."
+        },
+        "regulationMethods": {
+          "type": "string",
+          "description": "User's regulation methods used."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "date",
+        "gratitudeList",
+        "dreamDiary",
+        "dailyRecord",
+        "feelingsOfUpset",
+        "regulationMethods"
+      ]
+    },
+    "PsychologicalAssessment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PsychologicalAssessment",
+      "type": "object",
+      "description": "Represents a user's psychological assessment data.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the psychological assessment."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:1 PsychologicalAssessment)"
+        },
+        "traumaInformation": {
+          "type": "string",
+          "description": "Information about user's trauma."
+        },
+        "attachmentStyle": {
+          "type": "string",
+          "description": "User's attachment style."
+        },
+        "behavioralPatterns": {
+          "type": "string",
+          "description": "User's behavioral patterns."
+        },
+        "anxietyLevels": {
+          "type": "string",
+          "description": "User's anxiety levels."
+        },
+        "ocdAdhdTendencies": {
+          "type": "string",
+          "description": "User's tendencies towards OCD/ADHD."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "traumaInformation",
+        "attachmentStyle",
+        "behavioralPatterns",
+        "anxietyLevels",
+        "ocdAdhdTendencies"
+      ]
+    },
+    "AiAgent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AiAgent",
+      "type": "object",
+      "description": "Represents an AI agent.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AI agent."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the AI agent (e.g., Nutritionist)."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of AI agent (e.g., Nutritionist, Psychologist)."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "type"
+      ]
+    },
+    "AiAgentInteraction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AiAgentInteraction",
+      "type": "object",
+      "description": "Represents an interaction between a user and an AI agent.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AI agent interaction."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N AiAgentInteraction)"
+        },
+        "aiAgentId": {
+          "type": "string",
+          "description": "Reference to AiAgent. (Relationship: AiAgent 1:N AiAgentInteraction)"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of the interaction.",
+          "format": "date-time"
+        },
+        "userMessage": {
+          "type": "string",
+          "description": "User's message in the interaction."
+        },
+        "aiResponse": {
+          "type": "string",
+          "description": "AI agent's response in the interaction."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "aiAgentId",
+        "timestamp",
+        "userMessage",
+        "aiResponse"
+      ]
+    },
+    "AiMentalHealthProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AiMentalHealthProfile",
+      "type": "object",
+      "description": "Represents the AI's mental health profile for a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AI mental health profile."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:1 AiMentalHealthProfile)"
+        },
+        "profileData": {
+          "type": "string",
+          "description": "AI's analysis of the user's profile."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "profileData"
+      ]
+    },
+    "AiMentalHealthNote": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AiMentalHealthNote",
+      "type": "object",
+      "description": "Represents a note created by the AI for a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AI mental health note."
+        },
+        "aiMentalHealthProfileId": {
+          "type": "string",
+          "description": "Reference to AiMentalHealthProfile. (Relationship: AiMentalHealthProfile 1:N AiMentalHealthNote)"
+        },
+        "noteData": {
+          "type": "string",
+          "description": "The content of the AI's note."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the note was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "aiMentalHealthProfileId",
+        "noteData",
+        "timestamp"
+      ]
+    },
+    "Subscription": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Subscription",
+      "type": "object",
+      "description": "Represents a user's subscription details.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the subscription."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:1 Subscription)"
+        },
+        "planName": {
+          "type": "string",
+          "description": "Name of the subscription plan (e.g., Basic, Premium)."
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Start date of the subscription.",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "End date of the subscription.",
+          "format": "date-time"
+        },
+        "stripeSubscriptionId": {
+          "type": "string",
+          "description": "The subscription ID within the Stripe payment gateway."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "planName",
+        "startDate",
+        "endDate",
+        "stripeSubscriptionId"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}/userProfiles/{userProfileId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profiles. Path-based ownership ensures that only the user can access their profile data.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "userProfileId",
+              "description": "The unique identifier for the user profile."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/diaryEntries/{diaryEntryId}",
+        "definition": {
+          "entityName": "DiaryEntry",
+          "schema": {
+            "$ref": "#/backend/entities/DiaryEntry"
+          },
+          "description": "Stores diary entries for each user. Path-based ownership ensures that only the user can access their diary entries.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "diaryEntryId",
+              "description": "The unique identifier for the diary entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/psychologicalAssessments/{psychologicalAssessmentId}",
+        "definition": {
+          "entityName": "PsychologicalAssessment",
+          "schema": {
+            "$ref": "#/backend/entities/PsychologicalAssessment"
+          },
+          "description": "Stores psychological assessments for each user. Path-based ownership ensures that only the user can access their psychological assessment data.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "psychologicalAssessmentId",
+              "description": "The unique identifier for the psychological assessment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/aiAgents/{aiAgentId}",
+        "definition": {
+          "entityName": "AiAgent",
+          "schema": {
+            "$ref": "#/backend/entities/AiAgent"
+          },
+          "description": "Stores AI agent data.  Access control rules will determine who can create/modify these agents.",
+          "params": [
+            {
+              "name": "aiAgentId",
+              "description": "The unique identifier for the AI agent."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/aiAgentInteractions/{aiAgentInteractionId}",
+        "definition": {
+          "entityName": "AiAgentInteraction",
+          "schema": {
+            "$ref": "#/backend/entities/AiAgentInteraction"
+          },
+          "description": "Stores interactions between users and AI agents. Path-based ownership ensures that only the user can access their interaction data.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "aiAgentInteractionId",
+              "description": "The unique identifier for the AI agent interaction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}",
+        "definition": {
+          "entityName": "AiMentalHealthProfile",
+          "schema": {
+            "$ref": "#/backend/entities/AiMentalHealthProfile"
+          },
+          "description": "Stores AI mental health profiles for each user. Path-based ownership ensures that only the user can access their AI mental health profile.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "aiMentalHealthProfileId",
+              "description": "The unique identifier for the AI mental health profile."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}/aiMentalHealthNotes/{aiMentalHealthNoteId}",
+        "definition": {
+          "entityName": "AiMentalHealthNote",
+          "schema": {
+            "$ref": "#/backend/entities/AiMentalHealthNote"
+          },
+          "description": "Stores notes related to AI mental health profiles, nested under the profile. Path-based ownership from user and aiMentalHealthProfile ensures that only the user can access their AI mental health notes.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "aiMentalHealthProfileId",
+              "description": "The unique identifier for the AI mental health profile."
+            },
+            {
+              "name": "aiMentalHealthNoteId",
+              "description": "The unique identifier for the AI mental health note."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/subscriptions/{subscriptionId}",
+        "definition": {
+          "entityName": "Subscription",
+          "schema": {
+            "$ref": "#/backend/entities/Subscription"
+          },
+          "description": "Stores subscription details for each user. Path-based ownership ensures that only the user can access their subscription data.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "subscriptionId",
+              "description": "The unique identifier for the subscription."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to ensure data security, scalability, and ease of debugging, adhering to the core design principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), and QAPs (Rules are not Filters). Authorization independence is achieved through denormalization.  Specifically, any data that requires authorization based on a parent document's properties denormalizes those properties into the child documents. This avoids the need for `get()` calls in security rules. Structural Segregation is used by separating data with different access requirements into distinct collections. Access Modeling follows consistent patterns for authorization, primarily using Path-Based ownership for user-owned data and Membership Maps for collaborative access where relevant.\n\nThe key collections and their structures are:\n\n*   **/users/{userId}/userProfiles/{userProfileId}**:  Stores user profiles, with `userId` ensuring ownership. The `userProfileId` allows for potential future support of multiple profiles per user (though the schema currently suggests a 1:1 relationship).\n*   **/users/{userId}/diaryEntries/{diaryEntryId}**: Stores diary entries for each user, with path-based ownership for secure access.\n*   **/users/{userId}/psychologicalAssessments/{psychologicalAssessmentId}**: Stores psychological assessments for each user, maintaining clear ownership.\n*   **/aiAgents/{aiAgentId}**: Stores AI agent data.  This collection is globally accessible for reading the agent's metadata, but writing is restricted to administrators. Security rules ensure that only authorized users can create or modify AI agents.\n*   **/users/{userId}/aiAgentInteractions/{aiAgentInteractionId}**: Stores interactions between users and AI agents, with path-based ownership.\n*   **/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}**: Stores AI mental health profiles generated for each user.\n*   **/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}/aiMentalHealthNotes/{aiMentalHealthNoteId}**: Stores notes related to AI mental health profiles, nested under the profile for easy querying and ownership.\n*   **/users/{userId}/subscriptions/{subscriptionId}**: Stores subscription details for each user.\n\nThis structure facilitates simple and robust security rules. Path-based ownership (`/users/{userId}/...`) simplifies rules for user-specific data.  The segregation of AI agent metadata into a separate `/aiAgents` collection allows for different access controls (e.g., read-only for all users, write access for admins).\n\nThis structure supports QAPs. Listing diary entries, psychological assessments, AI interactions, mental health profiles, and subscriptions is naturally secured by the path-based ownership, because the rule only needs to verify that `request.auth.uid == userId`.\n"
+  }
+}
