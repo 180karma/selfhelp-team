@@ -6,20 +6,26 @@ import { agents } from '@/lib/agents';
 import { useParams, notFound } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Bot } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase, useCollection } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
-import { doc, addDoc, collection, DocumentData, serverTimestamp } from 'firebase/firestore';
+import { doc, addDoc, collection, DocumentData, serverTimestamp, query, orderBy, limit } from 'firebase/firestore';
+import type { AiMentalHealthNote, DiaryEntry } from '@/lib/types';
+
 
 type ChatMessage = {
   role: 'user' | 'model';
   content: string;
+  question?: {
+    text: string;
+    options: string[];
+  }
 };
 
 type Inputs = {
@@ -30,9 +36,12 @@ type Inputs = {
 const toGenkitHistory = (history: ChatMessage[]) => {
   return history.map(msg => ({
     role: msg.role,
+    // Genkit expects content to be an array of parts.
+    // We are creating a simple text part.
     content: [{ text: msg.content }]
   }));
 };
+
 
 export default function AgentChatPage() {
   const params = useParams();
@@ -46,18 +55,32 @@ export default function AgentChatPage() {
   const { user } = useUser();
   const firestore = useFirestore();
 
+  // Fetch initial assessment
   const assessmentRef = useMemoFirebase(() => {
     if (!user || !firestore) return null;
     return doc(firestore, 'users', user.uid, 'psychologicalAssessments', agentId);
   }, [user, firestore, agentId]);
-
   const { data: assessment, isLoading: isLoadingAssessment } = useDoc<DocumentData>(assessmentRef);
+
+  // Fetch past conversation notes
+  const notesRef = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    const profileRef = doc(firestore, 'users', user.uid, 'aiMentalHealthProfiles', agentId);
+    return query(collection(profileRef, 'aiMentalHealthNotes'), orderBy('timestamp', 'desc'), limit(5));
+  }, [user, firestore, agentId]);
+  const { data: pastNotes, isLoading: isLoadingNotes } = useCollection<AiMentalHealthNote>(notesRef);
+
+  // Fetch all diary entries
+  const diaryEntriesRef = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    return collection(firestore, 'users', user.uid, 'diaryEntries');
+  }, [user, firestore]);
+  const { data: diaryEntries, isLoading: isLoadingDiary } = useCollection<DiaryEntry>(diaryEntriesRef);
 
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [introSent, setIntroSent] = useState(false);
-
-  // Use a ref to hold the latest history for the cleanup function
   const historyRef = useRef(history);
+
   useEffect(() => {
     historyRef.current = history;
   }, [history]);
@@ -66,22 +89,43 @@ export default function AgentChatPage() {
     setIsLoading(true);
     try {
       let personaWithProfile = agent!.persona;
+
+      // 1. Add questionnaire data to persona
       if (profileData) {
         const answers = profileData.answers || profileData;
         const profileSummary = Object.entries(answers)
           .map(([key, value]) => `- ${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`)
           .join('\n');
-        personaWithProfile += `\n\nHere is the user's profile based on their questionnaire answers. Use this to tailor your conversation:\n${profileSummary}`;
+        personaWithProfile += `\n\nHere is the user's profile based on their questionnaire answers:\n${profileSummary}`;
       }
 
+      // 2. Add past conversation notes to persona
+      if (pastNotes && pastNotes.length > 0) {
+        const notesSummary = pastNotes.map(note => `On ${new Date(note.timestamp).toLocaleDateString()}, we discussed: ${note.noteData}`).join('\n\n');
+        personaWithProfile += `\n\nHere are summaries of our recent conversations to give you memory:\n${notesSummary}`;
+      }
+
+      // 3. Add relevant diary entries to persona
+      if (diaryEntries && diaryEntries.length > 0 && agent) {
+        const relevantEntries = diaryEntries.filter(entry =>
+          agent.categories.some(cat => entry.categories.includes(cat))
+        );
+        if (relevantEntries.length > 0) {
+          const diarySummary = relevantEntries.map(entry => `On ${new Date(entry.createdAt).toLocaleDateString()}, the user wrote a diary entry titled "${entry.title}" with the categories [${entry.categories.join(', ')}]. Content: ${entry.content.substring(0, 300)}...`).join('\n\n');
+          personaWithProfile += `\n\nHere are some of the user's recent diary entries that are relevant to your specialty. Use them to understand the user's state of mind:\n${diarySummary}`;
+        }
+      }
+
+
       const genkitHistory = toGenkitHistory(currentHistory);
-      const { response } = await agentChat({
+      const { response, question } = await agentChat({
         persona: personaWithProfile,
         history: genkitHistory,
         message: message,
       });
 
-      setHistory((prev) => [...prev, { role: 'model', content: response }]);
+      setHistory((prev) => [...prev, { role: 'model', content: response, question: question }]);
+
     } catch (error) {
       console.error('Error chatting with agent:', error);
       setHistory((prev) => [...prev, { role: 'model', content: "I'm having trouble responding right now. Please try again later." }]);
@@ -91,10 +135,7 @@ export default function AgentChatPage() {
   };
 
   const handleSaveNote = async () => {
-    // Use the ref to get the latest history
     const currentHistory = historyRef.current;
-    
-    // Only save if there's a user message in the history
     const hasUserMessage = currentHistory.some(m => m.role === 'user');
 
     if (!user || !firestore || currentHistory.length === 0 || !hasUserMessage) {
@@ -111,10 +152,9 @@ export default function AgentChatPage() {
       const profileRef = doc(firestore, 'users', user.uid, 'aiMentalHealthProfiles', agentId);
       const notesCollection = collection(profileRef, 'aiMentalHealthNotes');
       
-      // We use addDoc which is already non-blocking as per our setup
-      addDoc(notesCollection, {
+      await addDoc(notesCollection, {
         noteData,
-        timestamp: new Date().toISOString(),
+        timestamp: serverTimestamp(),
         userId: user.uid,
       });
       
@@ -122,13 +162,21 @@ export default function AgentChatPage() {
 
     } catch (error: any) {
        console.error('Error auto-saving note:', error);
-       // We might not want to show a toast here as it could be disruptive when navigating away
     }
+  };
+
+  const handleOptionClick = (option: string, originalQuestion: string) => {
+    const userMessage: ChatMessage = { role: 'user', content: `Regarding "${originalQuestion}", I chose: ${option}` };
+    const newHistory = [...history, userMessage];
+    setHistory(newHistory);
+    // Let the agent respond to the selected option
+    handleAgentResponse(userMessage.content, newHistory, assessment);
   };
 
 
   useEffect(() => {
-    if (!isLoadingAssessment) {
+    const isLoadingData = isLoadingAssessment || isLoadingNotes || isLoadingDiary;
+    if (!isLoadingData) {
       if (!assessment) {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent) {
@@ -137,11 +185,10 @@ export default function AgentChatPage() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assessment, isLoadingAssessment]);
+  }, [assessment, isLoadingAssessment, isLoadingNotes, isLoadingDiary, introSent]);
 
 
   useEffect(() => {
-    // Scroll to the bottom when history changes
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
         top: scrollAreaRef.current.scrollHeight,
@@ -150,7 +197,6 @@ export default function AgentChatPage() {
     }
   }, [history]);
   
-  // This effect will run when the component unmounts
   useEffect(() => {
     return () => {
       handleSaveNote();
@@ -162,7 +208,9 @@ export default function AgentChatPage() {
     notFound();
   }
 
-  if (isLoadingAssessment) {
+  const isLoadingData = isLoadingAssessment || isLoadingNotes || isLoadingDiary;
+
+  if (isLoadingData) {
     return (
       <div className="flex justify-center items-center h-full">
         <Skeleton className="h-24 w-1/2" />
@@ -173,7 +221,8 @@ export default function AgentChatPage() {
   const handleQuestionnaireComplete = (data: DocumentData) => {
     setShowQuestionnaire(false);
     setIntroSent(true);
-    handleAgentResponse("Hello, please introduce yourself based on my profile and ask a relevant first question to start our conversation.", [], {answers: data});
+    // Pass the raw answers object which is what handleAgentResponse now expects
+    handleAgentResponse("Hello, please introduce yourself based on my profile and ask a relevant first question to start our conversation.", [], data);
   };
 
   if (showQuestionnaire) {
@@ -182,6 +231,7 @@ export default function AgentChatPage() {
 
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (!data.message.trim()) return;
     const userMessage: ChatMessage = { role: 'user', content: data.message };
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
@@ -198,7 +248,7 @@ export default function AgentChatPage() {
             </div>
             <div>
               <CardTitle className="font-headline text-2xl">{agent.name}</CardTitle>
-              <p className="text-sm text-muted-foreground">{agent.type}</p>
+              <CardDescription>{agent.type}</CardDescription>
               <p className="text-xs text-muted-foreground italic mt-1">AI agents are not a replacement for professional medical or mental health advice.</p>
             </div>
           </div>
@@ -217,6 +267,25 @@ export default function AgentChatPage() {
                 )}
                 <div className={`max-w-prose rounded-lg p-3 ${message.role === 'user' ? 'bg-secondary text-secondary-foreground' : 'bg-muted'}`}>
                   <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{message.content}</p>
+                   {message.role === 'model' && message.question && (
+                    <div className="mt-4 space-y-2">
+                       <p className="font-semibold text-sm">{message.question.text}</p>
+                       <div className="flex flex-col space-y-2">
+                         {message.question.options.map((option, i) => (
+                          <Button 
+                            key={i} 
+                            variant="outline" 
+                            size="sm"
+                            className="justify-start"
+                            onClick={() => handleOptionClick(option, message.question!.text)}
+                            disabled={isLoading}
+                          >
+                            {option}
+                          </Button>
+                         ))}
+                       </div>
+                    </div>
+                  )}
                 </div>
                  {message.role === 'user' && (
                    <Avatar>

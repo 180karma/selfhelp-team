@@ -21,7 +21,11 @@ const AgentChatInputSchema = z.object({
 type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
 const AgentChatOutputSchema = z.object({
-  response: z.string().describe('The AI agent\'s response.'),
+  response: z.string().describe('The AI agent\'s text response.'),
+  question: z.object({
+    text: z.string().describe("A follow-up question."),
+    options: z.array(z.string()).describe("A list of multiple-choice options for the user to select.")
+  }).optional().describe("An optional multiple-choice question to ask the user."),
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
 
@@ -39,9 +43,12 @@ const agentChatFlow = ai.defineFlow(
       prompt: message,
       history: history,
       system: persona,
+      output: {
+        schema: AgentChatOutputSchema,
+      }
     });
 
-    return { response: llmResponse.text };
+    return llmResponse.output!;
   }
 );
 
