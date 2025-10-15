@@ -1,85 +1,149 @@
 'use client';
 
-import { useState } from 'react';
-import type { DiaryEntry } from '@/lib/types';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { summarizeEntryAction } from '@/app/actions/diary';
-import { useToast } from '@/hooks/use-toast';
+import * as React from 'react';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Loader2 } from 'lucide-react';
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
+import type { DiaryEntry } from '@/lib/types';
+import { collection } from 'firebase/firestore';
+import { ArrowUpDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
-type DiaryListProps = {
-  entries: DiaryEntry[];
-};
+export function DiaryList() {
+  const { user } = useUser();
+  const firestore = useFirestore();
 
-export function DiaryList({ entries }: DiaryListProps) {
-  const { toast } = useToast();
-  const [isSummarizing, setIsSummarizing] = useState(false);
-  const [summary, setSummary] = useState<string | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const entriesCollection = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return collection(firestore, 'users', user.uid, 'diaryEntries');
+  }, [firestore, user]);
 
-  const handleSummarize = async (content: string) => {
-    setIsSummarizing(true);
-    const result = await summarizeEntryAction(content);
-    setIsSummarizing(false);
+  const { data: entries, isLoading } = useCollection<DiaryEntry>(entriesCollection);
 
-    if (result.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: result.error,
-      });
-    } else if (result.summary) {
-      setSummary(result.summary);
-      setIsDialogOpen(true);
-    }
-  };
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const columns: ColumnDef<DiaryEntry>[] = [
+    {
+      accessorKey: 'createdAt',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Date
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
+    },
+    {
+      accessorKey: 'title',
+      header: 'Subject',
+    },
+    {
+      accessorKey: 'categories',
+      header: 'Categories',
+      cell: ({ row }) => {
+        const categories = row.original.categories;
+        if (!categories || categories.length === 0) {
+          return <span className="text-muted-foreground">N/A</span>;
+        }
+        return (
+          <div className="flex flex-wrap gap-1">
+            {categories.map((category) => (
+              <Badge key={category} variant="secondary">
+                {category}
+              </Badge>
+            ))}
+          </div>
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data: entries ?? [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="space-y-2">
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {entries.map((entry) => (
-          <Card key={entry.id}>
-            <CardHeader>
-              <CardTitle className="font-headline">{entry.title}</CardTitle>
-              <CardDescription>{new Date(entry.createdAt).toLocaleDateString()}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="line-clamp-4 text-muted-foreground">{entry.content}</p>
-            </CardContent>
-            <CardFooter>
-              <Button
-                variant="secondary"
-                onClick={() => handleSummarize(entry.content)}
-                disabled={isSummarizing}
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
               >
-                {isSummarizing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Summarize with AI
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="font-headline">Entry Summary</AlertDialogTitle>
-            <AlertDialogDescription>{summary}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setIsDialogOpen(false)}>Close</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No diary entries yet.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

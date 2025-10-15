@@ -1,13 +1,9 @@
 import { DiaryList } from '@/components/diary/diary-list';
 import { Button } from '@/components/ui/button';
-import { placeholderDiaryEntries } from '@/lib/placeholder-data';
 import { PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DiaryPage() {
-  // In a real app, you would fetch user-specific entries from your database.
-  const entries = placeholderDiaryEntries;
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -19,7 +15,7 @@ export default function DiaryPage() {
           </Link>
         </Button>
       </div>
-      <DiaryList entries={entries} />
+      <DiaryList />
     </div>
   );
 }

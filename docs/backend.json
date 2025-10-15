@@ -46,41 +46,40 @@
           "type": "string",
           "description": "Reference to UserProfile. (Relationship: UserProfile 1:N DiaryEntry)"
         },
-        "date": {
+        "createdAt": {
           "type": "string",
           "description": "Date of the diary entry.",
           "format": "date-time"
         },
-        "gratitudeList": {
+        "title": {
           "type": "string",
-          "description": "User's list of gratitudes for the day."
+          "description": "The title of the diary entry."
         },
-        "dreamDiary": {
+        "content": {
           "type": "string",
-          "description": "User's dream diary entry."
+          "description": "The content of the diary entry."
         },
-        "dailyRecord": {
+        "type": {
           "type": "string",
-          "description": "User's daily record of events."
+          "description": "The type of journal (e.g., 'daily', 'dream').",
+          "enum": ["daily", "dream"]
         },
-        "feelingsOfUpset": {
-          "type": "string",
-          "description": "User's feelings of upset."
-        },
-        "regulationMethods": {
-          "type": "string",
-          "description": "User's regulation methods used."
+        "categories": {
+          "type": "array",
+          "description": "AI-generated categories for the entry.",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
         "id",
         "userId",
-        "date",
-        "gratitudeList",
-        "dreamDiary",
-        "dailyRecord",
-        "feelingsOfUpset",
-        "regulationMethods"
+        "createdAt",
+        "title",
+        "content",
+        "type",
+        "categories"
       ]
     },
     "PsychologicalAssessment": {
