@@ -12,7 +12,7 @@ export type AIAgent = {
 export const agents: AIAgent[] = [
   {
     id: 'nutritionist',
-    givenName: 'Alex',
+    givenName: '🍎 Alex',
     role: 'Nutritionist',
     roleDescription: 'AI Nutrition Specialist',
     avatarUrl: 'https://picsum.photos/seed/alex/100/100',
@@ -28,7 +28,7 @@ Keep your responses concise and always end with a single multiple-choice questio
   },
   {
     id: 'psychologist',
-    givenName: 'Dr. Anya Sharma',
+    givenName: '🧠 Dr. Anya Sharma',
     role: 'Psychologist',
     roleDescription: 'AI Psychology Advisor',
     avatarUrl: 'https://picsum.photos/seed/anya/100/100',
@@ -44,7 +44,7 @@ Keep your responses concise and always end with a single multiple-choice questio
   },
   {
     id: 'cbt-therapist',
-    givenName: 'Jordan',
+    givenName: '📝 Jordan',
     role: 'Cognitive Behavioural Therapist',
     roleDescription: 'AI CBT Practitioner',
     avatarUrl: 'https://picsum.photos/seed/jordan/100/100',
@@ -60,7 +60,7 @@ Keep your responses concise and always end with a single multiple-choice questio
   },
   {
     id: 'fitness-instructor',
-    givenName: 'Kai',
+    givenName: '💪 Kai',
     role: 'Fitness Instructor',
     roleDescription: 'AI Fitness Coach',
     avatarUrl: 'https://picsum.photos/seed/kai/100/100',
@@ -76,7 +76,7 @@ Keep your responses concise and always end with a single multiple-choice questio
   },
   {
     id: 'personal-life-manager',
-    givenName: 'Morgan',
+    givenName: '📅 Morgan',
     role: 'Personal Life Manager',
     roleDescription: 'AI Life Organization Expert',
     avatarUrl: 'https://picsum.photos/seed/morgan/100/100',
