@@ -52,6 +52,7 @@ export default function AgentChatPage() {
   const { data: assessment, isLoading: isLoadingAssessment } = useDoc<DocumentData>(assessmentRef);
 
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+  const [introSent, setIntroSent] = useState(false);
 
 
   const handleAgentResponse = async (message: string, currentHistory: ChatMessage[], profileData?: DocumentData | null) => {
@@ -87,13 +88,14 @@ export default function AgentChatPage() {
     if (!isLoadingAssessment) {
       if (!assessment) {
         setShowQuestionnaire(true);
-      } else if (history.length === 0) {
+      } else if (history.length === 0 && !introSent) {
+        setIntroSent(true);
         handleAgentResponse("Hello, please introduce yourself based on my profile.", [], assessment);
       }
     }
     // We only want this to run once on mount, so we disable the exhaustive-deps rule.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agent, assessment, isLoadingAssessment]);
+  }, [assessment, isLoadingAssessment, introSent]);
 
 
   useEffect(() => {
@@ -120,6 +122,7 @@ export default function AgentChatPage() {
 
   const handleQuestionnaireComplete = (data: DocumentData) => {
     setShowQuestionnaire(false);
+    setIntroSent(true);
     handleAgentResponse("Hello, please introduce yourself based on my profile.", [], {answers: data});
   };
 
