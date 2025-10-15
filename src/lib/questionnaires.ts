@@ -1,3 +1,4 @@
+
 export type Question = {
   id: string;
   question: string;
@@ -105,6 +106,38 @@ export const questionnaires: Questionnaire[] = [
         id: 'selfCriticism',
         question: 'How would you describe your inner critic?',
         options: ['Quiet and manageable', 'Pops up sometimes', 'Loud and frequent', 'Constant and harsh'],
+      },
+    ],
+  },
+  {
+    agentId: 'trauma-therapist',
+    title: 'Developmental History Profile',
+    description: 'This questionnaire is designed to help your AI advisor understand your early life experiences and relationships. Please answer in a way that feels safe and comfortable for you.',
+    questions: [
+      {
+        id: 'childhoodFeeling',
+        question: 'Thinking back to your childhood, which word best describes how you generally felt?',
+        options: ['Secure and loved', 'Often anxious or on-edge', 'Independent and self-reliant', 'Confused or unheard'],
+      },
+      {
+        id: 'caregiverComfort',
+        question: 'When you were upset as a child, was there a caregiver you could consistently turn to for comfort?',
+        options: ['Yes, always', 'Sometimes, but it was unpredictable', 'Rarely, I usually had to soothe myself', 'No, I learned not to show I was upset'],
+      },
+      {
+        id: 'familySecrets',
+        question: 'Were there "unspoken rules" or topics that were not to be discussed in your family?',
+        options: ['No, our communication was very open', 'Yes, a few things were off-limits', 'Yes, many topics were avoided', 'I\'m not sure'],
+      },
+      {
+        id: 'selfWorthSource',
+        question: 'Growing up, where did you learn your sense of self-worth came from?',
+        options: ['From unconditional love and acceptance', 'From achievements and performance', 'From making others happy', 'I struggled to feel worthy'],
+      },
+      {
+        id: 'handlingBigEmotions',
+        question: 'How were big emotions like anger or sadness handled in your household?',
+        options: ['They were talked about and accepted', 'They were discouraged or punished', 'They were ignored', 'It was chaotic and unpredictable'],
       },
     ],
   },
