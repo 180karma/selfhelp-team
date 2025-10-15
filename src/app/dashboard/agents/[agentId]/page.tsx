@@ -213,12 +213,13 @@ export default function AgentChatPage() {
     <Card className="flex h-[85vh] flex-col">
       <CardHeader className="flex flex-row items-center justify-between border-b">
           <div className="flex items-center gap-4">
-            <div className="rounded-full bg-primary/10 p-3">
-              <Bot className="h-6 w-6 text-primary" />
-            </div>
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+              <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
+            </Avatar>
             <div>
-              <CardTitle className="font-headline text-2xl">{agent.name}</CardTitle>
-              <CardDescription>{agent.type}</CardDescription>
+              <CardTitle className="font-headline text-2xl">{agent.givenName}</CardTitle>
+              <CardDescription>{agent.roleDescription}</CardDescription>
               <p className="text-xs text-muted-foreground italic mt-1">AI agents are not a replacement for professional medical or mental health advice.</p>
             </div>
           </div>
@@ -230,9 +231,8 @@ export default function AgentChatPage() {
               <div key={index} className={`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`}>
                 {message.role === 'model' && (
                    <Avatar>
-                      <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full items-center justify-center bg-primary text-primary-foreground">
-                        <Bot className="h-6 w-6" />
-                      </span>
+                      <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+                      <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                     </Avatar>
                 )}
                 <div className={`max-w-prose rounded-lg p-3 ${message.role === 'user' ? 'bg-secondary text-secondary-foreground' : 'bg-muted'}`}>
@@ -268,9 +268,8 @@ export default function AgentChatPage() {
             {isLoading && (
               <div className="flex items-start gap-4">
                  <Avatar>
-                    <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full items-center justify-center bg-primary text-primary-foreground">
-                      <Bot className="h-6 w-6" />
-                    </span>
+                    <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+                    <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                   </Avatar>
                 <div className="max-w-prose rounded-lg p-3 bg-muted">
                   <Skeleton className="h-4 w-24" />

@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/sidebar';
 import {
   BookOpenText,
-  Bot,
+  Users,
   Crown,
   LayoutDashboard,
   LogOut,
@@ -107,10 +107,10 @@ export default function DashboardLayout({
                 <Link href="/dashboard/agents" passHref>
                   <SidebarMenuButton
                     isActive={isActive('/dashboard/agents')}
-                    icon={<Bot />}
-                    tooltip="AI Agents"
+                    icon={<Users />}
+                    tooltip="Wellness Team"
                   >
-                    AI Agents
+                    Wellness Team
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>

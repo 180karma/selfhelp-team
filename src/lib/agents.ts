@@ -1,8 +1,10 @@
 
 export type AIAgent = {
   id: string;
-  name: string;
-  type: string;
+  givenName: string;
+  role: string;
+  roleDescription: string;
+  avatarUrl: string;
   categories: string[];
   persona: string;
 };
@@ -10,8 +12,10 @@ export type AIAgent = {
 export const agents: AIAgent[] = [
   {
     id: 'nutritionist',
-    name: 'Nutritionist',
-    type: 'AI Nutrition Specialist',
+    givenName: 'Alex',
+    role: 'Nutritionist',
+    roleDescription: 'AI Nutrition Specialist',
+    avatarUrl: 'https://picsum.photos/seed/alex/100/100',
     categories: ['Health', 'Diet', 'Fitness', 'Food'],
     persona: `You are an AI Nutritionist with an encouraging and friendly tone. You have the user's profile and history. Your goal is to follow a structured appointment format.
 
@@ -24,8 +28,10 @@ Keep your responses concise and always end with a single multiple-choice questio
   },
   {
     id: 'psychologist',
-    name: 'Psychologist',
-    type: 'AI Psychology Advisor',
+    givenName: 'Dr. Anya Sharma',
+    role: 'Psychologist',
+    roleDescription: 'AI Psychology Advisor',
+    avatarUrl: 'https://picsum.photos/seed/anya/100/100',
     categories: ['Anxiety', 'Mental Health', 'Relationships', 'Trauma', 'Stress'],
     persona: `You are an AI Psychologist with a calm and empathetic tone. You have the user's profile and history. Your goal is to follow a structured appointment format.
 
@@ -38,8 +44,10 @@ Keep your responses concise and always end with a single multiple-choice questio
   },
   {
     id: 'cbt-therapist',
-    name: 'Cognitive Behavioural Therapist',
-    type: 'AI CBT Practitioner',
+    givenName: 'Jordan',
+    role: 'Cognitive Behavioural Therapist',
+    roleDescription: 'AI CBT Practitioner',
+    avatarUrl: 'https://picsum.photos/seed/jordan/100/100',
     categories: ['Anxiety', 'Behavioral Patterns', 'Personal Growth', 'Stress'],
     persona: `You are an AI CBT Practitioner with a structured and collaborative tone. You have the user's profile and history. Your goal is to follow a structured appointment format.
 
@@ -52,8 +60,10 @@ Keep your responses concise and always end with a single multiple-choice questio
   },
   {
     id: 'fitness-instructor',
-    name: 'Fitness Instructor',
-    type: 'AI Fitness Coach',
+    givenName: 'Kai',
+    role: 'Fitness Instructor',
+    roleDescription: 'AI Fitness Coach',
+    avatarUrl: 'https://picsum.photos/seed/kai/100/100',
     categories: ['Fitness', 'Health', 'Exercise', 'Motivation'],
     persona: `You are an AI Fitness Instructor with a high-energy and motivational tone. You have the user's profile and history. Your goal is to follow a structured appointment format.
 
@@ -66,8 +76,10 @@ Keep your responses concise and always end with a single multiple-choice questio
   },
   {
     id: 'personal-life-manager',
-    name: 'Personal Life Manager',
-    type: 'AI Life Organization Expert',
+    givenName: 'Morgan',
+    role: 'Personal Life Manager',
+    roleDescription: 'AI Life Organization Expert',
+    avatarUrl: 'https://picsum.photos/seed/morgan/100/100',
     categories: ['Work Stress', 'Productivity', 'Personal Growth', 'Creativity', 'Family'],
     persona: `You are an AI Personal Life Manager with an organized and supportive tone. You have the user's profile and history. Your goal is to follow a structured appointment format.
 

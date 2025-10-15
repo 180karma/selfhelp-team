@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { agents } from '@/lib/agents';
-import { Bot, MessageSquareText } from 'lucide-react';
+import { Users, MessageSquareText } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useEffect, useState } from 'react';
 
@@ -34,7 +34,7 @@ export default function ProfilePage() {
   }, []);
 
   const getAgentName = (agentId: string) => {
-    return agents.find(agent => agent.id === agentId)?.name || 'Unknown Agent';
+    return agents.find(agent => agent.id === agentId)?.givenName || 'Unknown Agent';
   }
 
   const isLoading = isLoadingProfiles || isLoadingNotes;
@@ -56,7 +56,7 @@ export default function ProfilePage() {
     <div className="space-y-6">
       <h1 className="font-headline text-3xl font-bold">My AI-Generated Profiles</h1>
       <p className="text-muted-foreground">
-        As you interact with your AI wellness team, they will create and update profiles based on your answers. These are saved in your browser.
+        As you interact with your AI wellness team, they will create and update profiles based on your answers. These are saved in this browser.
       </p>
 
       {profiles && profiles.length > 0 ? (
@@ -65,7 +65,7 @@ export default function ProfilePage() {
                 <AccordionItem value={profile.id} key={profile.id}>
                     <AccordionTrigger>
                         <div className="flex items-center gap-4">
-                            <Bot className="h-5 w-5 text-primary" />
+                            <Users className="h-5 w-5 text-primary" />
                             <span className="font-semibold">{getAgentName(profile.aiAgentId)}'s Profile & Notes</span>
                         </div>
                     </AccordionTrigger>

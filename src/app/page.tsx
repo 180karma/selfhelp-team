@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bot, BookHeart, UserCheck, BarChart3 } from 'lucide-react';
+import { Users, BookHeart, UserCheck, BarChart3 } from 'lucide-react';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find((img) => img.id === 'hero-background');
@@ -22,7 +22,7 @@ export default function Home() {
       description: 'Understand your attachment style, behavioral patterns, and more with our guided assessments.',
     },
     {
-      icon: <Bot className="h-10 w-10 text-primary" />,
+      icon: <Users className="h-10 w-10 text-primary" />,
       title: 'AI Wellness Team',
       description: 'Chat with AI agents like a nutritionist, therapist, and fitness instructor for personalized advice.',
     },
