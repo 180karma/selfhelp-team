@@ -118,7 +118,7 @@ export default function AgentChatPage() {
         const briefingText = relevantOtherNotes
           .map(note => {
             const otherAgent = agents.find(a => a.id === note.aiAgentId);
-            return `On ${new Date(note.timestamp as string).toLocaleDateString()}, my colleague ${otherAgent?.givenName} (${otherAgent?.role}) noted:\n${note.noteData}`;
+            return `On ${new Date(note.timestamp as string).toLocaleDateString()}, my colleague ${otherAgent?.givenName.split(' ')[0]} (${otherAgent?.role}) noted:\n${note.noteData}`;
           })
           .join('\n\n');
         personaWithContext += `\n\n## Cross-Functional Briefing (For context from the team):\n${briefingText}`;

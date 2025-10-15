@@ -127,7 +127,7 @@ export default function ProfilePage() {
                                     })}
                                 </div>
                              ) : (
-                                <p className="text-sm text-muted-foreground">No conversation notes from {agent.givenName} yet.</p>
+                                <p className="text-sm text-muted-foreground">No conversation notes from {agent.givenName.split(' ')[0]} yet.</p>
                              )}
                           </div>
                         </AccordionContent>
