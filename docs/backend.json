@@ -135,7 +135,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the AI agent."
+          "description": "Unique identifier for the AI agent (e.g., 'nutritionist')."
         },
         "name": {
           "type": "string",
@@ -143,13 +143,21 @@
         },
         "type": {
           "type": "string",
-          "description": "Type of AI agent (e.g., Nutritionist, Psychologist)."
+          "description": "A more descriptive role for the agent (e.g., 'AI Nutrition Specialist')."
+        },
+        "categories": {
+          "type": "array",
+          "description": "List of diary categories this agent is responsible for.",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
         "id",
         "name",
-        "type"
+        "type",
+        "categories"
       ]
     },
     "AiAgentInteraction": {
@@ -197,7 +205,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "AiMentalHealthProfile",
       "type": "object",
-      "description": "Represents the AI's mental health profile for a user.",
+      "description": "Represents the AI's mental health profile for a user, managed by a specific agent.",
       "properties": {
         "id": {
           "type": "string",
@@ -205,16 +213,21 @@
         },
         "userId": {
           "type": "string",
-          "description": "Reference to UserProfile. (Relationship: UserProfile 1:1 AiMentalHealthProfile)"
+          "description": "Reference to UserProfile."
+        },
+        "aiAgentId": {
+          "type": "string",
+          "description": "The ID of the AI agent managing this profile."
         },
         "profileData": {
           "type": "string",
-          "description": "AI's analysis of the user's profile."
+          "description": "AI's analysis of the user's profile for this agent's specialty."
         }
       },
       "required": [
         "id",
         "userId",
+        "aiAgentId",
         "profileData"
       ]
     },
@@ -222,7 +235,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "AiMentalHealthNote",
       "type": "object",
-      "description": "Represents a note created by the AI for a user.",
+      "description": "Represents a note created by an AI agent about a user.",
       "properties": {
         "id": {
           "type": "string",
@@ -230,7 +243,7 @@
         },
         "aiMentalHealthProfileId": {
           "type": "string",
-          "description": "Reference to AiMentalHealthProfile. (Relationship: AiMentalHealthProfile 1:N AiMentalHealthNote)"
+          "description": "Reference to AiMentalHealthProfile."
         },
         "noteData": {
           "type": "string",
@@ -367,7 +380,7 @@
           "schema": {
             "$ref": "#/backend/entities/AiAgent"
           },
-          "description": "Stores AI agent data.  Access control rules will determine who can create/modify these agents.",
+          "description": "Stores AI agent data. This collection would be read-only for clients and managed by admins.",
           "params": [
             {
               "name": "aiAgentId",
@@ -403,7 +416,7 @@
           "schema": {
             "$ref": "#/backend/entities/AiMentalHealthProfile"
           },
-          "description": "Stores AI mental health profiles for each user. Path-based ownership ensures that only the user can access their AI mental health profile.",
+          "description": "Stores AI mental health profiles for each user, partitioned by agent. Path-based ownership ensures that only the user can access their AI mental health profile.",
           "params": [
             {
               "name": "userId",
@@ -411,7 +424,7 @@
             },
             {
               "name": "aiMentalHealthProfileId",
-              "description": "The unique identifier for the AI mental health profile."
+              "description": "The unique identifier for the AI mental health profile, potentially combining user and agent IDs."
             }
           ]
         }
@@ -461,6 +474,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore structure is designed to ensure data security, scalability, and ease of debugging, adhering to the core design principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), and QAPs (Rules are not Filters). Authorization independence is achieved through denormalization.  Specifically, any data that requires authorization based on a parent document's properties denormalizes those properties into the child documents. This avoids the need for `get()` calls in security rules. Structural Segregation is used by separating data with different access requirements into distinct collections. Access Modeling follows consistent patterns for authorization, primarily using Path-Based ownership for user-owned data and Membership Maps for collaborative access where relevant.\n\nThe key collections and their structures are:\n\n*   **/users/{userId}/userProfiles/{userProfileId}**:  Stores user profiles, with `userId` ensuring ownership. The `userProfileId` allows for potential future support of multiple profiles per user (though the schema currently suggests a 1:1 relationship).\n*   **/users/{userId}/diaryEntries/{diaryEntryId}**: Stores diary entries for each user, with path-based ownership for secure access.\n*   **/users/{userId}/psychologicalAssessments/{psychologicalAssessmentId}**: Stores psychological assessments for each user, maintaining clear ownership.\n*   **/aiAgents/{aiAgentId}**: Stores AI agent data.  This collection is globally accessible for reading the agent's metadata, but writing is restricted to administrators. Security rules ensure that only authorized users can create or modify AI agents.\n*   **/users/{userId}/aiAgentInteractions/{aiAgentInteractionId}**: Stores interactions between users and AI agents, with path-based ownership.\n*   **/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}**: Stores AI mental health profiles generated for each user.\n*   **/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}/aiMentalHealthNotes/{aiMentalHealthNoteId}**: Stores notes related to AI mental health profiles, nested under the profile for easy querying and ownership.\n*   **/users/{userId}/subscriptions/{subscriptionId}**: Stores subscription details for each user.\n\nThis structure facilitates simple and robust security rules. Path-based ownership (`/users/{userId}/...`) simplifies rules for user-specific data.  The segregation of AI agent metadata into a separate `/aiAgents` collection allows for different access controls (e.g., read-only for all users, write access for admins).\n\nThis structure supports QAPs. Listing diary entries, psychological assessments, AI interactions, mental health profiles, and subscriptions is naturally secured by the path-based ownership, because the rule only needs to verify that `request.auth.uid == userId`.\n"
+    "reasoning": "The Firestore structure is designed to ensure data security, scalability, and ease of debugging, adhering to the core design principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), and QAPs (Rules are not Filters). Authorization independence is achieved through denormalization.  Specifically, any data that requires authorization based on a parent document's properties denormalizes those properties into the child documents. This avoids the need for `get()` calls in security rules. Structural Segregation is used by separating data with different access requirements into distinct collections. Access Modeling follows consistent patterns for authorization, primarily using Path-Based ownership for user-owned data and Membership Maps for collaborative access where relevant.\n\nThe key collections and their structures are:\n\n*   **/users/{userId}/userProfiles/{userProfileId}**:  Stores user profiles, with `userId` ensuring ownership. The `userProfileId` allows for potential future support of multiple profiles per user (though the schema currently suggests a 1:1 relationship).\n*   **/users/{userId}/diaryEntries/{diaryEntryId}**: Stores diary entries for each user, with path-based ownership for secure access.\n*   **/users/{userId}/psychologicalAssessments/{psychologicalAssessmentId}**: Stores psychological assessments for each user, maintaining clear ownership.\n*   **/aiAgents/{aiAgentId}**: Stores AI agent data. This collection is globally accessible for reading the agent's metadata, but writing is restricted to administrators. Security rules ensure that only authorized users can create or modify AI agents.\n*   **/users/{userId}/aiAgentInteractions/{aiAgentInteractionId}**: Stores interactions between users and AI agents, with path-based ownership.\n*   **/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}**: Stores AI mental health profiles generated for each user.\n*   **/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}/aiMentalHealthNotes/{aiMentalHealthNoteId}**: Stores notes related to AI mental health profiles, nested under the profile for easy querying and ownership.\n*   **/users/{userId}/subscriptions/{subscriptionId}**: Stores subscription details for each user.\n\nThis structure facilitates simple and robust security rules. Path-based ownership (`/users/{userId}/...`) simplifies rules for user-specific data.  The segregation of AI agent metadata into a separate `/aiAgents` collection allows for different access controls (e.g., read-only for all users, write access for admins).\n\nThis structure supports QAPs. Listing diary entries, psychological assessments, AI interactions, mental health profiles, and subscriptions is naturally secured by the path-based ownership, because the rule only needs to verify that `request.auth.uid == userId`.\n"
   }
 }
