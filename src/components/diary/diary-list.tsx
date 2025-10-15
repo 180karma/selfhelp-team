@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import {
   ColumnDef,
   flexRender,
@@ -20,23 +21,27 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import type { DiaryEntry } from '@/lib/types';
-import { collection } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter } from 'next/navigation';
 
 export function DiaryList() {
   const { user } = useUser();
   const firestore = useFirestore();
+  const router = useRouter();
 
   const entriesCollection = useMemoFirebase(() => {
     if (!firestore || !user) return null;
-    return collection(firestore, 'users', user.uid, 'diaryEntries');
+    return query(collection(firestore, 'users', user.uid, 'diaryEntries'), orderBy('createdAt', 'desc'));
   }, [firestore, user]);
 
   const { data: entries, isLoading } = useCollection<DiaryEntry>(entriesCollection);
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: 'createdAt', desc: true },
+  ]);
 
   const columns: ColumnDef<DiaryEntry>[] = [
     {
@@ -127,6 +132,8 @@ export function DiaryList() {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
+                onClick={() => router.push(`/dashboard/diary/${row.original.id}`)}
+                className="cursor-pointer"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

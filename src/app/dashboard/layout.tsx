@@ -20,7 +20,6 @@ import {
   Crown,
   LayoutDashboard,
   LogOut,
-  PlusCircle,
   Settings,
   User,
 } from 'lucide-react';
@@ -81,17 +80,6 @@ export default function DashboardLayout({
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
-               <SidebarMenuItem>
-                <Link href="/dashboard/diary/new" passHref>
-                  <SidebarMenuButton
-                    isActive={isActive('/dashboard/diary/new')}
-                    icon={<PlusCircle />}
-                    tooltip="New Entry"
-                  >
-                    New Entry
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
               <SidebarMenuItem>
                 <Link href="/dashboard/profile" passHref>
                   <SidebarMenuButton
@@ -106,7 +94,7 @@ export default function DashboardLayout({
               <SidebarMenuItem>
                 <Link href="/dashboard/agents" passHref>
                   <SidebarMenuButton
-                    isActive={isActive('/dashboard/agents')}
+                    isActive={pathname.startsWith('/dashboard/agents')}
                     icon={<Users />}
                     tooltip="Wellness Team"
                   >
