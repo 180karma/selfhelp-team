@@ -183,9 +183,8 @@ export default function AgentChatPage() {
 
   const handleSaveNote = async () => {
     const currentHistory = historyRef.current;
-    const hasUserMessage = currentHistory.some(m => m.role === 'user');
 
-    if (currentHistory.length === 0 || !hasUserMessage) {
+    if (currentHistory.length === 0) {
       return;
     }
     
@@ -379,7 +378,7 @@ export default function AgentChatPage() {
                       "whitespace-pre-wrap",
                       message.role === 'user' ? 'text-[10px]' : 'text-sm'
                     )}>{message.content}</p>
-                     {message.role === 'model' && message.question && (
+                     {message.role === 'model' && message.question && isLastMessage && !isLoading && (
                       <div className="mt-4 space-y-2">
                          <p className="font-semibold text-sm">{message.question.text}</p>
                          <div className="flex flex-col space-y-2">
