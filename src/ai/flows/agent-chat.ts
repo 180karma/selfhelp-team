@@ -17,6 +17,7 @@ const AgentChatInputSchema = z.object({
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history.'),
   message: z.string().describe('The latest user message.'),
+  userName: z.string().describe("The user's name."),
 });
 type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
@@ -41,12 +42,12 @@ const agentChatFlow = ai.defineFlow(
     outputSchema: AgentChatOutputSchema,
   },
   async (input) => {
-    const { persona, history, message } = input;
+    const { persona, history, message, userName } = input;
 
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: persona,
+      system: persona.replace('{{{userName}}}', userName),
       output: {
         schema: AgentChatOutputSchema,
       }

@@ -129,6 +129,7 @@ export default function AgentChatPage() {
         persona: personaWithContext,
         history: genkitHistory,
         message: message,
+        userName: user?.displayName || 'the user',
       });
 
       setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
