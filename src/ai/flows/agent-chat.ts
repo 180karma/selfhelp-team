@@ -8,32 +8,12 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { getAuth } from 'firebase/auth';
-import { initializeFirebase } from '@/firebase';
-
-// Initialize firebase to get user.
-initializeFirebase();
-
-const getUser = ai.defineTool(
-  {
-    name: 'getUser',
-    description: 'Get information about the current user.',
-    outputSchema: z.object({
-      name: z.string().describe('The name of the user.'),
-    }),
-  },
-  async () => {
-    const auth = getAuth();
-    return {
-      name: auth.currentUser?.displayName || 'the user',
-    };
-  }
-);
 
 
 // Define schemas inside the file, but do not export them.
 const AgentChatInputSchema = z.object({
   persona: z.string().describe('The persona or role the AI agent should adopt.'),
+  userName: z.string().describe("The user's name."),
   history: z.array(z.object({
     role: z.enum(['user', 'model']),
     content: z.array(z.object({ text: z.string() })),
@@ -63,13 +43,14 @@ const agentChatFlow = ai.defineFlow(
     outputSchema: AgentChatOutputSchema,
   },
   async (input) => {
-    const { persona, history, message } = input;
+    const { persona, userName, history, message } = input;
+
+    const populatedPersona = persona.replace(/{{{userName}}}/g, userName);
 
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: persona,
-      tools: [getUser],
+      system: populatedPersona,
       output: {
         schema: AgentChatOutputSchema,
       }

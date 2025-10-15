@@ -135,6 +135,7 @@ export default function AgentChatPage() {
       const genkitHistory = toGenkitHistory(currentHistory);
       const result = await agentChat({
         persona: personaWithContext,
+        userName: user?.displayName || 'the user',
         history: genkitHistory,
         message: message,
       });
@@ -304,13 +305,8 @@ export default function AgentChatPage() {
       <CardContent className="flex flex-1 flex-col gap-4 p-6">
         <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="space-y-6 pr-4">
-            {history.map((message, index) => {
-              const isLastMessage = index === history.length - 1;
-              
-              const animationClass = isLastMessage ? 'animate-fade-in' : '';
-
-              return (
-              <div key={index} className={cn(`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`, animationClass)}>
+            {history.map((message, index) => (
+              <div key={index} className={cn(`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`)}>
                 {message.role === 'model' && (
                   <div className="flex flex-col items-center gap-1">
                     <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
@@ -354,10 +350,9 @@ export default function AgentChatPage() {
                   </Avatar>
                  )}
               </div>
-              )
-            })}
+            ))}
             {isLoading && (
-              <div className="flex items-start gap-4 animate-fade-in">
+              <div className="flex items-start gap-4">
                 <div className="flex flex-col items-center gap-1">
                    <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                   <Avatar>
