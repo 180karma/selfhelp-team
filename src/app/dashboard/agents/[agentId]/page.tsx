@@ -248,7 +248,7 @@ export default function AgentChatPage() {
     setHistory(newHistory);
 
     // Check if the user agreed and a task was proposed
-    const positiveAffirmations = ['yes', 'yep', 'ok', 'add it', 'please', 'do it', 'helpful', 'nice', 'sounds good', 'let\'s do it'];
+    const positiveAffirmations = ['yes', 'yep', 'ok', 'add it', 'please', 'do it', 'helpful', 'nice', 'sounds good', 'let\'s do it', 'yes, please', 'yes, add it', 'yes, let\'s do it', 'sounds good'];
     const userSaidYes = positiveAffirmations.some(affirmation => option.toLowerCase().includes(affirmation));
 
     if (userSaidYes && proposedTask && user) {
