@@ -16,3 +16,10 @@ export type AiAgentInteraction = {
   userMessage: string;
   aiResponse: string;
 };
+
+export type AiMentalHealthProfile = {
+    id: string;
+    userId: string;
+    aiAgentId: string;
+    profileData: string;
+}

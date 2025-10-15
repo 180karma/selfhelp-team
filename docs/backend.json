@@ -61,7 +61,7 @@
         },
         "type": {
           "type": "string",
-description": "The type of journal (e.g., 'daily', 'dream').",
+          "description": "The type of journal (e.g., 'daily', 'dream').",
           "enum": ["daily", "dream"]
         },
         "categories": {
@@ -88,18 +88,6 @@ description": "The type of journal (e.g., 'daily', 'dream').",
       "type": "object",
       "description": "Stores a user's answers to an agent-specific questionnaire.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the assessment, typically the agent's ID."
-        },
-        "userId": {
-          "type": "string",
-          "description": "Reference to UserProfile."
-        },
-        "agentId": {
-          "type": "string",
-          "description": "The ID of the agent this assessment is for."
-        },
         "answers": {
           "type": "object",
           "description": "A key-value map of question IDs to the user's selected answer.",
@@ -109,9 +97,6 @@ description": "The type of journal (e.g., 'daily', 'dream').",
         }
       },
       "required": [
-        "id",
-        "userId",
-        "agentId",
         "answers"
       ]
     },
@@ -200,10 +185,6 @@ description": "The type of journal (e.g., 'daily', 'dream').",
       "type": "object",
       "description": "Represents the AI's mental health profile for a user, managed by a specific agent.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the AI mental health profile."
-        },
         "userId": {
           "type": "string",
           "description": "Reference to UserProfile."
@@ -218,7 +199,6 @@ description": "The type of journal (e.g., 'daily', 'dream').",
         }
       },
       "required": [
-        "id",
         "userId",
         "aiAgentId",
         "profileData"
@@ -347,7 +327,7 @@ description": "The type of journal (e.g., 'daily', 'dream').",
         }
       },
       {
-        "path": "/users/{userId}/psychologicalAssessments/{assessmentId}",
+        "path": "/users/{userId}/psychologicalAssessments/{agentId}",
         "definition": {
           "entityName": "PsychologicalAssessment",
           "schema": {
@@ -360,8 +340,8 @@ description": "The type of journal (e.g., 'daily', 'dream').",
               "description": "The unique identifier for the user."
             },
             {
-              "name": "assessmentId",
-              "description": "The unique identifier for the assessment, typically the agentId."
+              "name": "agentId",
+              "description": "The unique identifier for the agent this assessment is for."
             }
           ]
         }
@@ -403,7 +383,7 @@ description": "The type of journal (e.g., 'daily', 'dream').",
         }
       },
       {
-        "path": "/users/{userId}/aiMentalHealthProfiles/{aiMentalHealthProfileId}",
+        "path": "/users/{userId}/aiMentalHealthProfiles/{agentId}",
         "definition": {
           "entityName": "AiMentalHealthProfile",
           "schema": {
@@ -416,8 +396,8 @@ description": "The type of journal (e.g., 'daily', 'dream').",
               "description": "The unique identifier for the user."
             },
             {
-              "name": "aiMentalHealthProfileId",
-              "description": "The unique identifier for the AI mental health profile, potentially combining user and agent IDs."
+              "name": "agentId",
+              "description": "The unique identifier for the AI agent managing this profile."
             }
           ]
         }

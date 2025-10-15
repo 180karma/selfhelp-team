@@ -13,6 +13,8 @@ import { Loader2 } from 'lucide-react';
 import { useFirestore, useUser, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, setDoc, DocumentData } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
+import { analyzeUserProfile } from '@/ai/flows/analyze-user-profile';
+import { agents } from '@/lib/agents';
 
 
 interface QuestionnaireProps {
@@ -92,6 +94,39 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
         });
         errorEmitter.emit('permission-error', permissionError);
       });
+      
+    // Generate AI profile
+    try {
+        const agent = agents.find(a => a.id === agentId);
+        if (agent) {
+            const { profileData } = await analyzeUserProfile({
+                persona: agent.persona,
+                questionnaireAnswers: answers,
+            });
+
+            const profileRef = doc(firestore, 'users', user.uid, 'aiMentalHealthProfiles', agentId);
+            setDoc(profileRef, {
+                userId: user.uid,
+                aiAgentId: agentId,
+                profileData: profileData,
+            }).catch(async (serverError) => {
+                 const permissionError = new FirestorePermissionError({
+                    path: profileRef.path,
+                    operation: 'write',
+                    requestResourceData: { userId: user.uid, aiAgentId: agentId, profileData },
+                });
+                errorEmitter.emit('permission-error', permissionError);
+            })
+        }
+    } catch (error) {
+        console.error("Failed to generate AI profile:", error);
+         toast({
+            variant: 'destructive',
+            title: 'AI Analysis Failed',
+            description: 'Could not generate the AI profile summary.',
+        });
+    }
+
 
     questionnaire.questions.forEach(q => {
       sessionStorage.removeItem(`q_${agentId}_${q.id}`);
@@ -99,7 +134,7 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
 
     toast({
       title: 'Profile Updated!',
-      description: "Your answers have been saved.",
+      description: "Your answers have been saved and analyzed.",
     });
 
     onComplete(answers);
