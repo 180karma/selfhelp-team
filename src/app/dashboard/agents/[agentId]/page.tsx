@@ -132,6 +132,28 @@ export default function AgentChatPage() {
         personaWithContext += `\n\n## Cross-Functional Briefing (For context from the team):\n${briefingText}`;
       }
 
+       // 3. Load goals to provide context on active and completed tasks
+      if (user) {
+        const goalsKey = `thrivewell-goals-${user.uid}`;
+        const allGoals: Goal[] = JSON.parse(localStorage.getItem(goalsKey) || '[]');
+        
+        const activeGoals = allGoals.filter(g => !g.completed);
+        const completedGoals = allGoals.filter(g => g.completed);
+
+        if (activeGoals.length > 0) {
+          const activeGoalsText = activeGoals.map(g => `- ${g.title} (Category: ${g.category})`).join('\n');
+          personaWithContext += `\n\n## User's Active Goals (To avoid repetition):\n${activeGoalsText}`;
+        }
+
+        if (completedGoals.length > 0) {
+          const completedGoalsText = completedGoals
+            .map(g => `- ${g.title} (Completed on: ${new Date(g.completedAt!).toLocaleDateString()})`)
+            .join('\n');
+          personaWithContext += `\n\n## User's Recently Completed Goals (Acknowledge and congratulate!):\n${completedGoalsText}`;
+        }
+      }
+
+
       const genkitHistory = toGenkitHistory(currentHistory);
       const result = await agentChat({
         persona: personaWithContext,
