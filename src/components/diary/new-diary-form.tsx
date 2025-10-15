@@ -1,9 +1,9 @@
 'use client';
 
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useForm as useFormAction } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 
 import { generateEntryAction } from '@/app/actions/diary';
 
@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
   title: z.string().min(1, { message: 'Title is required.' }),
@@ -26,11 +27,20 @@ const initialState = {
   diaryEntry: '',
 };
 
+function GenerationButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      Generate with AI
+    </Button>
+  );
+}
+
 export function NewDiaryForm() {
   const { toast } = useToast();
 
-  const [state, formAction] = useFormAction(generateEntryAction, initialState);
-  const { isSubmitting: isGenerating } = useFormState();
+  const [state, formAction] = useFormState(generateEntryAction, initialState);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -80,10 +90,7 @@ export function NewDiaryForm() {
                 name="prompt"
                 placeholder="e.g., A moment of unexpected joy today..."
               />
-              <Button type="submit" disabled={isGenerating}>
-                {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Generate with AI
-              </Button>
+              <GenerationButton />
             </div>
             {state.message && state.message !== 'success' && (
               <p className="text-sm font-medium text-destructive">{state.message}</p>
