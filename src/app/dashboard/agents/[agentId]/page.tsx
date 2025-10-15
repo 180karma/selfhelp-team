@@ -305,57 +305,66 @@ export default function AgentChatPage() {
       <CardContent className="flex flex-1 flex-col gap-4 p-6">
         <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="space-y-6 pr-4">
-            {history.map((message, index) => (
-              <div key={index} className={cn(`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`)}>
-                {message.role === 'model' && (
-                  <div className="flex flex-col items-center gap-1">
-                    <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
-                    <Avatar>
-                      <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
-                      <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                  </div>
-                )}
-                <div className={cn('rounded-lg p-3', 
-                    message.role === 'user' 
-                    ? 'bg-secondary text-secondary-foreground max-w-xs' 
-                    : 'bg-muted max-w-prose'
+            {history.map((message, index) => {
+              const isLastMessage = index === history.length - 1;
+              const isSecondToLast = index === history.length - 2;
+              
+              return (
+                <div key={index} className={cn(
+                  `flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`,
+                  isLastMessage ? 'animate-fade-in' : 'animate-fade-out',
+                  isSecondToLast && 'animate-quick-fade-in'
                 )}>
-                  <p className={cn(
-                    "whitespace-pre-wrap",
-                    message.role === 'user' ? 'text-[10px]' : 'text-sm'
-                  )}>{message.content}</p>
-                   {message.role === 'model' && message.question && (
-                    <div className="mt-4 space-y-2">
-                       <p className="font-semibold text-sm">{message.question.text}</p>
-                       <div className="flex flex-col space-y-2">
-                         {message.question.options.map((option, i) => (
-                          <Button 
-                            key={i} 
-                            variant="outline" 
-                            size="sm"
-                            className="justify-start"
-                            onClick={() => handleOptionClick(option, message.question!.text, message.question!.addTask)}
-                            disabled={isLoading}
-                          >
-                            {option}
-                          </Button>
-                         ))}
-                       </div>
-                       <p className="text-xs text-muted-foreground italic mt-2">Or type your own response below.</p>
+                  {message.role === 'model' && (
+                    <div className="flex flex-col items-center gap-1">
+                      <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
+                      <Avatar>
+                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+                        <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
+                      </Avatar>
                     </div>
                   )}
+                  <div className={cn('rounded-lg p-3', 
+                      message.role === 'user' 
+                      ? 'bg-secondary text-secondary-foreground max-w-xs' 
+                      : 'bg-muted max-w-prose'
+                  )}>
+                    <p className={cn(
+                      "whitespace-pre-wrap",
+                      message.role === 'user' ? 'text-[10px]' : 'text-sm'
+                    )}>{message.content}</p>
+                     {message.role === 'model' && message.question && (
+                      <div className="mt-4 space-y-2">
+                         <p className="font-semibold text-sm">{message.question.text}</p>
+                         <div className="flex flex-col space-y-2">
+                           {message.question.options.map((option, i) => (
+                            <Button 
+                              key={i} 
+                              variant="outline" 
+                              size="sm"
+                              className="justify-start"
+                              onClick={() => handleOptionClick(option, message.question!.text, message.question!.addTask)}
+                              disabled={isLoading}
+                            >
+                              {option}
+                            </Button>
+                           ))}
+                         </div>
+                         <p className="text-xs text-muted-foreground italic mt-2">Or type your own response below.</p>
+                      </div>
+                    )}
+                  </div>
+                   {message.role === 'user' && (
+                     <Avatar>
+                       <AvatarImage src={user?.photoURL ?? "https://picsum.photos/seed/user-avatar/40/40"} />
+                       <AvatarFallback>{user?.email?.charAt(0).toUpperCase() ?? 'U'}</AvatarFallback>
+                    </Avatar>
+                   )}
                 </div>
-                 {message.role === 'user' && (
-                   <Avatar>
-                     <AvatarImage src={user?.photoURL ?? "https://picsum.photos/seed/user-avatar/40/40"} />
-                     <AvatarFallback>{user?.email?.charAt(0).toUpperCase() ?? 'U'}</AvatarFallback>
-                  </Avatar>
-                 )}
-              </div>
-            ))}
+              )
+            })}
             {isLoading && (
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 animate-fade-in">
                 <div className="flex flex-col items-center gap-1">
                    <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                   <Avatar>
