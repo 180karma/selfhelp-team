@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { v4 as uuidv4 } from 'uuid';
+import Link from 'next/link';
 import { useUser } from '@/firebase';
 import type { Goal, GoalCategory, DiaryEntry } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -35,6 +36,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '../ui/badge';
 import { categorizeDiaryEntry } from '@/ai/flows/categorize-diary-entry';
+import { cn } from '@/lib/utils';
 
 
 const goalSchema = z.object({
@@ -181,31 +183,46 @@ export function GoalManager() {
         <CardContent>
           {filteredGoals.length > 0 ? (
             <div className="space-y-4">
-              {filteredGoals.map((goal) => (
-                <div key={goal.id} className="flex items-start space-x-3">
-                  <Checkbox
-                    id={goal.id}
-                    checked={false} // Checkbox only triggers dialog
-                    onCheckedChange={() => handleOpenDialog(goal)}
-                    aria-label={`Complete goal "${goal.title}"`}
-                    className="mt-1"
-                  />
-                  <div className="flex-1">
-                    <label
-                      htmlFor={goal.id}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
+              {filteredGoals.map((goal) => {
+                const isJournalGoal = goal.title.toLowerCase().includes('journal');
+                const GoalTitle = () => (
+                    <span className={cn(isJournalGoal && 'underline underline-offset-4 cursor-pointer hover:text-primary')}>
                       {goal.title}
-                    </label>
-                    {goal.addedBy && (
-                       <div className="flex items-center text-xs text-muted-foreground mt-1">
-                        <Bot className="h-3 w-3 mr-1" />
-                        <span>Added by {goal.addedBy.split(' ')[0]}</span>
-                       </div>
-                    )}
-                  </div>
-                </div>
-              ))}
+                    </span>
+                  );
+                
+                return (
+                    <div key={goal.id} className="flex items-start space-x-3">
+                    <Checkbox
+                        id={goal.id}
+                        checked={false} // Checkbox only triggers dialog
+                        onCheckedChange={() => handleOpenDialog(goal)}
+                        aria-label={`Complete goal "${goal.title}"`}
+                        className="mt-1"
+                    />
+                    <div className="flex-1">
+                        <label
+                        htmlFor={goal.id}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                        {isJournalGoal ? (
+                            <Link href="/dashboard/diary/new">
+                                <GoalTitle />
+                            </Link>
+                        ) : (
+                            goal.title
+                        )}
+                        </label>
+                        {goal.addedBy && (
+                        <div className="flex items-center text-xs text-muted-foreground mt-1">
+                            <Bot className="h-3 w-3 mr-1" />
+                            <span>Added by {goal.addedBy.split(' ')[0]}</span>
+                        </div>
+                        )}
+                    </div>
+                    </div>
+                )
+              })}
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">No active {category.toLowerCase()} yet.</p>
