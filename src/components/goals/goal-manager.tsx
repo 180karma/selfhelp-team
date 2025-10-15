@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@/firebase';
-import type { Goal, GoalCategory } from '@/lib/types';
+import type { Goal, GoalCategory, DiaryEntry } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '../ui/badge';
+import { categorizeDiaryEntry } from '@/ai/flows/categorize-diary-entry';
 
 
 const goalSchema = z.object({
@@ -46,7 +47,8 @@ const goalSchema = z.object({
 type GoalInput = z.infer<typeof goalSchema>;
 
 const noteSchema = z.object({
-  note: z.string().min(1, { message: 'Please enter a note.' }),
+  note: z.string().min(1, { message: 'Please enter a note describing what you did.' }),
+  additionalNotes: z.string().optional(),
 });
 
 type NoteInput = z.infer<typeof noteSchema>;
@@ -79,6 +81,7 @@ export function GoalManager() {
     resolver: zodResolver(noteSchema),
     defaultValues: {
       note: '',
+      additionalNotes: '',
     },
   });
 
@@ -101,15 +104,16 @@ export function GoalManager() {
     form.reset();
   };
 
-  const handleCompleteGoal = (note: string) => {
+  const handleCompleteGoal = async (noteData: NoteInput) => {
     if (!goalToComplete || !user) return;
 
+    // 1. Update Goal
     const updatedGoals = goals.map((goal) =>
       goal.id === goalToComplete.id
         ? {
             ...goal,
             completed: true,
-            completionNote: note,
+            completionNote: noteData.note,
             completedAt: new Date().toISOString(),
           }
         : goal
@@ -117,6 +121,30 @@ export function GoalManager() {
     setGoals(updatedGoals);
     localStorage.setItem(`thrivewell-goals-${user.uid}`, JSON.stringify(updatedGoals));
     
+    // 2. Create Diary Entry
+    const diaryContent = `I completed my goal: **${goalToComplete.title}** (from my ${goalToComplete.category} list).\n\n**What I did:**\n${noteData.note}\n\n${noteData.additionalNotes ? `**Additional thoughts:**\n${noteData.additionalNotes}` : ''}`;
+    
+    try {
+        const { categories } = await categorizeDiaryEntry({ diaryEntry: diaryContent });
+
+        const diaryEntry: DiaryEntry = {
+            id: uuidv4(),
+            userId: user.uid,
+            title: `Completed Goal: ${goalToComplete.title}`,
+            content: diaryContent,
+            type: 'daily',
+            createdAt: new Date().toISOString(),
+            categories: [...categories, 'Accomplishment', 'Goals'],
+        };
+        
+        const existingDiaryEntries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
+        existingDiaryEntries.push(diaryEntry);
+        localStorage.setItem('diaryEntries', JSON.stringify(existingDiaryEntries));
+    } catch(e) {
+        console.error("Failed to categorize diary entry from goal completion.", e)
+    }
+
+    // 3. Show Toast
     if (goalToComplete.addedBy) {
         toast({ 
             title: `A message from ${goalToComplete.addedBy.split(' ')[0]} 🎉`, 
@@ -125,7 +153,7 @@ export function GoalManager() {
     } else {
         toast({ 
             title: 'Goal Completed!', 
-            description: `You did it! Great job on completing "${goalToComplete.title}".`
+            description: `You did it! Great job on completing "${goalToComplete.title}". A diary entry was created.`
         });
     }
 
@@ -194,19 +222,32 @@ export function GoalManager() {
           <DialogHeader>
             <DialogTitle>Complete: {goalToComplete?.title}</DialogTitle>
             <DialogDescription>
-              Great job! Add a quick note about how you achieved this goal.
+              Great job! Describe what you did to complete this goal. This will be saved as a diary entry.
             </DialogDescription>
           </DialogHeader>
           <Form {...noteForm}>
-            <form onSubmit={noteForm.handleSubmit((data) => handleCompleteGoal(data.note))} className="space-y-4">
+            <form onSubmit={noteForm.handleSubmit(handleCompleteGoal)} className="space-y-4">
                <FormField
                   control={noteForm.control}
                   name="note"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Completion Note</FormLabel>
+                      <FormLabel>What I did</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="e.g., I went for a 30-minute walk during my lunch break." {...field} />
+                        <Textarea placeholder="e.g., I went for a 30-minute walk during my lunch break and felt more energetic afterward." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={noteForm.control}
+                  name="additionalNotes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Additional Thoughts (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Any other reflections or feelings about this accomplishment?" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -220,7 +261,7 @@ export function GoalManager() {
                 </DialogClose>
                 <Button type="submit" disabled={noteForm.formState.isSubmitting}>
                   {noteForm.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Complete Task
+                  Complete & Log Diary Entry
                 </Button>
               </DialogFooter>
             </form>
