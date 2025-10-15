@@ -7,15 +7,15 @@ import { notFound, useParams } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bot, Save } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useUser, useFirestore, useDoc, useMemoFirebase, errorEmitter, FirestorePermissionError } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
-import { doc, addDoc, collection, DocumentData } from 'firebase/firestore';
+import { doc, addDoc, collection, DocumentData, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 type ChatMessage = {
@@ -39,9 +39,9 @@ export default function AgentChatPage() {
   const params = useParams();
   const agentId = params.agentId as string;
   const agent = agents.find((a) => a.id === agentId);
+
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
@@ -58,11 +58,15 @@ export default function AgentChatPage() {
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [introSent, setIntroSent] = useState(false);
 
+  // Use a ref to hold the latest history for the cleanup function
+  const historyRef = useRef(history);
+  useEffect(() => {
+    historyRef.current = history;
+  }, [history]);
 
   const handleAgentResponse = async (message: string, currentHistory: ChatMessage[], profileData?: DocumentData | null) => {
     setIsLoading(true);
     try {
-
       let personaWithProfile = agent!.persona;
       if (profileData) {
         const answers = profileData.answers || profileData;
@@ -88,6 +92,43 @@ export default function AgentChatPage() {
     }
   };
 
+  const handleSaveNote = async () => {
+    // Use the ref to get the latest history
+    const currentHistory = historyRef.current;
+    
+    // Only save if there's a user message in the history
+    const hasUserMessage = currentHistory.some(m => m.role === 'user');
+
+    if (!user || !firestore || currentHistory.length === 0 || !hasUserMessage) {
+      return;
+    }
+    
+    try {
+      const genkitHistory = toGenkitHistory(currentHistory);
+      const { noteData } = await summarizeConversation({
+        persona: agent!.persona,
+        history: genkitHistory,
+      });
+
+      const profileRef = doc(firestore, 'users', user.uid, 'aiMentalHealthProfiles', agentId);
+      const notesCollection = collection(profileRef, 'aiMentalHealthNotes');
+      
+      // We use addDoc which is already non-blocking as per our setup
+      addDoc(notesCollection, {
+        noteData,
+        timestamp: new Date().toISOString(),
+        userId: user.uid,
+      });
+      
+      console.log('Conversation note saved automatically.');
+
+    } catch (error: any) {
+       console.error('Error auto-saving note:', error);
+       // We might not want to show a toast here as it could be disruptive when navigating away
+    }
+  };
+
+
   useEffect(() => {
     if (!isLoadingAssessment) {
       if (!assessment) {
@@ -97,8 +138,6 @@ export default function AgentChatPage() {
         handleAgentResponse("Hello, please introduce yourself based on my profile.", [], assessment);
       }
     }
-    // We only want this to run once on mount, so we disable the exhaustive-deps rule.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assessment, isLoadingAssessment, introSent]);
 
 
@@ -111,6 +150,14 @@ export default function AgentChatPage() {
       });
     }
   }, [history]);
+  
+  // This effect will run when the component unmounts
+  useEffect(() => {
+    return () => {
+      handleSaveNote();
+    };
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!agent) {
     notFound();
@@ -143,41 +190,6 @@ export default function AgentChatPage() {
     handleAgentResponse(data.message, newHistory, assessment);
   };
 
-  const handleSaveNote = async () => {
-    if (!user || !firestore || history.length === 0) return;
-    setIsSaving(true);
-    try {
-      const genkitHistory = toGenkitHistory(history);
-      const { noteData } = await summarizeConversation({
-        persona: agent!.persona,
-        history: genkitHistory,
-      });
-
-      const profileRef = doc(firestore, 'users', user.uid, 'aiMentalHealthProfiles', agentId);
-      const notesCollection = collection(profileRef, 'aiMentalHealthNotes');
-      
-      await addDoc(notesCollection, {
-          noteData,
-          timestamp: new Date().toISOString(),
-      });
-      
-      toast({
-        title: 'Note Saved',
-        description: 'A summary of your conversation has been saved to your profile.',
-      });
-
-    } catch (error: any) {
-       console.error('Error saving note:', error);
-       toast({
-        variant: 'destructive',
-        title: 'Error Saving Note',
-        description: error.message || 'Could not save conversation summary.',
-      });
-    } finally {
-        setIsSaving(false);
-    }
-  }
-
   return (
     <Card className="flex h-[85vh] flex-col">
       <CardHeader className="flex flex-row items-center justify-between border-b">
@@ -191,10 +203,6 @@ export default function AgentChatPage() {
               <p className="text-xs text-muted-foreground italic mt-1">AI agents are not a replacement for professional medical or mental health advice.</p>
             </div>
           </div>
-          <Button onClick={handleSaveNote} disabled={isSaving || history.length === 0} size="sm">
-            <Save className="mr-2 h-4 w-4" />
-            {isSaving ? 'Saving...' : 'Save Note'}
-          </Button>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-4 p-6">
         <ScrollArea className="flex-1" ref={scrollAreaRef}>

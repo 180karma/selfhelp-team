@@ -1,7 +1,7 @@
 'use client';
 
 import { useFirestore, useUser, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, collectionGroup, query, where, Timestamp } from 'firebase/firestore';
+import { collection, collectionGroup, query, where, getDocs } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -26,42 +26,6 @@ export default function ProfilePage() {
   const [isLoadingNotes, setIsLoadingNotes] = useState(false);
 
   useEffect(() => {
-    if (!firestore || !user || !profiles) return;
-
-    setIsLoadingNotes(true);
-    const fetchNotes = async () => {
-      const allNotesQuery = query(
-        collectionGroup(firestore, 'aiMentalHealthNotes'),
-        where('userId', '==', user.uid)
-      );
-
-      const notesSnapshot = await getDocs(allNotesQuery);
-      const notesData: Record<string, AiMentalHealthNote[]> = {};
-
-      notesSnapshot.forEach(doc => {
-        const note = { id: doc.id, ...doc.data() } as AiMentalHealthNote;
-        const profileId = doc.ref.parent.parent?.id; // agentId
-        if (profileId) {
-            if (!notesData[profileId]) {
-                notesData[profileId] = [];
-            }
-            notesData[profileId].push(note);
-        }
-      });
-      
-      // Sort notes by timestamp
-      for (const profileId in notesData) {
-          notesData[profileId].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      }
-
-      setNotesByProfile(notesData);
-      setIsLoadingNotes(false);
-    };
-
-    // Since useCollection provides real-time updates, we don't have a direct async/await mechanism
-    // We can use a simple `getDocs` here for simplicity or implement a multi-listener hook
-    const notesQuery = query(collectionGroup(firestore, 'users', user.uid, 'aiMentalHealthProfiles'));
-
     const fetchAllNotes = async () => {
         if (!user || !firestore) return;
         
@@ -69,13 +33,11 @@ export default function ProfilePage() {
         const notesGroup = collectionGroup(firestore, 'aiMentalHealthNotes');
         const q = query(notesGroup, where('userId', '==', user.uid));
         
-        // This is a one-time fetch. For real-time, you'd need multiple `useCollection` hooks.
         const querySnapshot = await getDocs(q);
         const notesMap: Record<string, AiMentalHealthNote[]> = {};
 
         querySnapshot.forEach((doc) => {
             const note = { id: doc.id, ...doc.data() } as AiMentalHealthNote;
-            // The agentId is the ID of the parent document of the 'aiMentalHealthNotes' subcollection
             const agentId = doc.ref.parent.parent?.id;
             if (agentId) {
                 if (!notesMap[agentId]) {
@@ -94,17 +56,10 @@ export default function ProfilePage() {
         setIsLoadingNotes(false);
     }
     
-    // We need to re-fetch notes if the user changes.
-    // A more complex implementation could use real-time listeners for notes.
     if(user?.uid) {
         fetchAllNotes();
     }
-
-
-  // A simple re-fetch when profiles list changes could also work
-  // but might be inefficient. For now, we fetch once on user load.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, firestore]);
+  }, [user, firestore, profiles]); // Re-fetch notes if profiles change as well
   
 
   const getAgentName = (agentId: string) => {
@@ -175,7 +130,7 @@ export default function ProfilePage() {
                                 ))}
                            </div>
                         ) : (
-                           <p className="text-sm text-muted-foreground">No conversation notes have been saved for this agent yet. After a chat, click "Save Note" to create a summary.</p>
+                           <p className="text-sm text-muted-foreground">No conversation notes have been saved for this agent yet. Notes are saved automatically when you leave a chat session.</p>
                         )}
                       </div>
                     </AccordionContent>

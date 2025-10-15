@@ -26,7 +26,6 @@ export type AiMentalHealthProfile = {
 
 export type AiMentalHealthNote = {
     id: string;
-    aiMentalHealthProfileId: string; // This might not be directly available/needed on the object itself
     userId: string; // Denormalized for collectionGroup query
     noteData: string;
     timestamp: string;
