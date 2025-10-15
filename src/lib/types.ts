@@ -10,6 +10,17 @@ export type DiaryEntry = {
   categories: string[];
 };
 
+export type GoalCategory = 'Daily Task' | 'Short-Term Goal' | 'Long-Term Goal';
+
+export type Goal = {
+  id: string;
+  userId: string;
+  title: string;
+  completed: boolean;
+  category: GoalCategory;
+  createdAt: string;
+};
+
 export type AiAgentInteraction = {
   id: string;
   userId: string;
@@ -27,7 +38,7 @@ export type AiMentalHealthProfile = {
 }
 
 export type AiMentalHealthNote = {
-    id: string;
+    id:string;
     userId?: string; // Denormalized for collectionGroup query, now optional
     aiAgentId: string;
     noteData: string;
