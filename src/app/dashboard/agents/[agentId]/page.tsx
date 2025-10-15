@@ -288,7 +288,7 @@ export default function AgentChatPage() {
   };
 
   return (
-    <Card className="flex h-[85vh] flex-col">
+    <Card className="flex h-full flex-col">
       <CardHeader className="flex flex-row items-center justify-between border-b">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">

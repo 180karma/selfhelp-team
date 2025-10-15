@@ -146,7 +146,11 @@ export default function DashboardLayout({
             </div>
             <UserAvatar />
           </header>
-          <main className="flex-1 p-4 sm:p-6">{children}</main>
+          <main className="flex-1 p-4 sm:p-6">
+            <div className="h-[calc(100vh-theme(spacing.28))]">
+              {children}
+            </div>
+          </main>
         </SidebarInset>
       </SidebarProvider>
     </FirebaseClientProvider>
