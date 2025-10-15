@@ -117,10 +117,16 @@ export default function DashboardLayout({
           </SidebarContent>
           <SidebarFooter>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton icon={<Settings />} tooltip="Settings">
-                  Settings
-                </SidebarMenuButton>
+               <SidebarMenuItem>
+                <Link href="/dashboard/settings" passHref>
+                  <SidebarMenuButton 
+                    isActive={isActive('/dashboard/settings')}
+                    icon={<Settings />} 
+                    tooltip="Settings"
+                  >
+                    Settings
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <Link href="/" passHref>
