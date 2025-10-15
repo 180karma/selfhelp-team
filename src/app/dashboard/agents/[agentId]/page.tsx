@@ -7,7 +7,6 @@ import { useParams, notFound } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Bot } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -16,7 +15,9 @@ import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
 import { DocumentData } from 'firebase/firestore';
-import type { AiMentalHealthNote } from '@/lib/types';
+import type { AiMentalHealthNote, Goal, GoalCategory } from '@/lib/types';
+import { v4 as uuidv4 } from 'uuid';
+import { useToast } from '@/hooks/use-toast';
 
 
 type ChatMessage = {
@@ -47,6 +48,7 @@ export default function AgentChatPage() {
   const params = useParams();
   const agentId = params.agentId as string;
   const agent = agents.find((a) => a.id === agentId);
+  const { toast } = useToast();
 
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -131,6 +133,26 @@ export default function AgentChatPage() {
 
       setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
 
+      // Check if the agent wants to add a task
+      if (result.addTask && user) {
+        const newGoal: Goal = {
+          id: uuidv4(),
+          userId: user.uid,
+          title: result.addTask.title,
+          category: result.addTask.category as GoalCategory,
+          addedBy: result.addTask.addedBy,
+          completed: false,
+          createdAt: new Date().toISOString(),
+        };
+        const goalsKey = `thrivewell-goals-${user.uid}`;
+        const existingGoals = JSON.parse(localStorage.getItem(goalsKey) || '[]');
+        existingGoals.push(newGoal);
+        localStorage.setItem(goalsKey, JSON.stringify(existingGoals));
+        toast({
+          title: "New Task Added!",
+          description: `"${newGoal.title}" was added to your ${newGoal.category} list.`,
+        });
+      }
 
     } catch (error) {
       console.error('Error chatting with agent:', error);
