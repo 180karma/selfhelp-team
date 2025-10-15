@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -29,7 +30,7 @@ const AgentChatOutputSchema = z.object({
     options: z.array(z.string()).describe("A list of multiple-choice options for the user to select that lead to deeper conversation."),
     addTask: z.object({
       title: z.string().describe("The title of the task to add to the user's goal list."),
-      category: z.enum(['Daily Task', 'Short-Term Goal', 'Long-Term Goal']).describe("The category of the task."),
+      category: z.enum(['Daily Task', 'Short-Term Goal', 'Long-Term Goal']).describe("The category of the task (Daily, Short-Term, or Long-Term)."),
       addedBy: z.string().describe("The name of the agent adding the task.")
     }).optional().describe("An optional task for the user to add to their goal list if they agree. This is tied to the 'response' text, not the follow-up question.")
   }).describe("A mandatory multiple-choice question to ask the user to probe deeper into the topic."),
