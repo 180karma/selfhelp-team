@@ -1,7 +1,7 @@
 'use client';
 
 import { agentChat } from '@/ai/flows/agent-chat';
-import { agents, AIAgent } from '@/lib/agents';
+import { agents } from '@/lib/agents';
 import { notFound } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -61,10 +61,10 @@ export default function AgentChatPage({ params }: { params: { agentId: string } 
     reset();
 
     try {
-      const genkitHistory = toGenkitHistory([...history, userMessage]);
+      const genkitHistory = toGenkitHistory([...history]);
       const { response } = await agentChat({
         persona: agent.persona,
-        history: genkitHistory.slice(0, -1), // History before the latest user message
+        history: genkitHistory,
         message: data.message,
       });
 
