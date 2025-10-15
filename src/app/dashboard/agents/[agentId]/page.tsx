@@ -135,7 +135,7 @@ export default function AgentChatPage() {
       const genkitHistory = toGenkitHistory(currentHistory);
       const result = await agentChat({
         persona: personaWithContext,
-        userName: user?.displayName || 'the user',
+        userName: user?.displayName?.split(' ')[0] || 'the user',
         history: genkitHistory,
         message: message,
       });
