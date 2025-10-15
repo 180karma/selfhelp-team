@@ -85,7 +85,7 @@ export default function AgentChatPage() {
     historyRef.current = history;
   }, [history]);
 
-  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[], profileData?: DocumentData | null) => {
+  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[], profileData?: DocumentData | null, isFirstMessage: boolean = false) => {
     setIsLoading(true);
     try {
       let personaWithProfile = agent!.persona;
@@ -118,13 +118,19 @@ export default function AgentChatPage() {
 
 
       const genkitHistory = toGenkitHistory(currentHistory);
-      const { response, question } = await agentChat({
+      const result = await agentChat({
         persona: personaWithProfile,
         history: genkitHistory,
         message: message,
+        firstMessage: isFirstMessage,
       });
 
-      setHistory((prev) => [...prev, { role: 'model', content: response, question: question }]);
+      if ('question' in result) {
+         setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
+      } else {
+         setHistory((prev) => [...prev, { role: 'model', content: result.response }]);
+      }
+
 
     } catch (error) {
       console.error('Error chatting with agent:', error);
@@ -181,7 +187,7 @@ export default function AgentChatPage() {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent) {
         setIntroSent(true);
-        handleAgentResponse("Hello, please introduce yourself based on my profile and ask a relevant first question to start our conversation.", [], assessment);
+        handleAgentResponse("Hello, please introduce yourself based on my profile.", [], assessment, true);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -222,7 +228,7 @@ export default function AgentChatPage() {
     setShowQuestionnaire(false);
     setIntroSent(true);
     // Pass the raw answers object which is what handleAgentResponse now expects
-    handleAgentResponse("Hello, please introduce yourself based on my profile and ask a relevant first question to start our conversation.", [], data);
+    handleAgentResponse("Hello, please introduce yourself based on my profile.", [], data, true);
   };
 
   if (showQuestionnaire) {

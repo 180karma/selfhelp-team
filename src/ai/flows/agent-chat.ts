@@ -17,6 +17,7 @@ const AgentChatInputSchema = z.object({
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history.'),
   message: z.string().describe('The latest user message.'),
+  firstMessage: z.boolean().optional().describe('Flag indicating if this is the first message to generate a greeting.'),
 });
 type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
@@ -25,19 +26,37 @@ const AgentChatOutputSchema = z.object({
   question: z.object({
     text: z.string().describe("A follow-up question."),
     options: z.array(z.string()).describe("A list of multiple-choice options for the user to select.")
-  }).optional().describe("An optional multiple-choice question to ask the user."),
+  }).describe("A mandatory multiple-choice question to ask the user."),
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
+
+const GreetingOutputSchema = z.object({
+  response: z.string().describe("The AI agent's introductory greeting."),
+});
 
 
 const agentChatFlow = ai.defineFlow(
   {
     name: 'agentChatFlow',
     inputSchema: AgentChatInputSchema,
-    outputSchema: AgentChatOutputSchema,
+    outputSchema: z.union([AgentChatOutputSchema, GreetingOutputSchema]),
   },
   async (input) => {
-    const { persona, history, message } = input;
+    const { persona, history, message, firstMessage } = input;
+
+    if (firstMessage) {
+       const llmResponse = await ai.generate({
+        prompt: message,
+        history: [],
+        system: persona,
+        output: {
+          schema: GreetingOutputSchema,
+        }
+      });
+      // The output will not have a question for the first message
+      return llmResponse.output! as z.infer<typeof GreetingOutputSchema>;
+    }
+
 
     const llmResponse = await ai.generate({
       prompt: message,
@@ -48,11 +67,11 @@ const agentChatFlow = ai.defineFlow(
       }
     });
 
-    return llmResponse.output!;
+    return llmResponse.output! as AgentChatOutput;
   }
 );
 
 // Only export the async function.
-export async function agentChat(input: AgentChatInput): Promise<AgentChatOutput> {
+export async function agentChat(input: AgentChatInput): Promise<AgentChatOutput | GreetingOutputSchema> {
   return agentChatFlow(input);
 }
