@@ -319,10 +319,13 @@ export default function AgentChatPage() {
               return (
               <div key={index} className={cn(`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`, animationClass)}>
                 {message.role === 'model' && (
+                  <div className="flex flex-col items-center gap-1">
                    <Avatar>
                       <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                       <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                     </Avatar>
+                    <p className="text-[8px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
+                  </div>
                 )}
                 <div className={`max-w-prose rounded-lg p-3 ${message.role === 'user' ? 'bg-secondary text-secondary-foreground' : 'bg-muted'}`}>
                   <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{message.content}</p>
@@ -358,10 +361,13 @@ export default function AgentChatPage() {
             })}
             {isLoading && (
               <div className="flex items-start gap-4 animate-fade-in">
-                 <Avatar>
+                <div className="flex flex-col items-center gap-1">
+                  <Avatar>
                     <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                     <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                   </Avatar>
+                  <p className="text-[8px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
+                </div>
                 <div className="max-w-prose rounded-lg p-3 bg-muted">
                   <Skeleton className="h-4 w-24" />
                 </div>
