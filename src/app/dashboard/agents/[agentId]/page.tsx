@@ -60,7 +60,8 @@ export default function AgentChatPage() {
 
       let personaWithProfile = agent!.persona;
       if (profileData) {
-        const profileSummary = Object.entries(profileData.answers)
+        const answers = profileData.answers || profileData;
+        const profileSummary = Object.entries(answers)
           .map(([key, value]) => `- ${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`)
           .join('\n');
         personaWithProfile += `\n\nHere is the user's profile based on their questionnaire answers. Use this to tailor your conversation:\n${profileSummary}`;
