@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Loader2 } from 'lucide-react';
-import { useFirestore, useUser } from '@/firebase';
+import { useFirestore, useUser, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, setDoc, DocumentData } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
@@ -22,7 +22,7 @@ interface QuestionnaireProps {
 
 export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
   const { toast } = useToast();
-  const { user } = useUser();
+  const { user } = use-user();
   const firestore = useFirestore();
 
   const questionnaire = questionnaires.find((q) => q.agentId === agentId);
@@ -59,7 +59,7 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
   };
 
   const handleSubmit = async () => {
-    if (!user) {
+    if (!user || !firestore) {
        toast({
         variant: 'destructive',
         title: 'Not Authenticated',
@@ -68,37 +68,36 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
       return;
     }
 
-    try {
-      const answers: { [key: string]: string } = {};
-      questionnaire.questions.forEach(q => {
-        const answer = sessionStorage.getItem(`q_${agentId}_${q.id}`);
-        if(answer) {
-          answers[q.id] = answer;
-        }
+    const answers: { [key: string]: string } = {};
+    questionnaire.questions.forEach(q => {
+      const answer = sessionStorage.getItem(`q_${agentId}_${q.id}`);
+      if(answer) {
+        answers[q.id] = answer;
+      }
+    });
+    
+    const assessmentRef = doc(firestore, 'users', user.uid, 'psychologicalAssessments', agentId);
+    
+    setDoc(assessmentRef, answers)
+      .catch(async (serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: assessmentRef.path,
+          operation: 'write',
+          requestResourceData: answers,
+        });
+        errorEmitter.emit('permission-error', permissionError);
       });
-      
-      const assessmentRef = doc(firestore, 'users', user.uid, 'psychologicalAssessments', agentId);
-      await setDoc(assessmentRef, answers);
 
-      questionnaire.questions.forEach(q => {
-        sessionStorage.removeItem(`q_${agentId}_${q.id}`);
-      });
+    questionnaire.questions.forEach(q => {
+      sessionStorage.removeItem(`q_${agentId}_${q.id}`);
+    });
 
-      toast({
-        title: 'Profile Updated!',
-        description: "Your answers have been saved.",
-      });
+    toast({
+      title: 'Profile Updated!',
+      description: "Your answers have been saved.",
+    });
 
-      onComplete(answers);
-
-    } catch (error: any) {
-      console.error("Error saving assessment:", error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to save your answers.',
-      });
-    }
+    onComplete(answers);
   };
 
 
