@@ -13,6 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { analyzeUserProfile } from '@/ai/flows/analyze-user-profile';
 import { agents } from '@/lib/agents';
+import { roadmaps } from '@/lib/roadmaps';
 import { DocumentData } from 'firebase/firestore';
 
 
@@ -78,10 +79,12 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     try {
         const agent = agents.find(a => a.id === agentId);
         if (agent) {
-            const { profileData, roadmap } = await analyzeUserProfile({
+            const { profileData } = await analyzeUserProfile({
                 persona: agent.persona,
                 questionnaireAnswers: answers,
             });
+
+            const roadmap = roadmaps[agentId];
 
             const profileKey = `thrivewell-profile-${agentId}`;
             const profileToSave = {

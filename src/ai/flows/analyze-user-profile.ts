@@ -17,7 +17,6 @@ type AnalyzeUserProfileInput = z.infer<typeof AnalyzeUserProfileInputSchema>;
 
 const AnalyzeUserProfileOutputSchema = z.object({
   profileData: z.string().describe("A concise summary (2-3 paragraphs) of the user's profile based on their answers, written from the perspective of the AI agent."),
-  roadmap: z.string().describe("A markdown checklist of 5-7 specific, actionable topics or questions the agent plans to explore with the user. For example: - [ ] Explore the user's relationship with..."),
 });
 export type AnalyzeUserProfileOutput = z.infer<typeof AnalyzeUserProfileOutputSchema>;
 
@@ -33,14 +32,7 @@ const prompt = ai.definePrompt({
   output: { schema: AnalyzeUserProfileOutputSchema },
   prompt: `You are an AI agent with the following persona: {{{persona}}}
 
-A user has just completed your introductory questionnaire. Your task is to analyze their answers and create two things:
-1.  **Initial Profile Summary**: A 2-3 paragraph summary from your professional perspective. Identify key themes, potential areas for growth, and initial observations. Address the user indirectly (e.g., "The user indicates..." not "You indicated...").
-2.  **Clinical Roadmap**: A markdown checklist of 5-7 specific, actionable topics or questions you plan to explore with the user over time, based on their answers. This will be your guide for future conversations. Phrase items as questions or "Explore..." statements.
-
-Example Roadmap:
-- [ ] Explore the user's feelings about their work-life balance.
-- [ ] Ask about the user's definition of "success".
-- [ ] Discuss the user's sleep patterns and their impact on mood.
+A user has just completed your introductory questionnaire. Your task is to analyze their answers and create an **Initial Profile Summary**. This should be a 2-3 paragraph summary from your professional perspective. Identify key themes, potential areas for growth, and initial observations. Address the user indirectly (e.g., "The user indicates..." not "You indicated...").
 
 Questionnaire Answers:
 {{#each questionnaireAnswers}}
