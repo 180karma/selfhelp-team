@@ -39,6 +39,34 @@ export default function AgentChatPage({ params }: { params: { agentId: string } 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
 
+  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[]) => {
+    setIsLoading(true);
+    try {
+      const genkitHistory = toGenkitHistory(currentHistory);
+      const { response } = await agentChat({
+        persona: agent!.persona,
+        history: genkitHistory,
+        message: message,
+      });
+
+      setHistory((prev) => [...prev, { role: 'model', content: response }]);
+    } catch (error) {
+      console.error('Error chatting with agent:', error);
+      setHistory((prev) => [...prev, { role: 'model', content: "I'm having trouble responding right now. Please try again later." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (agent && history.length === 0) {
+      // Send an initial, silent message to the agent to get the introduction and questions.
+      handleAgentResponse("Hello, please introduce yourself and ask your initial questions.", []);
+    }
+    // We only want this to run once on mount, so we disable the exhaustive-deps rule.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agent]);
+
 
   useEffect(() => {
     // Scroll to the bottom when history changes
@@ -56,25 +84,10 @@ export default function AgentChatPage({ params }: { params: { agentId: string } 
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const userMessage: ChatMessage = { role: 'user', content: data.message };
-    setHistory((prev) => [...prev, userMessage]);
-    setIsLoading(true);
+    const newHistory = [...history, userMessage];
+    setHistory(newHistory);
     reset();
-
-    try {
-      const genkitHistory = toGenkitHistory([...history]);
-      const { response } = await agentChat({
-        persona: agent.persona,
-        history: genkitHistory,
-        message: data.message,
-      });
-
-      setHistory((prev) => [...prev, { role: 'model', content: response }]);
-    } catch (error) {
-      console.error('Error chatting with agent:', error);
-      setHistory((prev) => [...prev, { role: 'model', content: "I'm having trouble responding right now. Please try again later." }]);
-    } finally {
-      setIsLoading(false);
-    }
+    handleAgentResponse(data.message, newHistory);
   };
 
   return (
@@ -101,7 +114,7 @@ export default function AgentChatPage({ params }: { params: { agentId: string } 
                     </Avatar>
                 )}
                 <div className={`max-w-prose rounded-lg p-3 ${message.role === 'user' ? 'bg-secondary text-secondary-foreground' : 'bg-muted'}`}>
-                  <p className="text-sm">{message.content}</p>
+                  <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{message.content}</p>
                 </div>
                  {message.role === 'user' && (
                    <Avatar>
