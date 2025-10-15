@@ -17,10 +17,12 @@ import { useToast } from '@/hooks/use-toast';
 import { agents } from '@/lib/agents';
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/firebase';
 
 export default function SettingsPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const { user } = useUser();
 
   const handleResetData = () => {
     try {
@@ -29,6 +31,11 @@ export default function SettingsPage() {
 
       // Clear all notes
       localStorage.removeItem('thrivewell-notes');
+      
+      // Clear all goals if user exists
+      if (user) {
+        localStorage.removeItem(`thrivewell-goals-${user.uid}`);
+      }
 
       // Clear agent-specific assessments and profiles
       agents.forEach(agent => {
@@ -70,7 +77,7 @@ export default function SettingsPage() {
             <div>
               <h3 className="font-semibold">Reset All Data</h3>
               <p className="text-sm text-muted-foreground">
-                This will permanently delete all your diary entries, AI profiles, notes, and assessment answers from this browser.
+                This will permanently delete all your diary entries, goals, AI profiles, notes, and assessment answers from this browser.
               </p>
             </div>
             
@@ -85,7 +92,7 @@ export default function SettingsPage() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete all your application data stored in this browser, including diary entries, assessments, and AI-generated notes.
+                    This action cannot be undone. This will permanently delete all your application data stored in this browser, including diary entries, goals, assessments, and AI-generated notes.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
