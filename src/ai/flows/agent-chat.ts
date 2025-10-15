@@ -4,14 +4,13 @@
  * @fileOverview A flow to handle chat interactions with AI agents.
  *
  * - agentChat - A function that generates a response from an AI agent.
- * - AgentChatInput - The input type for the agentChat function.
- * - AgentChatOutput - The return type for the agentChat function.
  */
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const AgentChatInputSchema = z.object({
+// Define schemas inside the file, but do not export them.
+const AgentChatInputSchema = z.object({
   persona: z.string().describe('The persona or role the AI agent should adopt.'),
   history: z.array(z.object({
     role: z.enum(['user', 'model']),
@@ -19,17 +18,13 @@ export const AgentChatInputSchema = z.object({
   })).describe('The conversation history.'),
   message: z.string().describe('The latest user message.'),
 });
-export type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
+type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
-export const AgentChatOutputSchema = z.object({
+const AgentChatOutputSchema = z.object({
   response: z.string().describe('The AI agent\'s response.'),
 });
-export type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
+type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
 
-
-export async function agentChat(input: AgentChatInput): Promise<AgentChatOutput> {
-  return agentChatFlow(input);
-}
 
 const agentChatFlow = ai.defineFlow(
   {
@@ -51,3 +46,8 @@ const agentChatFlow = ai.defineFlow(
     return { response: llmResponse.text };
   }
 );
+
+// Only export the async function.
+export async function agentChat(input: AgentChatInput): Promise<AgentChatOutput> {
+  return agentChatFlow(input);
+}
