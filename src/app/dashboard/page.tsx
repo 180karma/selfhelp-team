@@ -5,7 +5,7 @@ import { useUser } from '@/firebase';
 
 export default function DashboardPage() {
   const { user } = useUser();
-  const userName = user?.displayName?.split(' ')[0] || 'there';
+  const userName = user?.displayName?.split(' ')[0] || 'friend';
 
   return (
     <div className="space-y-6">
