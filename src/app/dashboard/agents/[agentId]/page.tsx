@@ -2,7 +2,7 @@
 
 import { agentChat } from '@/ai/flows/agent-chat';
 import { agents } from '@/lib/agents';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -31,8 +31,10 @@ const toGenkitHistory = (history: ChatMessage[]) => {
   }));
 };
 
-export default function AgentChatPage({ params }: { params: { agentId: string } }) {
-  const agent = agents.find((a) => a.id === params.agentId);
+export default function AgentChatPage() {
+  const params = useParams();
+  const agentId = params.agentId as string;
+  const agent = agents.find((a) => a.id === agentId);
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm<Inputs>();
