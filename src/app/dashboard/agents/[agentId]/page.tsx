@@ -321,7 +321,10 @@ export default function AgentChatPage() {
                     ? 'bg-secondary text-secondary-foreground max-w-xs' 
                     : 'bg-muted max-w-prose'
                 )}>
-                  <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{message.content}</p>
+                  <p className={cn(
+                    "whitespace-pre-wrap",
+                    message.role === 'user' ? 'text-[10px]' : 'text-sm'
+                  )}>{message.content}</p>
                    {message.role === 'model' && message.question && (
                     <div className="mt-4 space-y-2">
                        <p className="font-semibold text-sm">{message.question.text}</p>
