@@ -20,12 +20,19 @@ import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
 
 
+type ProposedTask = {
+    title: string;
+    category: string;
+    addedBy: string;
+};
+
 type ChatMessage = {
   role: 'user' | 'model';
   content: string;
   question?: {
     text: string;
     options: string[];
+    addTask?: ProposedTask;
   }
 };
 
@@ -134,27 +141,6 @@ export default function AgentChatPage() {
 
       setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
 
-      // Check if the agent wants to add a task
-      if (result.addTask && user) {
-        const newGoal: Goal = {
-          id: uuidv4(),
-          userId: user.uid,
-          title: result.addTask.title,
-          category: result.addTask.category as GoalCategory,
-          addedBy: result.addTask.addedBy,
-          completed: false,
-          createdAt: new Date().toISOString(),
-        };
-        const goalsKey = `thrivewell-goals-${user.uid}`;
-        const existingGoals = JSON.parse(localStorage.getItem(goalsKey) || '[]');
-        existingGoals.push(newGoal);
-        localStorage.setItem(goalsKey, JSON.stringify(existingGoals));
-        toast({
-          title: "New Task Added!",
-          description: `"${newGoal.title}" was added to your ${newGoal.category} list.`,
-        });
-      }
-
     } catch (error) {
       console.error('Error chatting with agent:', error);
       setHistory((prev) => [...prev, { role: 'model', content: "I'm having trouble responding right now. Please try again later." }]);
@@ -198,10 +184,36 @@ export default function AgentChatPage() {
     }
   };
 
-  const handleOptionClick = (option: string, originalQuestion: string) => {
+  const handleOptionClick = (option: string, originalQuestion: string, proposedTask?: ProposedTask) => {
+    // Add the user's choice to the history immediately for a responsive feel
     const userMessage: ChatMessage = { role: 'user', content: `Regarding "${originalQuestion}", I chose: ${option}` };
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
+
+    // Check if the user agreed and a task was proposed
+    const positiveAffirmations = ['yes', 'yep', 'ok', 'add it', 'please', 'do it', 'helpful', 'nice', 'sounds good', 'let\'s do it'];
+    const userSaidYes = positiveAffirmations.some(affirmation => option.toLowerCase().includes(affirmation));
+
+    if (userSaidYes && proposedTask && user) {
+        const newGoal: Goal = {
+          id: uuidv4(),
+          userId: user.uid,
+          title: proposedTask.title,
+          category: proposedTask.category as GoalCategory,
+          addedBy: proposedTask.addedBy,
+          completed: false,
+          createdAt: new Date().toISOString(),
+        };
+        const goalsKey = `thrivewell-goals-${user.uid}`;
+        const existingGoals = JSON.parse(localStorage.getItem(goalsKey) || '[]');
+        existingGoals.push(newGoal);
+        localStorage.setItem(goalsKey, JSON.stringify(existingGoals));
+        toast({
+          title: "New Task Added!",
+          description: `"${newGoal.title}" was added to your ${newGoal.category} list.`,
+        });
+    }
+    
     // Let the agent respond to the selected option
     handleAgentResponse(userMessage.content, newHistory);
   };
@@ -307,7 +319,7 @@ export default function AgentChatPage() {
                             variant="outline" 
                             size="sm"
                             className="justify-start"
-                            onClick={() => handleOptionClick(option, message.question!.text)}
+                            onClick={() => handleOptionClick(option, message.question!.text, message.question!.addTask)}
                             disabled={isLoading}
                           >
                             {option}
