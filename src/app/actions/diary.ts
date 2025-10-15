@@ -1,8 +1,7 @@
 'use server';
 
 import { categorizeDiaryEntry } from '@/ai/flows/categorize-diary-entry';
-import { addDocumentNonBlocking } from '@/firebase';
-import { collection, getFirestore } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { initializeFirebase } from '@/firebase';
 import { z } from 'zod';
 
@@ -28,7 +27,7 @@ export async function createEntryAction(values: z.infer<typeof formSchema>) {
     const { firestore } = initializeFirebase();
     const entriesCollection = collection(firestore, 'users', userId, 'diaryEntries');
 
-    await addDocumentNonBlocking(entriesCollection, {
+    await addDoc(entriesCollection, {
       title,
       content,
       type,
@@ -38,8 +37,8 @@ export async function createEntryAction(values: z.infer<typeof formSchema>) {
     });
     
     return { success: 'Entry saved!' };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating entry:', error);
-    return { error: 'Failed to save entry.' };
+    return { error: error.message || 'Failed to save entry.' };
   }
 }
