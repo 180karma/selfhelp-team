@@ -19,6 +19,7 @@ export type Goal = {
   completed: boolean;
   category: GoalCategory;
   createdAt: string;
+  addedBy?: string; // agent's givenName
 };
 
 export type AiAgentInteraction = {

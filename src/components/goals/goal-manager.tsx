@@ -10,7 +10,7 @@ import type { Goal, GoalCategory } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlusCircle, Loader2 } from 'lucide-react';
+import { PlusCircle, Loader2, Bot } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -85,21 +85,30 @@ export function GoalManager() {
           {filteredGoals.length > 0 ? (
             <div className="space-y-4">
               {filteredGoals.map((goal) => (
-                <div key={goal.id} className="flex items-center space-x-3">
+                <div key={goal.id} className="flex items-start space-x-3">
                   <Checkbox
                     id={goal.id}
                     checked={goal.completed}
                     onCheckedChange={() => toggleGoal(goal.id)}
                     aria-label={`Mark goal "${goal.title}" as ${goal.completed ? 'incomplete' : 'complete'}`}
+                    className="mt-1"
                   />
-                  <label
-                    htmlFor={goal.id}
-                    className={`text-sm font-medium leading-none ${
-                      goal.completed ? 'line-through text-muted-foreground' : ''
-                    } peer-disabled:cursor-not-allowed peer-disabled:opacity-70`}
-                  >
-                    {goal.title}
-                  </label>
+                  <div className="flex-1">
+                    <label
+                      htmlFor={goal.id}
+                      className={`text-sm font-medium leading-none ${
+                        goal.completed ? 'line-through text-muted-foreground' : ''
+                      } peer-disabled:cursor-not-allowed peer-disabled:opacity-70`}
+                    >
+                      {goal.title}
+                    </label>
+                    {goal.addedBy && (
+                       <div className="flex items-center text-xs text-muted-foreground mt-1">
+                        <Bot className="h-3 w-3 mr-1" />
+                        <span>Added by {goal.addedBy}</span>
+                       </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
