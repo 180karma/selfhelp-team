@@ -185,11 +185,6 @@ export function GoalManager() {
             <div className="space-y-4">
               {filteredGoals.map((goal) => {
                 const isJournalGoal = goal.title.toLowerCase().includes('journal');
-                const GoalTitle = () => (
-                    <span className={cn(isJournalGoal && 'underline underline-offset-4 cursor-pointer hover:text-primary')}>
-                      {goal.title}
-                    </span>
-                  );
                 
                 return (
                     <div key={goal.id} className="flex items-start space-x-3">
@@ -206,8 +201,8 @@ export function GoalManager() {
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
                         {isJournalGoal ? (
-                            <Link href="/dashboard/diary/new">
-                                <GoalTitle />
+                            <Link href={`/dashboard/diary/new?title=${encodeURIComponent(goal.title)}&type=daily`} className="underline underline-offset-4 cursor-pointer hover:text-primary">
+                                {goal.title}
                             </Link>
                         ) : (
                             goal.title

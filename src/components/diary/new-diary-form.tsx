@@ -24,7 +24,12 @@ const formSchema = z.object({
   type: z.enum(['daily', 'dream'], { required_error: 'Please select a journal type.' }),
 });
 
-export function NewDiaryForm() {
+interface NewDiaryFormProps {
+  presetTitle?: string;
+  presetType?: 'daily' | 'dream';
+}
+
+export function NewDiaryForm({ presetTitle, presetType }: NewDiaryFormProps) {
   const { toast } = useToast();
   const { user } = useUser();
   const router = useRouter();
@@ -32,8 +37,9 @@ export function NewDiaryForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
+      title: presetTitle || '',
       content: '',
+      type: presetType || undefined,
     },
   });
 
