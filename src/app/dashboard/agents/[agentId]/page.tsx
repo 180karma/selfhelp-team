@@ -15,7 +15,7 @@ import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
 import { DocumentData } from 'firebase/firestore';
-import type { AiMentalHealthNote, Goal, GoalCategory } from '@/lib/types';
+import type { AiMentalHealthNote, Goal, GoalCategory, AiMentalHealthProfile } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -92,11 +92,15 @@ export default function AgentChatPage() {
 
       // 1. Add AI-generated profile from local storage
       const profileKey = `thrivewell-profile-${agentId}`;
-      const savedProfile = localStorage.getItem(profileKey);
-      if (savedProfile) {
-        const profile = JSON.parse(savedProfile);
-        if (profile.profileData) {
+      const savedProfileItem = localStorage.getItem(profileKey);
+      let profile: AiMentalHealthProfile | null = null;
+      if (savedProfileItem) {
+        profile = JSON.parse(savedProfileItem);
+        if (profile && profile.profileData) {
           personaWithContext += `\n\n## My Internal Profile Summary About the User:\n${profile.profileData}`;
+        }
+        if (profile && profile.roadmap) {
+          personaWithContext += `\n\n## My Clinical Roadmap:\n${profile.roadmap}`;
         }
       }
 
@@ -186,10 +190,16 @@ export default function AgentChatPage() {
     }
     
     try {
+        const profileKey = `thrivewell-profile-${agentId}`;
+        const savedProfileItem = localStorage.getItem(profileKey);
+        const profile: AiMentalHealthProfile | null = savedProfileItem ? JSON.parse(savedProfileItem) : null;
+        const currentRoadmap = profile?.roadmap || '';
+
       const genkitHistory = toGenkitHistory(currentHistory);
-      const { noteData } = await summarizeConversation({
+      const { noteData, updatedRoadmap } = await summarizeConversation({
         persona: agent!.persona,
         history: genkitHistory,
+        roadmap: currentRoadmap,
       });
       
       const note: AiMentalHealthNote = {
@@ -197,7 +207,7 @@ export default function AgentChatPage() {
         aiAgentId: agentId,
         noteData,
         timestamp: new Date().toISOString(),
-        userId: user?.uid, // Can still be useful for potential future migrations
+        userId: user?.uid,
       };
 
       const notesKey = 'thrivewell-notes';
@@ -205,7 +215,12 @@ export default function AgentChatPage() {
       existingNotes.push(note);
       localStorage.setItem(notesKey, JSON.stringify(existingNotes));
       
-      console.log('Conversation note saved automatically to local storage.');
+      if (profile) {
+        profile.roadmap = updatedRoadmap;
+        localStorage.setItem(profileKey, JSON.stringify(profile));
+      }
+
+      console.log('Conversation note and updated roadmap saved automatically to local storage.');
 
     } catch (error: any) {
        console.error('Error auto-saving note:', error);
@@ -253,7 +268,7 @@ export default function AgentChatPage() {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent) {
         setIntroSent(true);
-        handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question.", []);
+        handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question based on your clinical roadmap.", []);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -292,7 +307,7 @@ export default function AgentChatPage() {
     setAssessment({ answers: data }); // Update local state with new assessment data
     setShowQuestionnaire(false);
     setIntroSent(true);
-    handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question.", []);
+    handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question based on your new clinical roadmap.", []);
   };
 
   if (showQuestionnaire) {

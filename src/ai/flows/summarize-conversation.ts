@@ -15,11 +15,13 @@ const SummarizeConversationInputSchema = z.object({
     role: z.enum(['user', 'model']),
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history to be summarized.'),
+  roadmap: z.string().describe('The current clinical roadmap markdown checklist.'),
 });
 type SummarizeConversationInput = z.infer<typeof SummarizeConversationInputSchema>;
 
 const SummarizeConversationOutputSchema = z.object({
   noteData: z.string().describe("A concise summary of the conversation, focusing on key issues, user responses, and resolution practices discussed."),
+  updatedRoadmap: z.string().describe("The updated version of the clinical roadmap. The agent should check off the item that was discussed in the conversation, for example: - [x] Discussed topic."),
 });
 type SummarizeConversationOutput = z.infer<typeof SummarizeConversationOutputSchema>;
 
@@ -44,12 +46,17 @@ Structure the note to include:
 2.  **User Responses:** How did the user describe their feelings, thoughts, and behaviors related to these issues?
 3.  **Resolution Practices:** What strategies, suggestions, or action items were discussed to address the issues?
 
-Do not include conversational filler. This is an internal note for tracking progress over time.
+Also, review the conversation and the provided "Clinical Roadmap." Identify the primary topic that was discussed and update the roadmap by marking the corresponding item as complete (e.g., changing \`- [ ]\` to \`- [x]\`). Return this updated roadmap.
+
+Do not include conversational filler in the note. This is an internal note for tracking progress.
 
 Conversation History:
 {{#each history}}
 - {{role}}: {{content.[0].text}}
 {{/each}}
+
+Current Roadmap:
+{{{roadmap}}}
 `,
 });
 

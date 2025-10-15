@@ -78,7 +78,7 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     try {
         const agent = agents.find(a => a.id === agentId);
         if (agent) {
-            const { profileData } = await analyzeUserProfile({
+            const { profileData, roadmap } = await analyzeUserProfile({
                 persona: agent.persona,
                 questionnaireAnswers: answers,
             });
@@ -87,6 +87,7 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
             const profileToSave = {
                 aiAgentId: agentId,
                 profileData: profileData,
+                roadmap: roadmap,
             };
             localStorage.setItem(profileKey, JSON.stringify(profileToSave));
         }

@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { agents } from '@/lib/agents';
-import { Users, MessageSquareText } from 'lucide-react';
+import { Users, MessageSquareText, CheckSquare, Square } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useMemo, useState, useEffect } from 'react';
 import { useUser } from '@/firebase';
+import ReactMarkdown from 'react-markdown';
 
 
 export default function ProfilePage() {
@@ -105,6 +106,26 @@ export default function ProfilePage() {
                                    <p style={{ whiteSpace: 'pre-wrap' }}>{profile.profileData}</p>
                                 </CardContent>
                             </Card>
+
+                            {profile.roadmap && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="text-lg font-semibold">Clinical Roadmap</CardTitle>
+                                        <CardDescription>This is the agent's plan for your sessions.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="pt-0 prose prose-sm max-w-none text-foreground prose-li:my-0 prose-ul:my-0">
+                                      <ReactMarkdown
+                                         components={{
+                                            input: ({ checked }) => {
+                                                return checked ? <CheckSquare className="h-4 w-4 inline-block mr-2" /> : <Square className="h-4 w-4 inline-block mr-2" />;
+                                            },
+                                        }}
+                                      >
+                                        {profile.roadmap}
+                                      </ReactMarkdown>
+                                    </CardContent>
+                                </Card>
+                            )}
 
                             <h3 className="font-headline text-lg font-semibold pt-4">Conversation Notes</h3>
                              {agentNotes.length > 0 ? (

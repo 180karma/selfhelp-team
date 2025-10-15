@@ -38,6 +38,7 @@ export type AiMentalHealthProfile = {
     userId: string;
     aiAgentId: string;
     profileData: string;
+    roadmap: string;
 }
 
 export type AiMentalHealthNote = {
