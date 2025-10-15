@@ -22,6 +22,7 @@ export type Goal = {
   addedBy?: string; // agent's givenName
   completedAt?: string;
   completionNote?: string;
+  congratulated?: boolean;
 };
 
 export type AiAgentInteraction = {

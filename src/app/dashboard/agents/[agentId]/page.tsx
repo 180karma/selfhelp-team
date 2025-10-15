@@ -87,6 +87,7 @@ export default function AgentChatPage() {
 
   const handleAgentResponse = async (message: string, currentHistory: ChatMessage[]) => {
     setIsLoading(true);
+    const goalsToMarkAsCongratulated: Goal[] = [];
     try {
       let personaWithContext = agent!.persona;
 
@@ -142,15 +143,16 @@ export default function AgentChatPage() {
         const allGoals: Goal[] = JSON.parse(localStorage.getItem(goalsKey) || '[]');
         
         const activeGoals = allGoals.filter(g => !g.completed);
-        const completedGoals = allGoals.filter(g => g.completed);
+        const completedAndNotCongratulated = allGoals.filter(g => g.completed && !g.congratulated);
+        goalsToMarkAsCongratulated.push(...completedAndNotCongratulated);
 
         if (activeGoals.length > 0) {
           const activeGoalsText = activeGoals.map(g => `- ${g.title} (Category: ${g.category})`).join('\n');
           personaWithContext += `\n\n## User's Active Goals (To avoid repetition):\n${activeGoalsText}`;
         }
 
-        if (completedGoals.length > 0) {
-          const completedGoalsText = completedGoals
+        if (completedAndNotCongratulated.length > 0) {
+          const completedGoalsText = completedAndNotCongratulated
             .map(g => `- ${g.title} (Completed on: ${new Date(g.completedAt!).toLocaleDateString()})`)
             .join('\n');
           personaWithContext += `\n\n## User's Recently Completed Goals (Acknowledge and congratulate!):\n${completedGoalsText}`;
@@ -178,6 +180,19 @@ export default function AgentChatPage() {
       }
     } finally {
       setIsLoading(false);
+      // After the agent responds, mark the goals as congratulated
+      if (user && goalsToMarkAsCongratulated.length > 0) {
+          const goalsKey = `thrivewell-goals-${user.uid}`;
+          const allGoals: Goal[] = JSON.parse(localStorage.getItem(goalsKey) || '[]');
+          const goalIdsToUpdate = new Set(goalsToMarkAsCongratulated.map(g => g.id));
+          
+          const updatedGoals = allGoals.map(goal => 
+              goalIdsToUpdate.has(goal.id) ? { ...goal, congratulated: true } : goal
+          );
+
+          localStorage.setItem(goalsKey, JSON.stringify(updatedGoals));
+          console.log('Marked goals as congratulated:', goalsToMarkAsCongratulated.map(g => g.title));
+      }
     }
   };
 
