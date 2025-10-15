@@ -29,6 +29,16 @@ export const questionnaires: Questionnaire[] = [
         options: ['Nothing', 'Coffee/Tea only', 'Cereal or toast', 'Eggs or protein-rich meal', 'Smoothie or yogurt'],
       },
       {
+        id: 'waterIntake',
+        question: 'How much water do you typically drink per day?',
+        options: ['Less than 2 glasses', '2-4 glasses', '5-7 glasses', '8 or more glasses'],
+      },
+      {
+        id: 'snackingHabits',
+        question: 'How would you describe your snacking habits?',
+        options: ['I don\'t usually snack', 'I snack on fruits and nuts', 'I crave salty snacks (chips, pretzels)', 'I crave sugary snacks (candy, pastries)'],
+      },
+      {
         id: 'cookingFrequency',
         question: 'How often do you cook meals at home?',
         options: ['Almost every meal', 'A few times a week', 'Rarely', 'Never'],
@@ -66,6 +76,16 @@ export const questionnaires: Questionnaire[] = [
         options: ['Excellent, I feel rested', 'Good, mostly restful', 'Fair, sometimes restless', 'Poor, I wake up tired'],
       },
       {
+        id: 'socialConnection',
+        question: 'How connected have you felt to others lately?',
+        options: ['Very connected and supported', 'Somewhat connected', 'A little isolated', 'Very lonely and disconnected'],
+      },
+      {
+        id: 'enjoyment',
+        question: 'Have you been finding joy or interest in your usual activities?',
+        options: ['Yes, as much as usual', 'A little less than usual', 'Much less than usual', 'I\'ve lost interest completely'],
+      },
+      {
         id: 'shortTermGoal',
         question: "What is one thing you'd like to work on for your emotional well-being in the next month?",
         options: ['Developing a self-care routine', 'Better understanding my emotional triggers', 'Improving communication in a relationship', 'Reducing feelings of anxiety in specific situations'],
@@ -93,9 +113,19 @@ export const questionnaires: Questionnaire[] = [
         options: ['No, not really', 'Yes, one or two things', 'Yes, several things affect my daily life', 'Yes, my world feels very small'],
       },
       {
+        id: 'perfectionism',
+        question: 'Do you often feel that what you do is never good enough?',
+        options: ['No, I\'m usually happy with "good enough"', 'Sometimes I struggle with this', 'Yes, I often feel like a perfectionist', 'Yes, it causes me significant stress'],
+      },
+      {
         id: 'reactionToMistakes',
         question: 'When you make a mistake, what is your typical inner response?',
         options: ['"I can learn from this."', '"I\'m so stupid."', '"I always mess things up."', '"I should have known better."'],
+      },
+       {
+        id: 'physicalAnxiety',
+        question: 'When you feel anxious, do you notice physical symptoms (e.g., racing heart, tight chest)?',
+        options: ['Never', 'Sometimes', 'Often', 'Almost always'],
       },
       {
         id: 'shortTermGoal',
@@ -123,6 +153,16 @@ export const questionnaires: Questionnaire[] = [
         id: 'caregiverComfort',
         question: 'When you were upset as a child, was there a caregiver you could consistently turn to for comfort?',
         options: ['Yes, always', 'Sometimes, but it was unpredictable', 'Rarely, I usually had to soothe myself', 'No, I learned not to show I was upset'],
+      },
+      {
+        id: 'currentRelationships',
+        question: 'In your adult relationships (friendships or romantic), how easy is it for you to trust others?',
+        options: ['Very easy, I trust openly', 'It takes me a little while', 'It\'s very difficult for me', 'I expect to be let down'],
+      },
+      {
+        id: 'selfCriticism',
+        question: 'How would you describe your inner critic?',
+        options: ['Gentle and encouraging', 'Mostly quiet', 'Often harsh and loud', 'Relentless'],
       },
       {
         id: 'familySecrets',
@@ -157,9 +197,19 @@ export const questionnaires: Questionnaire[] = [
             options: ['Cardio (running, cycling)', 'Strength training (weights)', 'Mind-body (yoga, pilates)', 'Team sports', 'I\'m not sure yet'],
         },
         {
+            id: 'biggestObstacle',
+            question: 'What is your biggest obstacle to exercising regularly?',
+            options: ['Lack of time', 'Lack of motivation', 'Not knowing what to do', 'It feels boring or tedious', 'Physical limitations'],
+        },
+        {
             id: 'workoutDuration',
             question: 'How much time can you realistically dedicate to a workout session?',
             options: ['15-20 minutes', '30-45 minutes', '60 minutes', 'More than 60 minutes'],
+        },
+        {
+          id: 'accountability',
+          question: 'What best helps you stay accountable to your fitness goals?',
+          options: ['Tracking my progress', 'Having a workout buddy', 'Setting rewards for myself', 'Following a structured plan', 'I struggle with accountability'],
         },
         {
             id: 'shortTermGoal',
@@ -189,9 +239,19 @@ export const questionnaires: Questionnaire[] = [
             options: ['I have a detailed schedule', 'I have a general to-do list', 'I go with the flow', 'I plan day-by-day', 'I don\'t plan'],
         },
         {
+            id: 'procrastinationTrigger',
+            question: 'When you procrastinate, what is the most common reason?',
+            options: ['The task feels too big or overwhelming', 'I\'m not sure where to start', 'I get distracted by other things', 'I\'m waiting for the "perfect" time', 'I don\'t feel like it'],
+        },
+        {
             id: 'energyLevels',
             question: 'When do you feel most productive and energetic?',
             options: ['Early morning', 'Late morning', 'Afternoon', 'Evening', 'My energy is inconsistent'],
+        },
+        {
+            id: 'digitalClutter',
+            question: 'How would you describe your digital life (email inbox, computer desktop)?',
+            options: ['Very organized', 'Somewhat organized', 'A bit chaotic', 'Completely overwhelming'],
         },
         {
             id: 'shortTermGoal',
