@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useRouter } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,10 +13,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useFirestore, useUser, errorEmitter, FirestorePermissionError } from '@/firebase';
+import { useUser } from '@/firebase';
 import { Loader2 } from 'lucide-react';
 import { categorizeDiaryEntry } from '@/ai/flows/categorize-diary-entry';
-import { addDoc, collection } from 'firebase/firestore';
 
 
 const formSchema = z.object({
@@ -27,7 +27,6 @@ const formSchema = z.object({
 export function NewDiaryForm() {
   const { toast } = useToast();
   const { user } = useUser();
-  const firestore = useFirestore();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,7 +40,7 @@ export function NewDiaryForm() {
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!user || !firestore) {
+    if (!user) {
       toast({
         variant: 'destructive',
         title: 'Not Authenticated',
@@ -52,28 +51,23 @@ export function NewDiaryForm() {
 
     try {
       const { categories } = await categorizeDiaryEntry({ diaryEntry: values.content });
-
-      const entriesCollection = collection(firestore, 'users', user.uid, 'diaryEntries');
+      
       const entryData = {
         ...values,
+        id: uuidv4(),
         categories,
         createdAt: new Date().toISOString(),
         userId: user.uid,
       };
 
-      addDoc(entriesCollection, entryData)
-        .catch(async (serverError) => {
-          const permissionError = new FirestorePermissionError({
-            path: entriesCollection.path,
-            operation: 'create',
-            requestResourceData: entryData,
-          });
-          errorEmitter.emit('permission-error', permissionError);
-        });
+      const existingEntries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
+      existingEntries.push(entryData);
+      localStorage.setItem('diaryEntries', JSON.stringify(existingEntries));
+
 
       toast({
         title: 'Entry Saved!',
-        description: 'Your diary entry has been successfully saved.',
+        description: 'Your diary entry has been successfully saved locally.',
       });
       form.reset();
       router.push('/dashboard/diary');

@@ -1,26 +1,30 @@
 'use client';
 
-import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { DiaryEntry } from '@/lib/types';
 import { useParams, notFound } from 'next/navigation';
-import { doc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from 'lucide-react';
+import { useUser } from '@/firebase';
 
 export default function DiaryEntryPage() {
   const params = useParams();
   const entryId = params.id as string;
   const { user } = useUser();
-  const firestore = useFirestore();
+  const [entry, setEntry] = useState<DiaryEntry | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const entryRef = useMemoFirebase(() => {
-    if (!firestore || !user || !entryId) return null;
-    return doc(firestore, 'users', user.uid, 'diaryEntries', entryId);
-  }, [firestore, user, entryId]);
-
-  const { data: entry, isLoading } = useDoc<DiaryEntry>(entryRef);
+  useEffect(() => {
+    setIsLoading(true);
+    if (user && entryId) {
+      const storedEntries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
+      const foundEntry = storedEntries.find((e: DiaryEntry) => e.id === entryId && e.userId === user.uid);
+      setEntry(foundEntry || null);
+    }
+    setIsLoading(false);
+  }, [user, entryId]);
 
   if (isLoading) {
     return (

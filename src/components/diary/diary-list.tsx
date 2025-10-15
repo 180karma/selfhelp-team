@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ColumnDef,
   flexRender,
@@ -19,25 +19,28 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
+import { useUser } from '@/firebase';
 import type { DiaryEntry } from '@/lib/types';
-import { collection, query, orderBy } from 'firebase/firestore';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
 
 export function DiaryList() {
   const { user } = useUser();
-  const firestore = useFirestore();
   const router = useRouter();
+  const [entries, setEntries] = React.useState<DiaryEntry[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  const entriesCollection = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
-    return query(collection(firestore, 'users', user.uid, 'diaryEntries'), orderBy('createdAt', 'desc'));
-  }, [firestore, user]);
-
-  const { data: entries, isLoading } = useCollection<DiaryEntry>(entriesCollection);
+  React.useEffect(() => {
+    setIsLoading(true);
+    if (user) {
+      const storedEntries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
+      const userEntries = storedEntries.filter((entry: DiaryEntry) => entry.userId === user.uid);
+      userEntries.sort((a: DiaryEntry, b: DiaryEntry) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setEntries(userEntries);
+    }
+    setIsLoading(false);
+  }, [user]);
 
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: 'createdAt', desc: true },
@@ -85,7 +88,7 @@ export function DiaryList() {
   ];
 
   const table = useReactTable({
-    data: entries ?? [],
+    data: entries,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,

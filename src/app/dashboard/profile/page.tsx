@@ -6,39 +6,46 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { agents } from '@/lib/agents';
 import { Users, MessageSquareText } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
-import { useMemo } from 'react';
-import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, collectionGroup, query, where, orderBy } from 'firebase/firestore';
+import { useMemo, useState, useEffect } from 'react';
+import { useUser } from '@/firebase';
 
 
 export default function ProfilePage() {
   const { user } = useUser();
-  const firestore = useFirestore();
+  const [profiles, setProfiles] = useState<AiMentalHealthProfile[]>([]);
+  const [notes, setNotes] = useState<AiMentalHealthNote[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const profilesQuery = useMemoFirebase(() => {
-    if (!user?.uid || !firestore) return null;
-    return query(collection(firestore, 'users', user.uid, 'aiMentalHealthProfiles'));
-  }, [user?.uid, firestore]);
-  const { data: profiles, isLoading: isLoadingProfiles } = useCollection<AiMentalHealthProfile>(profilesQuery);
+  useEffect(() => {
+    setIsLoading(true);
+    // Load profiles from local storage
+    const storedProfiles: AiMentalHealthProfile[] = [];
+    agents.forEach(agent => {
+      const profileData = localStorage.getItem(`thrivewell-profile-${agent.id}`);
+      if (profileData) {
+        const parsedData = JSON.parse(profileData);
+        // Add a unique ID for the accordion key
+        parsedData.id = `profile-${agent.id}`;
+        storedProfiles.push(parsedData);
+      }
+    });
+    setProfiles(storedProfiles);
 
-  const notesQuery = useMemoFirebase(() => {
-    if (!user?.uid || !firestore) return null;
-    return query(
-      collectionGroup(firestore, 'aiMentalHealthNotes'),
-      where('userId', '==', user.uid),
-      orderBy('timestamp', 'desc')
-    );
-  }, [user?.uid, firestore]);
-  const { data: notes, isLoading: isLoadingNotes } = useCollection<AiMentalHealthNote>(notesQuery);
+    // Load notes from local storage
+    const notesData = localStorage.getItem('thrivewell-notes');
+    const storedNotes = notesData ? JSON.parse(notesData) : [];
+    // Ensure notes are sorted by timestamp descending
+    storedNotes.sort((a: AiMentalHealthNote, b: AiMentalHealthNote) => 
+        new Date(b.timestamp as string).getTime() - new Date(a.timestamp as string).getTime());
+    setNotes(storedNotes);
 
-  const isLoading = isLoadingProfiles || isLoadingNotes;
+    setIsLoading(false);
+  }, []);
   
   const notesByProfile = useMemo(() => {
     if (!notes) return {};
     return notes.reduce((acc, note) => {
-        // e.g., users/uid/aiMentalHealthProfiles/agentId/aiMentalHealthNotes/noteId
-        const pathSegments = note.id.split('/');
-        const agentId = pathSegments.length > 3 ? pathSegments[3] : undefined;
+        const agentId = note.aiAgentId;
         if (agentId) {
             if (!acc[agentId]) {
                 acc[agentId] = [];
@@ -70,7 +77,7 @@ export default function ProfilePage() {
     <div className="space-y-6">
       <h1 className="font-headline text-3xl font-bold">My AI-Generated Profiles</h1>
       <p className="text-muted-foreground">
-        As you interact with your AI wellness team, they create profiles and notes from your conversations. These are saved to your account.
+        As you interact with your AI wellness team, they create profiles and notes from your conversations. These are saved to your browser.
       </p>
 
       {profiles && profiles.length > 0 ? (
@@ -103,7 +110,7 @@ export default function ProfilePage() {
                              {agentNotes.length > 0 ? (
                                 <div className="space-y-4">
                                     {agentNotes.map(note => {
-                                        const timestamp = (note.timestamp as any)?.toDate ? (note.timestamp as any).toDate() : new Date(note.timestamp);
+                                        const timestamp = new Date(note.timestamp as string);
                                         return (
                                             <Card key={note.id}>
                                                 <CardHeader>

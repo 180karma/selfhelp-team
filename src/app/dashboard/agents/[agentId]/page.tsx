@@ -12,10 +12,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useUser, useFirestore } from '@/firebase';
+import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
-import { doc, addDoc, collection, DocumentData, serverTimestamp } from 'firebase/firestore';
+import { DocumentData } from 'firebase/firestore';
 
 
 type ChatMessage = {
@@ -52,7 +52,6 @@ export default function AgentChatPage() {
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
-  const firestore = useFirestore();
 
   const [assessment, setAssessment] = useState<DocumentData | null>(null);
   const [isLoadingAssessment, setIsLoadingAssessment] = useState(true);
@@ -80,13 +79,14 @@ export default function AgentChatPage() {
     try {
       let personaWithProfile = agent!.persona;
 
-      // 1. Add questionnaire data from local state to persona
-      if (assessment) {
-        const answers = assessment.answers || assessment;
-        const profileSummary = Object.entries(answers)
-          .map(([key, value]) => `- ${key.replace(/([A-Z])/g, ' $1').trim()}: ${value}`)
-          .join('\n');
-        personaWithProfile += `\n\nHere is the user's profile based on their questionnaire answers:\n${profileSummary}`;
+      // 1. Add AI-generated profile from local storage
+      const profileKey = `thrivewell-profile-${agentId}`;
+      const savedProfile = localStorage.getItem(profileKey);
+      if (savedProfile) {
+        const profile = JSON.parse(savedProfile);
+        if (profile.profileData) {
+          personaWithProfile += `\n\nHere is my internal profile summary about the user:\n${profile.profileData}`;
+        }
       }
 
       const genkitHistory = toGenkitHistory(currentHistory);
@@ -111,7 +111,7 @@ export default function AgentChatPage() {
     const currentHistory = historyRef.current;
     const hasUserMessage = currentHistory.some(m => m.role === 'user');
 
-    if (!user || !firestore || currentHistory.length === 0 || !hasUserMessage) {
+    if (currentHistory.length === 0 || !hasUserMessage) {
       return;
     }
     
@@ -121,17 +121,21 @@ export default function AgentChatPage() {
         persona: agent!.persona,
         history: genkitHistory,
       });
-
-      const profileRef = doc(firestore, 'users', user.uid, 'aiMentalHealthProfiles', agentId);
-      const notesCollection = collection(profileRef, 'aiMentalHealthNotes');
       
-      await addDoc(notesCollection, {
+      const note = {
+        id: `note-${agentId}-${Date.now()}`,
+        aiAgentId: agentId,
         noteData,
-        timestamp: serverTimestamp(),
-        userId: user.uid,
-      });
+        timestamp: new Date().toISOString(),
+        userId: user?.uid, // Can still be useful for potential future migrations
+      };
+
+      const notesKey = 'thrivewell-notes';
+      const existingNotes = JSON.parse(localStorage.getItem(notesKey) || '[]');
+      existingNotes.push(note);
+      localStorage.setItem(notesKey, JSON.stringify(existingNotes));
       
-      console.log('Conversation note saved automatically.');
+      console.log('Conversation note saved automatically to local storage.');
 
     } catch (error: any) {
        console.error('Error auto-saving note:', error);

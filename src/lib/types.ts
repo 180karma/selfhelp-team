@@ -28,7 +28,8 @@ export type AiMentalHealthProfile = {
 
 export type AiMentalHealthNote = {
     id: string;
-    userId: string; // Denormalized for collectionGroup query
+    userId?: string; // Denormalized for collectionGroup query, now optional
+    aiAgentId: string;
     noteData: string;
     timestamp: Timestamp | string;
 }
