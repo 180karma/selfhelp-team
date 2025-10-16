@@ -8,8 +8,6 @@ import { Users, MessageSquareText, CheckSquare, Square } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useMemo, useState, useEffect } from 'react';
 import { useUser } from '@/firebase';
-import ReactMarkdown from 'react-markdown';
-
 
 export default function ProfilePage() {
   const { user } = useUser();
@@ -87,6 +85,7 @@ export default function ProfilePage() {
                 const agent = getAgentInfo(profile.aiAgentId);
                 const agentNotes = notesByProfile[profile.aiAgentId] || [];
                 if (!agent) return null;
+                const roadmapItems = profile.roadmap?.split('\n').filter(line => line.trim().startsWith('- [')) || [];
                 return (
                     <AccordionItem value={profile.id} key={profile.id}>
                         <AccordionTrigger>
@@ -118,16 +117,17 @@ export default function ProfilePage() {
                                                 </CardHeader>
                                             </AccordionTrigger>
                                             <AccordionContent>
-                                                <CardContent className="pt-0 prose prose-sm max-w-none text-foreground prose-li:my-0 prose-ul:my-0">
-                                                <ReactMarkdown
-                                                    components={{
-                                                        input: ({ checked }) => {
-                                                            return checked ? <CheckSquare className="h-4 w-4 inline-block mr-2" /> : <Square className="h-4 w-4 inline-block mr-2" />;
-                                                        },
-                                                    }}
-                                                >
-                                                    {profile.roadmap}
-                                                </ReactMarkdown>
+                                                <CardContent className="pt-0 space-y-2">
+                                                    {roadmapItems.map((item, index) => {
+                                                        const isChecked = item.includes('[x]');
+                                                        const text = item.replace(/- \[[x ]\] /, '');
+                                                        return (
+                                                            <div key={index} className="flex items-start gap-2 text-sm">
+                                                                {isChecked ? <CheckSquare className="h-4 w-4 mt-0.5 text-primary flex-shrink-0" /> : <Square className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />}
+                                                                <span className={isChecked ? 'text-muted-foreground line-through' : 'text-foreground'}>{text}</span>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </CardContent>
                                             </AccordionContent>
                                         </Card>
