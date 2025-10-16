@@ -2,313 +2,189 @@
 
 export const roadmaps: Record<string, string> = {
   nutritionist: `
-- [ ] Explore your current relationship with food. What does a typical day of eating look like?
-- [ ] Discuss your primary health goals. What does 'being healthy' mean to you in your own words?
-- [ ] Investigate your energy levels throughout the day. When do you feel most and least energetic?
-- [ ] Talk about your breakfast habits. What's the first thing you eat or drink in the morning?
-- [ ] Review your hydration habits. How much water versus other beverages do you drink?
-- [ ] Delve into your snacking patterns. What triggers you to snack, and what do you reach for?
-- [ ] Understand your meal preparation habits. How often do you cook at home versus eating out?
-- [ ] Explore your feelings around grocery shopping and keeping healthy food in the house.
-- [ ] Discuss any food cravings you experience regularly. Are they for sweet, salty, or fatty foods?
-- [ ] Talk about 'mindful eating'. Have you ever tried to pay close attention to a meal without distractions?
-- [ ] Investigate your understanding of macronutrients (protein, carbs, fats).
-- [ ] Review your fiber intake. How many fruits and vegetables do you eat in a typical day?
-- [ ] Discuss your intake of processed foods versus whole foods.
-- [ ] Explore your relationship with sugar and sugary drinks.
-- [ ] Talk about how social situations or eating with others impacts your food choices.
-- [ ] Investigate your weekend eating habits compared to your weekday habits.
-- [ ] Discuss portion sizes. How do you typically decide how much to eat?
-- [ ] Explore any digestive issues you might experience (bloating, discomfort).
-- [ ] Talk about the connection between your mood and your food choices.
-- [ ] Review your intake of healthy fats (avocado, nuts, olive oil).
-- [ ] Discuss any dietary restrictions or preferences you have.
-- [ ] Explore how you feel after eating certain types of meals (e.g., heavy vs. light).
-- [ ] Talk about your environment. Is your kitchen set up to support healthy eating?
-- [ ] Investigate your protein intake, especially at breakfast.
-- [ ] Discuss your go-to healthy meal. What's one meal you feel good about eating?
-- [ ] Explore your knowledge of reading and understanding nutrition labels.
-- [ ] Talk about any supplements or vitamins you currently take.
-- [ ] Review your alcohol consumption and its place in your diet.
-- [ ] Discuss your goals for a 'cheat meal' or 'treat'. How do you approach them?
-- [ ] Explore your feelings of guilt or shame around food, if any.
-- [ ] Talk about long-term sustainability. What's a small change you could make that you could stick with for a year?
-- [ ] Investigate your sleep patterns and how they might affect your appetite.
-- [ ] Discuss the role of meal planning in your life. Have you ever tried it?
-- [ ] Explore your relationship with your body image.
-- [ ] Talk about a time you felt really good about your eating habits. What was that like?
-- [ ] Review the 'colors on your plate'. Do you eat a variety of colorful plant foods?
-- [ ] Discuss any barriers to healthy eating you face (e.g., cost, time, family preferences).
-- [ ] Explore how you refuel after physical activity.
-- [ ] Talk about your food budget. How does it influence your choices?
-- [ ] Investigate your history with dieting, if any.
-- [ ] Discuss eating on the go. What are your strategies for staying healthy when busy?
-- [ ] Explore your feelings about trying new foods or recipes.
-- [ ] Talk about your 'food rules'. Are there any foods you believe are 'good' or 'bad'?
-- [ ] Review your caffeine intake. How does it affect you?
-- [ ] Discuss how you celebrate success or deal with stress. Does food play a role?
-- [ ] Explore the concept of 'intuitive eating'.
-- [ ] Talk about your support system for your health goals.
-- [ ] Investigate your readiness for change. On a scale of 1-10, how ready are you to make a change?
-- [ ] Discuss your vision for your future self in terms of health and nutrition.
-- [ ] Review everything we've discussed and create a simple, actionable plan for the next week.
+- [ ] **Module: Your Relationship with Food**
+    ### 1. Emotional Awareness
+    - When you think about your daily meals, what feelings come up for you (e.g., excitement, stress, guilt, indifference)?
+    - How does your mood influence what you choose to eat during the day?
+    - Can you describe a time you ate something because of how you were feeling, rather than because you were hungry?
+    
+    ### 2. Situational Triggers
+    - What does a typical day of eating look like for you, from morning to night?
+    - Are there specific times of day or activities (like watching TV) that you associate with eating?
+    - How do your eating habits on weekends or social occasions differ from your weekday habits?
+
+    ### 3. Root Cause Patterns
+    - What messages about food did you receive growing up?
+    - Is there a pattern to the types of food you crave when you're stressed, tired, or happy?
+    - How does your energy level throughout the day affect your food choices for the next meal?
+
+    ### 4. Life Impact
+    - How do your current eating habits affect your energy, mood, and overall well-being?
+    - In what ways does your relationship with food impact your social life or relationships?
+    - What is one aspect of your diet you wish you could change, and why?
+    - If you had your ideal relationship with food, what would that look like and feel like?
+
+    ### Solutions & Action Plan
+    - **Behavioral Solution:** Try keeping a simple food and mood journal for three days. Just jot down what you eat and how you feel, without judgment.
+    - **Mental Exercise:** Before one meal each day, pause and take one deep breath. Ask yourself, "What does my body need right now?"
+    - **Physical Tool:** Pay attention to your body's hunger and fullness cues. Try to rate your hunger on a scale of 1-10 before and after eating.
+    - **Daily Task:** Drink one full glass of water before each meal.
+    - **Short-Term Goal:** Plan and prepare one healthy meal you're excited about this week.
+    - **Long-Term Goal:** Develop a habit of mindful eating where you feel in control and at peace with your food choices.
 `,
   psychologist: `
-- [ ] Explore your primary reason for seeking support right now. What's been on your mind?
-- [ ] Discuss your current mood and how it's been fluctuating over the past few weeks.
-- [ ] Delve into your current stress levels. What are the main sources of stress in your life?
-- [ ] Review your sleep patterns. Are you getting enough rest, and do you wake up feeling refreshed?
-- [ ] Talk about your social connections. How supported and connected do you feel to others?
-- [ ] Investigate your ability to find joy and pleasure in daily activities recently.
-- [ ] Discuss how you typically cope with difficult emotions like sadness, anger, or anxiety.
-- [ ] Explore your self-talk. Are you generally kind or critical toward yourself?
-- [ ] Talk about a recent situation that made you feel overwhelmed. What happened?
-- [ ] Review your work/life balance. Do you feel you have enough time for both?
-- [ ] Discuss your primary relationships. What are the sources of strength and/or strain?
-- [ ] Explore any patterns of worry or anxiety you've noticed. Do you worry about the future?
-- [ ] Talk about your energy levels. How have they been for you lately?
-- [ ] Investigate feelings of loneliness or isolation.
-- [ ] Discuss your sense of self-worth and self-esteem.
-- [ ] Explore any specific fears or phobias that impact your life.
-- [ ] Talk about your relationship with anger. How do you express it or process it?
-- [ ] Review your ability to set and maintain personal boundaries with others.
-- [ ] Discuss your definition of a 'good day'. What does that look like for you?
-- [ ] Explore any feelings of guilt or shame that you carry.
-- [ ] Talk about your past experiences with therapy or self-help, if any.
-- [ ] Investigate how you handle criticism or feedback from others.
-- [ ] Discuss your relationship with perfectionism. Do you feel pressure to be perfect?
-- [ ] Explore your ability to relax and unwind without feeling guilty.
-- [ ] Talk about your 'inner child'. What is something you loved to do when you were young?
-- [ ] Review your decision-making process. Do you find it easy or difficult to make choices?
-- [ ] Discuss your sense of purpose or meaning in life.
-- [ ] Explore how you handle disappointment or setbacks.
-- [ ] Talk about your physical health and its connection to your mental well-being.
-- [ ] Investigate any intrusive or unwanted thoughts you might experience.
-- [ ] Discuss your communication style. Are you assertive, passive, or aggressive?
-- [ ] Explore your feelings about the future. Are you generally optimistic or pessimistic?
-- [ ] Talk about a personal strength you are proud of.
-- [ ] Review how you manage your time and responsibilities.
-- [ ] Discuss your relationship with social media and its impact on your mood.
-- [ ] Explore your capacity for self-compassion. How do you treat yourself when you make a mistake?
-- [ ] Talk about any experiences of grief or loss you've had.
-- [ ] Investigate your patterns in romantic relationships.
-- [ ] Discuss your personal values. What is most important to you in life?
-- [ ] Explore your hopes for what might change as a result of our conversations.
-- [ ] Talk about what 'mental wellness' means to you personally.
-- [ ] Review your support system. Who can you turn to when things are tough?
-- [ ] Discuss a small, kind thing you could do for yourself this week.
-- [ ] Explore your relationship with uncertainty and the unknown.
-- [ ] Talk about a time you felt resilient. What helped you get through it?
-- [ ] Investigate the concept of 'vulnerability'. What does it mean to you?
-- [ ] Discuss your body's signals. How do you know when you're stressed or relaxed?
-- [ ] Explore the stories you tell yourself about who you are.
-- [ ] Talk about what you are most grateful for in your life right now.
-- [ ] Review the progress we've made and set an intention for the coming week.
+- [ ] **Module: Understanding & Managing Anxiety**
+    ### 1. Emotional Awareness
+    - When you feel anxious, what's the primary emotion you experience? Is it fear, worry, dread, or something else?
+    - Can you describe what 'anxiety' feels like in your body? (e.g., tight chest, racing heart, butterflies in stomach)
+    - How do you know when you're starting to feel anxious versus when you're in a full state of anxiety?
+    
+    ### 2. Situational Triggers
+    - Are there specific situations, places, or people that consistently trigger your anxiety?
+    - Think about the last time you felt anxious. What was happening in the moments leading up to it?
+    - Do you notice your anxiety is worse at certain times of day or on certain days of the week?
+
+    ### 3. Root Cause Patterns
+    - What are the common 'what if...' thoughts that run through your mind when you're anxious?
+    - Is there a core fear or belief underneath the anxiety? (e.g., fear of failure, fear of judgment, fear of losing control)
+    - How did your family or caregivers respond to your worries when you were younger?
+
+    ### 4. Life Impact
+    - How does anxiety impact your daily decisions, from small choices to big ones?
+    - Are there activities, hobbies, or goals you avoid because of anxiety?
+    - What is the biggest frustration anxiety causes in your life right now?
+    - If you could reduce your anxiety by 25%, what would you start doing differently?
+
+    ### Solutions & Action Plan
+    - **Behavioral Solution:** When you feel anxiety rising, try the '3-3-3 rule': Name 3 things you see, 3 sounds you hear, and move 3 parts of your body. This grounds you in the present moment.
+    - **Mental Exercise:** When you have an anxious thought, gently challenge it. Ask, "Is this thought 100% true? What's a more balanced perspective?"
+    - **Physical Tool:** Practice 'box breathing' for one minute: Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds, hold for 4 seconds.
+    - **Daily Task:** Set aside 5 minutes for a 'worry period' where you allow yourself to worry, then consciously postpone any worries that arise outside that time.
+    - **Short-Term Goal:** Choose one small, anxiety-provoking situation that you've been avoiding and take a tiny step towards facing it this week.
+    - **Long-Term Goal:** Build a toolkit of coping strategies that allows you to manage anxiety and re-engage with activities you value.
 `,
   'cbt-therapist': `
-- [ ] Introduce the basic CBT model: the connection between thoughts, feelings, and behaviors.
-- [ ] Identify a recent situation where you felt a strong negative emotion. What was the situation?
-- [ ] Explore the automatic negative thoughts (ANTs) that went through your mind in that situation.
-- [ ] Discuss common cognitive distortions. Do you recognize any of these in your thinking? (e.g., all-or-nothing thinking).
-- [ ] Practice identifying the 'hot thought' - the one that causes the most distress.
-- [ ] Learn to question the 'hot thought'. What's the evidence for and against it?
-- [ ] Explore alternative, more balanced thoughts. What's another way to look at the situation?
-- [ ] Discuss the concept of a 'thought record' as a tool for challenging thoughts.
-- [ ] Identify a core belief you hold about yourself (e.g., "I'm not good enough").
-- [ ] Explore where this core belief might have come from.
-- [ ] Discuss behavioral activation. What's one small, enjoyable activity you've been avoiding?
-- [ ] Create a plan to schedule that one small activity this week.
-- [ ] Review the link between avoidance and anxiety. How does avoiding things make anxiety worse in the long run?
-- [ ] Identify a pattern of 'safety behaviors' you might use (e.g., over-preparing, seeking reassurance).
-- [ ] Discuss creating a 'hierarchy of fears' for a situation you avoid.
-- [ ] Explore the idea of conducting a 'behavioral experiment'. What's a belief you could test?
-- [ ] Plan a small behavioral experiment (e.g., "If I make a small mistake, people will reject me").
-- [ ] Review the results of the behavioral experiment. What did you learn?
-- [ ] Discuss 'worry time' as a technique for managing generalized anxiety.
-- [ ] Practice a simple mindfulness exercise to notice thoughts without judgment.
-- [ ] Explore the difference between productive worry and unproductive worry.
-- [ ] Discuss problem-solving techniques for productive worries.
-- [ ] Identify physical symptoms of anxiety. What do you feel in your body?
-- [ ] Practice a progressive muscle relaxation (PMR) technique.
-- [ ] Practice a diaphragmatic (belly) breathing technique.
-- [ ] Discuss how to apply relaxation techniques 'in the moment'.
-- [ ] Explore 'catastrophizing'. Do you often jump to the worst-case scenario?
-- [ ] Practice 'de-catastrophizing' by asking "And then what?".
-- [ ] Discuss 'mind reading' and 'fortune telling' as cognitive distortions.
-- [ ] Identify a situation where you might have engaged in mind reading.
-- [ ] Explore 'emotional reasoning' (e.g., "I feel anxious, so it must be dangerous").
-- [ ] Discuss 'should' statements and their impact on your mood.
-- [ ] Practice reframing 'should' statements into preferences.
-- [ ] Explore 'personalization' - blaming yourself for things outside your control.
-- [ ] Discuss how to challenge personalization by looking for other contributing factors.
-- [ ] Review the role of self-compassion in CBT.
-- [ ] Explore how to respond to setbacks with a CBT mindset.
-- [ ] Discuss creating a 'relapse prevention plan' or 'CBT toolkit'.
-- [ ] Review the concept of 'labeling' ("I'm a failure" vs. "I made a mistake").
-- [ ] Explore how to focus on the behavior rather than the label.
-- [I ] Discuss 'magnification and minimization' (e.g., blowing up your mistakes, downplaying your successes).
-- [ ] Practice acknowledging a personal success without minimizing it.
-- [ ] Explore 'overgeneralization' (e.g., "This always happens to me").
-- [ ] Discuss how to find exceptions to an overgeneralized belief.
-- [ ] Review the importance of scheduling pleasurable activities.
-- [ ] Explore the link between physical activity and mood from a CBT perspective.
-- [ ] Discuss creating a 'thought-action' plan for a recurring challenging situation.
-- [ ] Review your most-used cognitive distortions and how to spot them.
-- [ ] Explore how to use a 'CBT flashcard' for a core belief.
-- [ ] Discuss maintenance and how to continue using CBT skills independently.
+- [ ] **Module: Challenging Negative Automatic Thoughts (ANTs)**
+    ### 1. Emotional Awareness
+    - Think of a recent time you felt a sudden shift in your mood (e.g., suddenly sad, angry, or anxious). What was the feeling?
+    - Right before you felt that emotion, what thought went through your mind? (This is the Automatic Negative Thought or ANT).
+    - On a scale of 0-100, how much did you believe that 'hot thought' in the moment?
+
+    ### 2. Situational Triggers
+    - In what types of situations do these ANTs most often appear? (e.g., at work, in social settings, when alone)
+    - Who are you usually with, or what are you typically doing, when this pattern of thinking occurs?
+    - Is there a physical state (like being tired or hungry) that makes you more vulnerable to ANTs?
+
+    ### 3. Root Cause Patterns
+    - What is a common cognitive distortion you recognize in your ANTs? (e.g., All-or-Nothing Thinking, Catastrophizing, Mind Reading)
+    - Does this ANT connect to a deeper-seated 'core belief' about yourself, others, or the world? (e.g., "I'm not good enough," "I'm unlovable")
+    - How has believing this thought pattern served you or protected you in the past, even if it's unhelpful now?
+
+    ### 4. Life Impact
+    - When you believe this ANT, how does it make you behave? What do you do or not do?
+    - How does this thought pattern affect your relationships or your performance at work/school?
+    - What is the long-term cost of repeatedly buying into this type of thought?
+    - If you didn't have this thought, what would you do differently?
+
+    ### Solutions & Action Plan
+    - **Behavioral Solution:** Conduct a 'Behavioral Experiment'. If your ANT is "If I speak up in a meeting, everyone will think my idea is stupid," the experiment is to share one small idea and observe the actual result.
+    - **Mental Exercise:** Complete a 'Thought Record'. Write down the Situation, ANT, Emotion, evidence for the ANT, evidence against it, and a new, more balanced thought.
+    - **Physical Tool:** When you catch an ANT, place your hand on your chest, take a deep breath, and create physical distance from the thought, observing it as a mental event rather than a fact.
+    - **Daily Task:** Identify and label at least one ANT and its cognitive distortion today without needing to change it.
+    - **Short-Term Goal:** Complete one full Thought Record for a distressing event this week.
+    - **Long-Term Goal:** Develop the skill of automatically catching, challenging, and reframing ANTs as they occur, reducing their emotional impact.
 `,
   'trauma-therapist': `
-- [ ] Gently explore the concept of safety. What does 'feeling safe' mean to you, and where do you feel it in your body?
-- [ ] Introduce grounding. Let's name three things you can see and two things you can hear right now.
-- [ ] Discuss your 'Window of Tolerance'. How do you know when you're feeling calm versus overwhelmed or shut down?
-- [ ] Talk about your caregivers from childhood. What was it like to be comforted by them when you were upset?
-- [ ] Explore your 'inner critic.' What is its tone? Does it sound like anyone you know?
-- [ ] Discuss the difference between 'shame' (I am bad) and 'guilt' (I did something bad). Which one feels more familiar?
-- [ ] Identify a 'glimmer'—a very small moment of peace or joy you've experienced recently.
-- [ ] Talk about the nervous system's responses: fight, flight, and freeze. Do you recognize these in yourself?
-- [ ] Explore 'freeze' responses like feeling numb, zoned out, or disconnected. When do these happen?
-- [ ] Discuss 'attachment styles'. In relationships, do you tend to seek closeness, prefer distance, or feel uncertain?
-- [ ] Explore your relationship with anger. Was it a 'safe' emotion to express in your family?
-- [ ] Talk about boundaries. What does a 'good' boundary feel like in your body?
-- [ ] Gently explore the idea of an 'inner child'. What does that younger part of you need to hear?
-- [ ] Discuss patterns in your adult relationships. Do they echo any feelings from your childhood?
-- [ ] Explore the feeling of 'longing'. What is it that you find yourself longing for?
-- [ ] Talk about self-compassion. What would it be like to treat yourself as you would a dear friend?
-- [ ] Identify a core belief about yourself that might be linked to past experiences (e.g., 'I am too much,' 'I am unlovable').
-- [ ] Discuss the feeling of depression. Is it a heavy, empty, or agitated feeling for you?
-- [ ] Explore how depression might serve as a form of protection, like a 'shutdown' response.
-- [ ] Talk about 'unspoken rules' from your childhood. What was not okay to talk about?
-- [ ] Explore what it feels like to trust someone. Is it easy or difficult for you?
-- [ ] Discuss the concept of 'resourcing'—identifying people, places, or things that help you feel stronger.
-- [ ] Identify a personal strength that has helped you survive difficult times.
-- [ ] Explore the concept of 'foreboding joy'—the fear that something bad will happen when things feel good.
-- [ ] Talk about what it means to 'co-regulate' with someone—to feel calmed by their presence.
-- [ ] Discuss your relationship with your body. Does it feel like a safe place to be?
-- [ ] Explore how you experience dissociation. Is it like daydreaming, or something else?
-- [ ] Talk about perfectionism. Is it a way to try to stay safe or earn love?
-- [ ] Explore what it would mean to 'reparent' your inner child.
-- [ ] Discuss the physical symptoms of trauma. Where does stress live in your body?
-- [ ] Explore the concept of 'earned secure attachment'. Can we build safety in adult relationships?
-- [- ] Talk about hypervigilance. Are you often scanning for danger?
-- [ ] Discuss the 'fawn' response—people-pleasing as a way to stay safe.
-- [ ] Explore a time you felt truly seen and understood. What was that like?
-- [ ] Talk about your relationship with rest and productivity. Is it okay to do nothing?
-- [ ] Discuss the concept of 'post-traumatic growth'. Have any strengths emerged from your struggles?
-- [ ] Explore how shame might manifest physically for you (e.g., wanting to hide, feeling small).
-- [ ] Talk about a small, achievable act of self-care you can commit to this week.
-- [ ] Discuss what it would mean to set a small boundary in a low-stakes relationship.
-- [ ] Explore your feelings around vulnerability. Is it scary, or a sign of strength?
-- [ ] Talk about how you handle compliments or positive feedback.
-- [ ] Discuss the narrative you tell yourself about your life story. Can we add a chapter of resilience?
-- [ ] Explore the connection between your attachment patterns and your current coping mechanisms.
-- [ ] Talk about what it would feel like to 'take up space' and prioritize your own needs.
-- [ ] Discuss the process of grieving past losses, including the loss of a felt sense of safety.
-- [ ] Explore how you could create a 'safe space' in your home or mind.
-- [ ] Talk about the difference between being alone and being lonely.
-- [ ] Discuss your hopes for healing. What would a 'healed' future look like to you?
-- [ ] Review the coping skills we've discussed and identify one to practice.
+- [ ] **Module: Exploring Your Inner Critic & Self-Compassion**
+    ### 1. Emotional Awareness
+    - When your inner critic 'speaks,' what is the primary feeling it brings up? (e.g., shame, fear, sadness, inadequacy)
+    - What is the tone of your inner critic? Is it harsh, sarcastic, dismissive, or something else?
+    - Can you notice where you feel the critic's voice in your body? Is it a tension in your shoulders, a pit in your stomach?
+
+    ### 2. Situational Triggers
+    - When is your inner critic the loudest? (e.g., after making a mistake, when trying something new, when you're resting)
+    - Are there specific people or comparisons that tend to activate your inner critic?
+    - What happens right before the inner critic takes over? Are you tired, stressed, or feeling vulnerable?
+
+    ### 3. Root Cause Patterns
+    - Does the voice of your inner critic remind you of anyone from your past?
+    - What was the 'function' of this critical voice? Did it develop to try and keep you safe, to avoid criticism from others, or to push you to succeed?
+    - What are the core messages this critic repeats? (e.g., "You're not good enough," "You'll always fail," "Don't get your hopes up")
+
+    ### 4. Life Impact
+    - How does the inner critic stop you from taking risks or trying new things?
+    - In what ways does this self-criticism affect your relationships or your willingness to be vulnerable?
+    - What is the impact of this constant criticism on your physical energy and well-being?
+    - If that critical voice were gone, what would you have the freedom to do or be?
+
+    ### Solutions & Action Plan
+    - **Behavioral Solution:** Practice 'compassionate action'. The next time the critic appears, ask, "What would I do for a dear friend in this situation?" Then, try to do that for yourself (e.g., make tea, take a short walk).
+    - **Mental Exercise:** 'Soften, Soothe, Allow.' When the critic is harsh, say to yourself (internally or out loud), "This is a moment of suffering. Suffering is a part of life. May I be kind to myself in this moment."
+    - **Physical/Somatic Tool:** Place a hand over your heart. Feel the warmth and gentle pressure. Breathe into that space for one minute, offering yourself a moment of comfort without needing to fix anything.
+    - **Daily Task:** Notice your inner critic one time today and, instead of fighting it, just label it: "Ah, there's the critic."
+    - **Short-Term Goal:** Write a compassionate letter to yourself from the perspective of a wise, kind friend, acknowledging a recent struggle.
+    - **Long-Term Goal:** To cultivate an inner compassionate voice that is stronger and more accessible than the inner critic.
 `,
   'fitness-instructor': `
-- [ ] Let's talk about your "why". What's your single biggest motivation for wanting to focus on fitness?
-- [ ] Explore your current relationship with exercise. Is it a friend, a foe, or a stranger?
-- [ ] Discuss your current activity level. What does movement look like in your average week?
-- [ ] What types of movement or exercise have you enjoyed in the past, even as a kid?
-- [ ] Identify your biggest obstacle to being more active. What's the #1 thing that gets in the way?
-- [ ] Let's talk time. Realistically, how many minutes a day, and how many days a week, can you dedicate to exercise?
-- [ ] Explore your current energy levels. When during the day do you feel most ready to move?
-- [ ] Discuss your access to equipment or workout spaces (e.g., gym, park, at-home space).
-- [ ] What's your accountability style? Do you prefer a structured plan, a workout buddy, or something else?
-- [ ] Review the importance of a warm-up. What's a simple way you could warm up for 5 minutes?
-- [ ] Discuss the concept of NEAT (Non-Exercise Activity Thermogenesis) - simple ways to move more all day.
-- [ ] Let's talk about cardio. What are your thoughts on activities that get your heart rate up?
-- [ ] Explore bodyweight strength training. Have you ever tried squats, push-ups (on knees is great!), or planks?
-- [ ] Discuss the importance of flexibility and mobility. How does your body feel when you stretch?
-- [ ] Let's set a super simple goal for this week. What's one tiny action you can take?
-- [ ] Talk about workout nutrition. What do you typically eat or drink before or after exercise?
-- [ ] Explore the role of music or podcasts in your workouts. What gets you pumped up?
-- [ ] Discuss the idea of "exercise snacks" - short 5-10 minute bursts of activity.
-- [ ] How do you feel after you exercise? Let's focus on the immediate positive effects.
-- [ ] Talk about consistency over intensity. Why is showing up the most important part?
-- [ ] Let's review proper form for a basic bodyweight squat.
-- [ ] Discuss the importance of rest days. Why are they crucial for progress?
-- [ ] Explore a simple post-workout stretching routine.
-- [ ] What's one fitness myth you've always wondered about?
-- [ ] Let's talk about building a "movement habit". How can we attach it to an existing routine?
-- [ ] Discuss a "movement mindset". How can we reframe exercise as a privilege, not a punishment?
-- [ ] Explore outdoor activities you might enjoy (e.g., hiking, walking in a park).
-- [ ] What are your thoughts on morning vs. evening workouts?
-- [ ] Discuss the importance of core strength for everyday life. Let's talk about a plank.
-- [ ] How do you track your progress? (e.g., reps, time, how you feel).
-- [ ] Let's celebrate a "non-scale victory". What's a benefit of exercise that has nothing to do with weight?
-- [ ] Explore active recovery. What's a gentle activity you could do on a rest day?
-- [ ] Discuss a simple goal for increasing your daily step count.
-- [ ] What's one piece of workout clothing that makes you feel confident and ready to move?
-- [ ] Let's talk about overcoming the "I don't feel like it" moments.
-- [ ] Explore a simple upper body exercise, like wall push-ups.
-- [ ] Discuss the connection between hydration and performance.
-- [ ] What's a fun fitness class or activity you've always been curious to try?
-- [ ] Let's talk about building momentum. How can one good choice lead to another?
-- [ ] Explore the idea of a "fitness identity". Can you see yourself as a person who is active?
-- [ ] Discuss how to listen to your body and adjust your workout accordingly.
-- [ ] What's a reward you can give yourself for staying consistent for a week?
-- [ ] Let's plan a simple, balanced workout week (e.g., 2 strength days, 2 cardio days, 1 active recovery).
-- [ ] Discuss how to handle a missed workout without getting discouraged.
-- [ ] Explore the long-term benefits of strength training for healthy aging.
-- [ ] What's one negative thought you have about exercise that we can challenge?
-- [ ] Let's talk about your fitness journey. What's the next small step forward?
-- [ ] Review your progress and set a clear, exciting goal for the upcoming month.
-- [ ] Celebrate your commitment to your health and well-being!
+- [ ] **Module: Overcoming Your Biggest Fitness Obstacle**
+    ### 1. Emotional Awareness
+    - When you think about your biggest obstacle to fitness, what's the main feeling that comes up? (e.g., frustration, overwhelm, guilt, apathy)
+    - How do you feel physically on days you overcome this obstacle versus days you don't?
+    - What's the internal story you tell yourself about this obstacle? (e.g., "I'm just too busy," "I'm not a fitness person")
+
+    ### 2. Situational Triggers
+    - At what exact moment does this obstacle usually win? (e.g., hitting snooze, sitting on the couch after work, opening the fridge)
+    - What are the environmental factors? Is your workout gear hidden away? Is your calendar too packed?
+    - Are there certain people or social situations that reinforce this obstacle?
+
+    ### 3. Root Cause Patterns
+    - Have you faced a similar obstacle in other areas of your life, not just fitness?
+    - What is the 'payoff' for giving in to the obstacle? (e.g., comfort, avoiding discomfort, more free time in the short-term)
+    - What past experiences with exercise might be contributing to this obstacle? (e.g., negative experiences in PE, feeling judged at a gym)
+
+    ### 4. Life Impact
+    - How does this specific obstacle impact your energy and confidence in other areas of your life?
+    - What is the cumulative effect of this obstacle over a month or a year?
+    - If this one obstacle were removed, what would become possible for you?
+    - How does this obstacle conflict with the person you want to be?
+
+    ### Solutions & Action Plan
+    - **Behavioral Solution:** 'Habit Stacking.' Link a new fitness habit to an existing one. For example, "After I brush my teeth in the morning, I will immediately put on my workout clothes."
+    - **Mental Exercise:** 'Temptation Bundling.' Pair the activity you're avoiding with something you enjoy. "I will only listen to my favorite podcast while I'm out for a walk."
+    - **Physical Tool:** Prepare your environment. If your obstacle is morning workouts, lay out your clothes, shoes, and water bottle the night before. Make the first step ridiculously easy.
+    - **Daily Task:** Complete a 5-minute "movement snack" (e.g., 5 minutes of stretching, walking, or bodyweight squats).
+    - **Short-Term Goal:** Successfully navigate your primary obstacle on three separate occasions this week.
+    - **Long-Term Goal:** To create a system and environment that makes your biggest fitness obstacle irrelevant.
 `,
   'personal-life-manager': `
-- [ ] What's the one area of your life that feels most chaotic or disorganized right now?
-- [ ] Let's do a 'brain dump'. What are all the tasks and to-dos currently swirling in your head?
-- [ ] Discuss your current planning system. How do you keep track of what you need to do?
-- [ ] Explore your physical workspace. Is it a place of focus or a source of distraction?
-- [ ] Talk about your morning routine. What are the first 60 minutes of your day like?
-- [ ] What about your evening routine? How do you wind down and prepare for the next day?
-- [ ] Identify your biggest time-waster. What's one thing that consistently pulls you off task?
-- [ ] Discuss the '2-Minute Rule'. If a task takes less than two minutes, do it now.
-- [ ] Let's talk about email. How much time do you spend in your inbox each day?
-- [ ] Explore the idea of 'batching' similar tasks together (e.g., answering all emails at once).
-- [ ] Discuss a big goal or project you have. What is the absolute next physical action you need to take?
-- [ ] Let's practice breaking that big project into smaller, more manageable steps.
-- [ ] Explore the 'Eisenhower Matrix' (Urgent/Important). What's one task you can identify for each quadrant?
-- [ ] Talk about procrastination. What's one task you've been putting off?
-- [ ] Discuss the feeling behind the procrastination. Is it fear, boredom, or something else?
-- [ ] Let's try the 'Pomodoro Technique' concept: 25 minutes of focused work, then a 5-minute break.
-- [ ] Explore your digital clutter. How many tabs do you have open right now?
-- [ ] Discuss the power of saying 'no'. Is there something you can decline this week?
-- [ ] Let's talk about meal planning. How much time and mental energy do you spend deciding what to eat?
-- [ ] Explore the concept of a 'weekly review'. What could you check on every Sunday to feel prepared?
-- [ ] Discuss your system for handling incoming papers and mail.
-- [ ] What's your process for capturing ideas and reminders? (e.g., notebook, app)
-- [ ] Let's talk about your calendar. Is it a tool you use proactively?
-- [ ] Explore 'time blocking'. Can you schedule a block of time for one important task this week?
-- [ ] Discuss your energy levels. When is your 'golden hour' for productive work?
-- [ ] How do you handle interruptions and distractions?
-- [ ] Let's talk about multitasking. Are you really doing more than one thing at a time?
-- [ ] Explore the 'one-touch' principle for handling emails or papers.
-- [ ] Discuss the role of a 'master to-do list' versus a 'daily to-do list'.
-- [ ] What's one recurring task you could automate or simplify?
-- [ ] Let's talk about delegation. Is there anything you can ask for help with?
-- [ ] Explore the concept of 'satisficing' vs. 'maximizing' (good enough vs. perfect).
-- [ ] Discuss how you organize your digital files and folders.
-- [ ] What's one small thing you could do to make your bedroom a more restful space?
-- [ ] Let's talk about financial organization. Do you have a system for tracking your spending?
-- [ ] Explore the 'Sunday Scaries'. How do you feel on Sunday evening?
-- [ ] What's one routine you could establish to make Mondays smoother?
-- [ ] Discuss the concept of a 'shutdown ritual' at the end of your workday.
-- [ ] Let's talk about your long-term goals. Do your daily actions align with them?
-- [ ] Explore the 'Ivy Lee Method': identifying your six most important tasks for the next day.
-- [ ] How do you manage passwords and important digital information?
-- [ ] Discuss the clutter in your car or bag. What can be removed?
-- [ ] Let's talk about preparing for the next day the night before (e.g., setting out clothes).
-- [ ] Explore the idea of a 'waiting for' list to track things you've delegated.
-- [ ] Discuss how you manage social commitments and your social calendar.
-- [ ] What's one area where you'd like to create a simple checklist?
-- [ ] Let's talk about setting clear agendas for meetings or important conversations.
-- [ ] Explore the idea of a 'quarterly personal review' to check in on bigger goals.
-- [ ] How do you celebrate when you've had a productive day or week?
-- [ ] Let's review the most effective strategies we've discussed and create a personalized 'productivity toolkit'.
+- [ ] **Module: Taming Procrastination**
+    ### 1. Emotional Awareness
+    - When you're procrastinating on a specific task, what is the core feeling you're avoiding? (e.g., boredom, overwhelm, fear of failure, confusion)
+    - What emotion do you feel *while* you're procrastinating (e.g., temporary relief, guilt, mounting anxiety)?
+    - How do you feel physically when you finally start the task versus when you're avoiding it?
+
+    ### 2. Situational Triggers
+    - What types of tasks do you most often procrastinate on? (e.g., complex projects, boring chores, difficult conversations)
+    - What is your go-to procrastination activity? (e.g., scrolling social media, cleaning something else, watching TV)
+    - Are there certain times of day or environments where you are more likely to procrastinate?
+
+    ### 3. Root Cause Patterns
+    - Is perfectionism a factor? Do you delay starting because you're afraid you can't do it perfectly?
+    - Does the task feel disconnected from your values or long-term goals, making it feel meaningless?
+    - When you think about the task, do you focus on the difficulty of starting or the relief of finishing?
+
+    ### 4. Life Impact
+    - What is the real-world consequence of procrastinating on this type of task? (e.g., missed deadlines, added stress, disappointing others)
+    - How does the stress of the unfinished task affect your ability to relax and enjoy your free time?
+    - What opportunities have you missed out on because of procrastination?
+    - How does procrastination impact your self-esteem and how you see yourself?
+
+    ### Solutions & Action Plan
+    - **Behavioral Solution:** Use the '5-Minute Rule'. Commit to working on the dreaded task for just five minutes. If you want to stop after five minutes, you can, but you'll often build momentum to continue.
+    - **Mental Exercise:** 'Chunking'. Break the overwhelming task into tiny, specific, and actionable steps. Instead of "work on report," the first step is "open document and write one sentence."
+    - **Physical Tool:** Create a 'distraction-free' zone. Put your phone in another room, close unnecessary tabs, and set a clear intention for your focused work block.
+    - **Daily Task:** Identify your single 'Most Important Task' (MIT) for the day and do it first, before anything else.
+    - **Short-Term Goal:** Use the 5-Minute Rule to start a task you've been avoiding for a week.
+    - **Long-Term Goal:** To develop a proactive approach to tasks, reducing the stress and negative self-talk associated with procrastination.
 `,
 };
