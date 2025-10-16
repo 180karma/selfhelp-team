@@ -24,16 +24,16 @@ const AgentChatInputSchema = z.object({
 type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
 const AgentChatOutputSchema = z.object({
-    response: z.string().describe("The AI agent's text response, which must lead to a proposed task."),
+    response: z.string().describe("The AI agent's text response, which may or may not include a question."),
     question: z.object({
-        text: z.string().describe("A follow-up question to the user. This must be a confirmation question to add the proposed task."),
-        options: z.array(z.string()).describe("A list of simple Yes/No style answers for the user to confirm adding the task."),
+        text: z.string().describe("A follow-up question to the user."),
+        options: z.array(z.string()).describe("A list of simple answers for the user to choose from."),
         addTask: z.object({
             title: z.string().describe("The title of the task to add to the user's goal list."),
             category: z.enum(['Daily Task', 'Short-Term Goal', 'Long-Term Goal']).describe("The category of the task (Daily, Short-Term, or Long-Term)."),
             addedBy: z.string().describe("The name of the agent adding the task.")
-        }).describe("A mandatory task for the user to add to their goal list if they agree.")
-    }).describe("A mandatory multiple-choice question to ask the user, which must be a confirmation to add the proposed task."),
+        }).describe("A mandatory task for the user to add to their goal list if they agree.").optional()
+    }).describe("A multiple-choice question to ask the user.").optional(),
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
 
