@@ -1,3 +1,4 @@
+
 'use client';
 
 import { agentChat } from '@/ai/flows/agent-chat';
@@ -199,7 +200,7 @@ export default function AgentChatPage() {
   const handleSaveNote = async () => {
     const currentHistory = historyRef.current;
 
-    if (currentHistory.length === 0) {
+    if (currentHistory.length === 0 || !user) {
       return;
     }
     
@@ -212,6 +213,7 @@ export default function AgentChatPage() {
       const genkitHistory = toGenkitHistory(currentHistory);
       const { noteData, updatedRoadmap } = await summarizeConversation({
         persona: agent!.persona,
+        userName: user?.displayName || 'the user',
         history: genkitHistory,
         roadmap: currentRoadmap,
       });
@@ -453,5 +455,3 @@ export default function AgentChatPage() {
     </Card>
   );
 }
-
-    
