@@ -33,7 +33,7 @@ export default function ProfilePage() {
     // Load notes from local storage
     const notesData = localStorage.getItem('thrivewell-notes');
     const storedNotes = notesData ? JSON.parse(notesData) : [];
-    // Ensure notes are sorted by timestamp descending
+    // Ensure notes are sorted by timestamp descending (newest first)
     storedNotes.sort((a: AiMentalHealthNote, b: AiMentalHealthNote) => 
         new Date(b.timestamp as string).getTime() - new Date(a.timestamp as string).getTime());
     setNotes(storedNotes);
@@ -138,14 +138,20 @@ export default function ProfilePage() {
                             <h3 className="font-headline text-lg font-semibold pt-4">Conversation Notes</h3>
                              {agentNotes.length > 0 ? (
                                 <div className="space-y-4">
-                                    {agentNotes.map(note => {
+                                    {agentNotes.map((note, index) => {
                                         const timestamp = new Date(note.timestamp as string);
+                                        // Numbering starts from the oldest note. Since the array is sorted newest to oldest,
+                                        // the number is total length minus the current index.
+                                        const noteNumber = agentNotes.length - index;
                                         return (
                                             <Card key={note.id}>
                                                 <CardHeader>
-                                                    <CardTitle className="text-md flex items-center gap-2">
+                                                    <CardTitle className="text-md flex items-center justify-between">
+                                                      <div className="flex items-center gap-2">
                                                         <MessageSquareText className="h-4 w-4" />
                                                         Note from {timestamp.toLocaleDateString()}
+                                                      </div>
+                                                      <span className="text-sm font-medium text-muted-foreground">#{noteNumber}</span>
                                                     </CardTitle>
                                                 </CardHeader>
                                                 <CardContent>
