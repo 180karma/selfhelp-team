@@ -9,6 +9,27 @@ import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useMemo, useState, useEffect } from 'react';
 import { useUser } from '@/firebase';
 
+// Simple markdown renderer component
+function MarkdownContent({ content }: { content: string }) {
+  const renderMarkdown = (text: string) => {
+    // Bold
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // Headers
+    text = text.replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>');
+    text = text.replace(/^## (.*$)/gim, '<h2 class="text-xl font-semibold mt-4 mb-2">$1</h2>');
+    // Line breaks
+    text = text.replace(/\n/g, '<br />');
+    
+    return text;
+  };
+
+  return (
+    <div 
+      dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
+    />
+  );
+}
+
 export default function ProfilePage() {
   const { user } = useUser();
   const [profiles, setProfiles] = useState<AiMentalHealthProfile[]>([]);
@@ -102,7 +123,7 @@ export default function ProfilePage() {
                                     <CardDescription>This is the initial analysis based on your questionnaire answers.</CardDescription>
                                 </CardHeader>
                                 <CardContent className="pt-0">
-                                   <p className="whitespace-pre-wrap text-sm">{profile.profileData}</p>
+                                   <MarkdownContent content={profile.profileData} />
                                 </CardContent>
                             </Card>
 
@@ -149,7 +170,7 @@ export default function ProfilePage() {
                                                     </CardTitle>
                                                 </CardHeader>
                                                 <CardContent>
-                                                    <p className="whitespace-pre-wrap text-sm">{note.noteData}</p>
+                                                    <MarkdownContent content={note.noteData} />
                                                 </CardContent>
                                             </Card>
                                         );
