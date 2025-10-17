@@ -9,7 +9,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-
+import { getRandomAcknowledgement } from '@/lib/acknowledgements';
 
 // Define schemas inside the file, but do not export them.
 const AgentChatInputSchema = z.object({
@@ -20,6 +20,7 @@ const AgentChatInputSchema = z.object({
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history.'),
   message: z.string().describe('The latest user message.'),
+  lastAcknowledgement: z.string().optional().describe('The last acknowledgement used by the agent.'),
 });
 type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
@@ -34,6 +35,7 @@ const AgentChatOutputSchema = z.object({
             addedBy: z.string().describe("The name of the agent adding the task.")
         }).describe("A mandatory task for the user to add to their goal list if they agree.").optional()
     }).describe("A multiple-choice question to ask the user.").optional(),
+    acknowledgement: z.string().describe("The acknowledgement phrase used.")
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
 
@@ -44,18 +46,37 @@ const agentChatFlow = ai.defineFlow(
     outputSchema: AgentChatOutputSchema,
   },
   async (input) => {
-    const { persona, userName, history, message } = input;
+    const { persona, userName, history, message, lastAcknowledgement } = input;
 
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
       system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.`,
       output: {
-        schema: AgentChatOutputSchema,
+        schema: z.object({ // Create a temporary schema for the AI output, without the acknowledgement
+            response: AgentChatOutputSchema.shape.response,
+            question: AgentChatOutputSchema.shape.question,
+        }),
       }
     });
 
-    return llmResponse.output!;
+    const output = llmResponse.output;
+
+    if (!output) {
+      throw new Error("Flow did not produce a valid output.");
+    }
+    
+    // Determine if an acknowledgement should be added.
+    // We add one if there's history and the last message was from the user.
+    const shouldAcknowledge = history.length > 0 && history[history.length -1].role === 'user';
+    const acknowledgement = shouldAcknowledge ? getRandomAcknowledgement(lastAcknowledgement) : '';
+    const finalResponse = shouldAcknowledge ? `${acknowledgement} ${output.response}` : output.response;
+
+    return {
+        response: finalResponse,
+        question: output.question,
+        acknowledgement: acknowledgement,
+    };
   }
 );
 

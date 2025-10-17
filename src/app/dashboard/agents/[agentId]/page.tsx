@@ -81,6 +81,7 @@ export default function AgentChatPage() {
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [introSent, setIntroSent] = useState(false);
   const historyRef = useRef(history);
+  const [lastAcknowledgement, setLastAcknowledgement] = useState<string | undefined>();
 
   useEffect(() => {
     historyRef.current = history;
@@ -167,9 +168,13 @@ export default function AgentChatPage() {
         userName: user?.displayName?.split(' ')[0] || 'the user',
         history: genkitHistory,
         message: message,
+        lastAcknowledgement,
       });
 
       setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
+      if (result.acknowledgement) {
+        setLastAcknowledgement(result.acknowledgement);
+      }
 
     } catch (error: any) {
       console.error('Error chatting with agent:', error);
