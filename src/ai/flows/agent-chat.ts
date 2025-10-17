@@ -46,12 +46,10 @@ const agentChatFlow = ai.defineFlow(
   async (input) => {
     const { persona, userName, history, message } = input;
 
-    const populatedPersona = persona.replace(/{{{userName}}}/g, userName);
-
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: populatedPersona,
+      system: `Your instructions: ${persona}\n\nYou are addressing the user by their first name, which is: ${userName}.`,
       output: {
         schema: AgentChatOutputSchema,
       }
