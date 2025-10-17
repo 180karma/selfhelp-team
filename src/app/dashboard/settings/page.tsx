@@ -15,9 +15,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { agents } from '@/lib/agents';
-import { Trash2 } from 'lucide-react';
+import { Trash2, UserX } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/firebase';
+import { deleteUser } from 'firebase/auth';
+import { Separator } from '@/components/ui/separator';
 
 export default function SettingsPage() {
   const { toast } = useToast();
@@ -61,6 +63,37 @@ export default function SettingsPage() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!user) {
+      toast({
+        variant: 'destructive',
+        title: 'Not Authenticated',
+        description: 'You must be logged in to delete your account.',
+      });
+      return;
+    }
+
+    try {
+      await deleteUser(user);
+      toast({
+        title: 'Account Deleted',
+        description: 'Your account has been permanently deleted.',
+      });
+      router.push('/'); // Redirect to homepage after deletion
+    } catch (error: any) {
+      console.error('Failed to delete account:', error);
+      let description = 'An error occurred while deleting your account.';
+      if (error.code === 'auth/requires-recent-login') {
+        description = 'This is a sensitive operation. Please log out and log back in before deleting your account.';
+      }
+      toast({
+        variant: 'destructive',
+        title: 'Deletion Failed',
+        description: description,
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="font-headline text-3xl font-bold">Settings</h1>
@@ -72,7 +105,7 @@ export default function SettingsPage() {
             These actions are irreversible. Please proceed with caution.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold">Reset All Data</h3>
@@ -83,7 +116,7 @@ export default function SettingsPage() {
             
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive">
+                <Button variant="destructive" className="shrink-0">
                   <Trash2 className="mr-2 h-4 w-4" />
                   Reset All Data
                 </Button>
@@ -99,6 +132,40 @@ export default function SettingsPage() {
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction onClick={handleResetData} className="bg-destructive hover:bg-destructive/90">
                     Yes, delete my data
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+
+          <Separator />
+
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold">Delete Account</h3>
+              <p className="text-sm text-muted-foreground">
+                This will permanently delete your account and all associated data from our servers.
+              </p>
+            </div>
+            
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="shrink-0">
+                  <UserX className="mr-2 h-4 w-4" />
+                  Delete Account
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure you want to delete your account?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action is permanent and cannot be undone. All your data, including your profile, diary entries, and goals will be permanently removed.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive hover:bg-destructive/90">
+                    Yes, delete my account
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
