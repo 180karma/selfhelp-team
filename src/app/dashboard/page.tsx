@@ -2,10 +2,25 @@
 
 import { GoalManager } from '@/components/goals/goal-manager';
 import { useUser } from '@/firebase';
+import { useEffect, useState } from 'react';
 
 export default function DashboardPage() {
   const { user } = useUser();
-  const userName = user?.displayName?.split(' ')[0] || 'friend';
+  const [userName, setUserName] = useState<string>('friend');
+
+  useEffect(() => {
+    if (user) {
+      // Get name from Firebase displayName or localStorage
+      if (user.displayName) {
+        setUserName(user.displayName.split(' ')[0]);
+      } else {
+        const storedName = localStorage.getItem('thrivewell-user-name');
+        if (storedName) {
+          setUserName(storedName);
+        }
+      }
+    }
+  }, [user]);
 
   return (
     <div className="space-y-6">

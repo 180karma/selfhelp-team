@@ -15,16 +15,65 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { agents } from '@/lib/agents';
-import { Trash2, UserX } from 'lucide-react';
+import { Trash2, UserX, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/firebase';
-import { deleteUser } from 'firebase/auth';
+import { deleteUser, updateProfile } from 'firebase/auth';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useState, useEffect } from 'react';
 
 export default function SettingsPage() {
   const { toast } = useToast();
   const router = useRouter();
   const { user } = useUser();
+  const [displayName, setDisplayName] = useState('');
+  const [isSavingName, setIsSavingName] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setDisplayName(user.displayName || localStorage.getItem('thrivewell-user-name') || '');
+    }
+  }, [user]);
+
+  const handleUpdateName = async () => {
+    if (!displayName.trim()) {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid Name',
+        description: 'Please enter a valid name.',
+      });
+      return;
+    }
+
+    setIsSavingName(true);
+    try {
+      // Update Firebase profile if user exists
+      if (user) {
+        await updateProfile(user, {
+          displayName: displayName.trim(),
+        });
+      }
+      
+      // Also save to localStorage as backup
+      localStorage.setItem('thrivewell-user-name', displayName.trim().split(' ')[0]);
+      
+      toast({
+        title: 'Profile Updated',
+        description: 'Your name has been successfully updated.',
+      });
+    } catch (error) {
+      console.error('Failed to update name:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Update Failed',
+        description: 'Could not update your name. Please try again.',
+      });
+    } finally {
+      setIsSavingName(false);
+    }
+  };
 
   const handleResetData = () => {
     try {
@@ -97,6 +146,38 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <h1 className="font-headline text-3xl font-bold">Settings</h1>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-headline flex items-center gap-2">
+            <User className="h-5 w-5" />
+            Profile Settings
+          </CardTitle>
+          <CardDescription>
+            Update your personal information. Your AI agents will use this to address you.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="displayName">Name</Label>
+            <div className="flex gap-2">
+              <Input
+                id="displayName"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Enter your name"
+                className="flex-1"
+              />
+              <Button onClick={handleUpdateName} disabled={isSavingName}>
+                {isSavingName ? 'Saving...' : 'Save'}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              This is the name our AI agents will use when talking to you.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
       
       <Card className="border-destructive">
         <CardHeader>

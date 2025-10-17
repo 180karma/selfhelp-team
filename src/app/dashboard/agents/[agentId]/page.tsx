@@ -64,6 +64,34 @@ export default function AgentChatPage() {
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+  const [userName, setUserName] = useState<string>('');
+
+  // Get user's name from multiple sources
+  useEffect(() => {
+    if (user) {
+      // Priority: 1. Firebase displayName, 2. localStorage, 3. Prompt user
+      if (user.displayName) {
+        const firstName = user.displayName.split(' ')[0];
+        setUserName(firstName);
+        localStorage.setItem('thrivewell-user-name', firstName);
+      } else {
+        const storedName = localStorage.getItem('thrivewell-user-name');
+        if (storedName) {
+          setUserName(storedName);
+        } else {
+          // Prompt user for their name
+          const name = prompt('Welcome! Please enter your first name so our agents can address you properly:');
+          if (name && name.trim()) {
+            const firstName = name.trim().split(' ')[0];
+            setUserName(firstName);
+            localStorage.setItem('thrivewell-user-name', firstName);
+          } else {
+            setUserName('friend');
+          }
+        }
+      }
+    }
+  }, [user]);
 
   const [assessment, setAssessment] = useState<DocumentData | null>(null);
   const [isLoadingAssessment, setIsLoadingAssessment] = useState(true);
@@ -165,7 +193,7 @@ export default function AgentChatPage() {
       const genkitHistory = toGenkitHistory(currentHistory);
       const result = await agentChat({
         persona: personaWithContext,
-        userName: user?.displayName?.split(' ')[0] || 'the user',
+        userName: userName || 'friend',
         history: genkitHistory,
         message: message,
         lastAcknowledgement,
@@ -218,7 +246,7 @@ export default function AgentChatPage() {
       const genkitHistory = toGenkitHistory(currentHistory);
       const { noteData, updatedRoadmap } = await summarizeConversation({
         persona: agent!.persona,
-        userName: user?.displayName?.split(' ')[0] || 'the user',
+        userName: userName || 'friend',
         history: genkitHistory,
         roadmap: currentRoadmap,
       });

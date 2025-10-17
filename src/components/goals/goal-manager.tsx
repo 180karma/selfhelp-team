@@ -147,10 +147,11 @@ export function GoalManager() {
     }
 
     // 3. Show Toast
+    const userName = user.displayName?.split(' ')[0] || localStorage.getItem('thrivewell-user-name') || 'friend';
     if (goalToComplete.addedBy) {
         toast({ 
             title: `A message from ${goalToComplete.addedBy.split(' ')[0]} 🎉`, 
-            description: `Great job on completing your goal, ${user.displayName?.split(' ')[0]}!` 
+            description: `Great job on completing your goal, ${userName}!` 
         });
     } else {
         toast({ 
