@@ -15,8 +15,6 @@ export default function ProfilePage() {
   const [notes, setNotes] = useState<AiMentalHealthNote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const profileTitle = user?.displayName ? `${user.displayName}'s AI-Generated Profiles` : 'My AI-Generated Profiles';
-
   useEffect(() => {
     setIsLoading(true);
     // Load profiles from local storage
@@ -64,7 +62,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="font-headline text-3xl font-bold">My AI-Generated Profiles</h1>
+        <h1 className="font-headline text-3xl font-bold">Team Notes</h1>
         <div className="space-y-4">
             <Skeleton className="h-20 w-full" />
             <Skeleton className="h-20 w-full" />
@@ -76,7 +74,7 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-headline text-3xl font-bold">{profileTitle}</h1>
+      <h1 className="font-headline text-3xl font-bold">Team Notes</h1>
       <p className="text-muted-foreground">
         As you interact with your AI wellness team, they create profiles and notes from your conversations. These are saved to your browser.
       </p>
