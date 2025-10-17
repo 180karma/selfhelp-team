@@ -49,7 +49,7 @@ const agentChatFlow = ai.defineFlow(
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: `Your instructions: ${persona}\n\nYou are addressing the user by their first name, which is: ${userName}.`,
+      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.`,
       output: {
         schema: AgentChatOutputSchema,
       }

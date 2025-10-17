@@ -213,7 +213,7 @@ export default function AgentChatPage() {
       const genkitHistory = toGenkitHistory(currentHistory);
       const { noteData, updatedRoadmap } = await summarizeConversation({
         persona: agent!.persona,
-        userName: user?.displayName || 'the user',
+        userName: user?.displayName?.split(' ')[0] || 'the user',
         history: genkitHistory,
         roadmap: currentRoadmap,
       });

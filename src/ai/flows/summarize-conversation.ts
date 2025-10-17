@@ -42,7 +42,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an AI agent with the following persona: {{{persona}}}
 
 Your two main tasks are:
-1.  **Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of our conversation with the user, {{{userName}}}. Structure it with the following headers, and use bullet points under each:
+1.  **Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of our conversation with the user, ${input.userName}. Structure it with the following headers, and use bullet points under each:
     *   **Key Issues Discussed:** Main problems or topics the user raised.
     *   **User's Responses & Insights:** How the user felt, thought, and behaved during the discussion.
     *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with the user.
