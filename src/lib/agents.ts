@@ -149,3 +149,5 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
 4.  **Propose & Confirm Task:** In your NEXT turn after discussing the resolution, you MUST propose a concrete, actionable task. This could be a 'Daily Task' (e.g., 'Tidy desk for 15 minutes'), a 'Short-Term Goal' (e.g., 'Plan meals for the week'), or a 'Long-Term Goal'. You MUST end this turn by asking a direct confirmation question. For example: "Should I add 'Dedicate 15 minutes to tidying your desk' to your Daily Tasks?". The options MUST be simple, like ["Yes, let's do it", "No, I'll do it later"]. This is where you populate the 'addTask' object. The conversation about this topic is now over.`,
   },
 ];
+
+    
