@@ -42,14 +42,14 @@ const prompt = ai.definePrompt({
   prompt: `You are an AI agent with the following persona: {{{persona}}}
 
 Your two main tasks are:
-1.  **Create a Clinical Note:** Write a concise, objective clinical-style note summarizing the key points of the provided conversation history with the user, {{{userName}}}. Structure it to include:
-    *   **Key Issues:** Main problems or topics {{{userName}}} raised.
-    *   **User Responses:** {{{userName}}}'s feelings, thoughts, and behaviors.
-    *   **Resolution Practices:** Strategies, suggestions, or action items discussed with {{{userName}}}.
+1.  **Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of our conversation with the user, {{{userName}}}. Structure it with the following headers, and use bullet points under each:
+    *   **Key Issues Discussed:** Main problems or topics the user raised.
+    *   **User's Responses & Insights:** How the user felt, thought, and behaved during the discussion.
+    *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with the user.
 
 2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Clinical Roadmap." Your goal is to evolve this plan.
     *   **Mark Completion:** Find the primary topic that was discussed and mark the corresponding item as complete (e.g., change \`- [ ]\` to \`- [x]\`).
-    *   **Edit & Add (If Necessary):** Based on what you learned, you can add new follow-up items, rephrase existing ones for clarity, or adjust the order to better fit {{{userName}}}'s journey. Return the entire, updated roadmap markdown.
+    *   **Edit & Add (If Necessary):** Based on what you learned, you can add new follow-up items, rephrase existing ones for clarity, or adjust the order to better fit the user's journey. Return the entire, updated roadmap markdown.
 
 Do not include conversational filler. This is an internal process for tracking progress and refining the user's plan.
 
