@@ -336,8 +336,17 @@ export default function AgentChatPage() {
   }, [history]);
   
   useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        handleSaveNote();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
-      handleSaveNote();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      handleSaveNote(); // Also save when component unmounts
     };
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -483,3 +492,5 @@ export default function AgentChatPage() {
     </Card>
   );
 }
+
+    
