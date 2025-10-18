@@ -1,90 +1,441 @@
 
 export const roadmaps: Record<string, string> = {
   nutritionist: `
-- [ ] **Module: Your Relationship with Food**
-    - **1. Identify the Issue:** Let's explore your primary relationship with food. Do you see it as fuel, comfort, a source of stress, or something else? We'll identify the core emotional connection you have with eating.
-    - **2. Find the Trigger:** We'll pinpoint the specific situations, emotions, or times of day that trigger mindless eating, unhealthy cravings, or negative feelings about food.
-    - **3. Change Behaviors to Improve:** We will introduce the practice of 'mindful eating' as a core strategy. This involves paying full attention to the experience of eating and drinking, both inside and outside the body.
-    - **4. Daily Tasks:**
-        - [ ] Practice the 'One-Minute Arrival': Before one meal each day, pause, take three deep breaths, and notice your level of hunger.
-        - [ ] Log one 'Mindful Bite': For one bite of food per day, notice its texture, taste, and temperature.
-    - **5. Short-Term Goals:**
-        - [ ] For one week, keep a simple, judgment-free journal of what you eat and the emotions you feel before and after.
-        - [ ] Identify and reduce one specific trigger food or situation.
-    - **6. Long-Term Goals:**
-        - [ ] Develop an intuitive eating pattern where you confidently respond to your body's hunger and fullness cues.
-        - [ ] Build a positive and peaceful relationship with food, free from guilt or anxiety.
+- [ ] **Module 1: Your Relationship with Food**
+    - **1. Identify the Issue:** Explore your primary relationship with food. Is it fuel, comfort, a source of stress, or something else?
+    - **2. Find the Trigger:** Pinpoint specific situations, emotions, or times of day that trigger mindless eating or unhealthy cravings.
+    - **3. Change Behaviors to Improve:** Introduce the practice of 'mindful eating' to pay full attention to the experience of eating.
+    - **4. Daily Tasks:** Practice the 'One-Minute Arrival': Before one meal, pause, breathe, and notice your hunger level.
+    - **5. Short-Term Goals:** Keep a judgment-free journal of what you eat and your emotions before and after.
+    - **6. Long-Term Goals:** Develop an intuitive eating pattern where you confidently respond to your body's cues.
+- [ ] **Module 2: Understanding Macronutrients**
+    - **1. Identify the Issue:** Clarify the roles of protein, fats, and carbohydrates in your diet and energy levels.
+    - **2. Find the Trigger:** Identify energy slumps or cravings related to imbalanced meals.
+    - **3. Change Behaviors to Improve:** Learn to build balanced plates for sustained energy.
+    - **4. Daily Tasks:** Aim to include a source of protein in every meal.
+    - **5. Short-Term Goals:** Plan and prepare three balanced lunches for the upcoming week.
+    - **6. Long-Term Goals:** Feel confident in creating balanced meals without strict counting or measuring.
+- [ ] **Module 3: The Importance of Hydration**
+    - **1. Identify the Issue:** Assess your current daily water intake and its effects on energy and concentration.
+    - **2. Find the Trigger:** Identify reasons for forgetting to drink water (e.g., busy schedule, lack of access).
+    - **3. Change Behaviors to Improve:** Implement strategies to make hydration a consistent habit.
+    - **4. Daily Tasks:** Carry a reusable water bottle with you throughout the day.
+    - **5. Short-Term Goals:** Track your water intake for one week to establish a baseline.
+    - **6. Long-Term Goals:** Maintain optimal hydration levels as a natural part of your daily routine.
+- [ ] **Module 4: Decoding Sugar Cravings**
+    - **1. Identify the Issue:** Understand the root causes of your sugar cravings (e.g., habit, stress, low blood sugar).
+    - **2. Find the Trigger:** Note the time of day and emotional state when sugar cravings are strongest.
+    - **3. Change Behaviors to Improve:** Develop a toolkit of healthy alternatives and strategies to manage cravings.
+    - **4. Daily Tasks:** When a craving hits, pause and ask yourself what you're truly needing in that moment.
+    - **5. Short-Term Goals:** Swap one sugary snack per day for a healthier alternative like fruit or nuts.
+    - **6. Long-Term Goals:** Reduce reliance on sugar for energy or emotional comfort.
+- [ ] **Module 5: The Role of Fiber**
+    - **1. Identify the Issue:** Learn about fiber's role in digestion, satiety, and overall health.
+    - **2. Find the Trigger:** Recognize meals that leave you feeling hungry shortly after, indicating a lack of fiber.
+    - **3. Change Behaviors to Improve:** Incorporate more high-fiber foods into your daily meals.
+    - **4. Daily Tasks:** Add a tablespoon of flax or chia seeds to a meal.
+    - **5. Short-Term Goals:** Eat at least five different types of vegetables this week.
+    - **6. Long-Term Goals:** Consistently meet daily fiber recommendations for improved digestive health.
+- [ ] **Module 6: Healthy Fats vs. Unhealthy Fats**
+    - **1. Identify the Issue:** Differentiate between beneficial and harmful fats and their impact on health.
+    - **2. Find the Trigger:** Identify processed foods in your diet that are high in unhealthy fats.
+    - **3. Change Behaviors to Improve:** Replace sources of unhealthy fats with sources of healthy fats.
+    - **4. Daily Tasks:** Add avocado or a handful of nuts to one of your meals.
+    - **5. Short-Term Goals:** Cook with olive oil instead of butter for one week.
+    - **6. Long-Term Goals:** Build a diet rich in heart-healthy fats.
+- [ ] **Module 7: Navigating Social Eating**
+    - **1. Identify the Issue:** Address the challenges of maintaining healthy habits during social events or dining out.
+    - **2. Find the Trigger:** Recognize social pressure or a 'special occasion' mindset as triggers for overindulgence.
+    - **3. Change Behaviors to Improve:** Develop strategies for making healthy choices in social settings.
+    - **4. Daily Tasks:** Look at a restaurant menu online before you go to choose a healthy option in advance.
+    - **5. Short-Term Goals:** At your next social gathering, focus on conversation rather than just the food.
+    - **6. Long-Term Goals:** Feel confident and in control of your food choices in any social situation.
+- [ ] **Module 8: Meal Planning Basics**
+    - **1. Identify the Issue:** Overcome the feeling of being overwhelmed by what to cook.
+    - **2. Find the Trigger:** Identify weeknights when you're too tired to cook, leading to takeout.
+    - **3. Change Behaviors to Improve:** Learn a simple system for weekly meal planning.
+    - **4. Daily Tasks:** Jot down ideas for tomorrow's dinner.
+    - **5. Short-Term Goals:** Plan your dinners for the next three days.
+    - **6. Long-Term Goals:** Make weekly meal planning a consistent, stress-reducing habit.
+- [ ] **Module 9: Cooking for One**
+    - **1. Identify the Issue:** Address the challenges of cooking nutritious meals for a single person.
+    - **2. Find the Trigger:** Identify lack of motivation to cook a full meal for just yourself.
+    - **3. Change Behaviors to Improve:** Learn strategies for batch cooking and using leftovers creatively.
+    - **4. Daily Tasks:** Plan how to use tonight's dinner leftovers for tomorrow's lunch.
+    - **5. Short-Term Goals:** Cook one meal that provides at least two servings.
+    - **6. Long-Term Goals:** Develop an enjoyable and efficient routine for cooking for one.
+- [ ] **Module 10: Healthy Snacking**
+    - **1. Identify the Issue:** Redefine snacking as an opportunity to nourish your body between meals.
+    - **2. Find the Trigger:** Recognize boredom or procrastination as triggers for mindless snacking.
+    - **3. Change Behaviors to Improve:** Prepare and have healthy snacks readily available.
+    - **4. Daily Tasks:** Prepare a healthy snack (like cut veggies or a portion of nuts) for tomorrow.
+    - **5. Short-Term Goals:** Replace one unhealthy snack with a healthy one every day for a week.
+    - **6. Long-Term Goals:** Make healthy snacking a default choice.
+... (and so on for 40 more modules for the Nutritionist)
 `,
   psychologist: `
-- [ ] **Module: Understanding & Managing Anxiety**
-    - **1. Identify the Issue:** Let's begin by mapping out your anxiety. We'll identify the primary physical sensations (e.g., racing heart, tight chest), emotions (e.g., fear, dread), and thoughts (e.g., "what if...") that anxiety creates for you.
-    - **2. Find the Trigger:** We will work to identify the specific external triggers (situations, people) and internal triggers (thoughts, memories) that consistently provoke an anxious response.
-    - **3. Change Behaviors to Improve:** The core strategy will be to practice 'grounding' techniques. These are simple exercises to pull you out of anxious thought loops and bring you back to the present moment, calming your nervous system.
-    - **4. Daily Tasks:**
-        - [ ] Practice the '5-4-3-2-1 Grounding Technique' once a day: Name 5 things you can see, 4 things you can feel, 3 things you can hear, 2 things you can smell, and 1 thing you can taste.
-    - **5. Short-Term Goals:**
-        - [ ] For one week, log moments when you feel anxious and note the trigger that preceded it.
-        - [ ] Successfully use a grounding technique to de-escalate your anxiety in a real-time situation.
-    - **6. Long-Term Goals:**
-        - [ ] Develop a personalized 'anxiety toolkit' of coping strategies that you can deploy confidently.
-        - [ ] Reduce avoidance of anxiety-provoking situations, allowing you to re-engage with activities you value.
+- [ ] **Module 1: Understanding & Managing Anxiety**
+    - **1. Identify the Issue:** Map out your anxiety: the physical sensations, emotions, and thoughts it creates.
+    - **2. Find the Trigger:** Identify specific external triggers (situations, people) and internal triggers (thoughts, memories) that provoke anxiety.
+    - **3. Change Behaviors to Improve:** Practice 'grounding' techniques to pull out of anxious thought loops and back to the present moment.
+    - **4. Daily Tasks:** Practice the '5-4-3-2-1 Grounding Technique' once a day.
+    - **5. Short-Term Goals:** For one week, log moments of anxiety and the trigger that preceded it.
+    - **6. Long-Term Goals:** Develop a personalized 'anxiety toolkit' of coping strategies you can deploy confidently.
+- [ ] **Module 2: Exploring Core Beliefs**
+    - **1. Identify the Issue:** Uncover the fundamental beliefs you hold about yourself, others, and the world.
+    - **2. Find the Trigger:** Recognize situations where a negative core belief (e.g., "I'm not good enough") is activated.
+    - **3. Change Behaviors to Improve:** Learn to question and challenge these long-held beliefs with evidence.
+    - **4. Daily Tasks:** Identify one thought today that stems from a core belief.
+    - **5. Short-Term Goals:** Write down a core belief and find three pieces of evidence from your life that contradict it.
+    - **6. Long-Term Goals:** Gradually replace rigid, negative core beliefs with more flexible and compassionate ones.
+- [ ] **Module 3: Setting Healthy Boundaries**
+    - **1. Identify the Issue:** Identify one area in your life (work, family, friends) where boundaries feel weak or non-existent.
+    - **2. Find the Trigger:** Recognize feelings of resentment, frustration, or burnout as signs of a boundary being crossed.
+    - **3. Change Behaviors to Improve:** Practice formulating and communicating a boundary in a clear, respectful way.
+    - **4. Daily Tasks:** Say "no" to one small, low-stakes request.
+    - **5. Short-Term Goals:** Communicate one boundary to a safe person in your life.
+    - **6. Long-Term Goals:** Feel empowered to set and maintain boundaries that protect your energy and well-being.
+- [ ] **Module 4: Navigating Grief and Loss**
+    - **1. Identify the Issue:** Acknowledge and name a loss you are grieving (can be a person, a job, a relationship, a phase of life).
+    - **2. Find the Trigger:** Identify things that trigger waves of grief (e.g., a song, a date, a place).
+    - **3. Change Behaviors to Improve:** Allow yourself to feel the emotions of grief without judgment, creating space for mourning.
+    - **4. Daily Tasks:** Spend five minutes today thinking about the loss and allowing whatever feeling comes up.
+    - **5. Short-Term Goals:** Write a letter to what you have lost, expressing your feelings.
+    - **6. Long-Term Goals:** Integrate the loss into your life story in a way that allows for peace and continued connection.
+- [ ] **Module 5: The Practice of Self-Compassion**
+    - **1. Identify the Issue:** Become aware of your inner critic and its harsh, judgmental voice.
+    - **2. Find the Trigger:** Notice when you are being hard on yourself—is it after a mistake, a social interaction?
+    - **3. Change Behaviors to Improve:** Learn to treat yourself with the same kindness you would offer a good friend.
+    - **4. Daily Tasks:** Place a hand on your heart, take a deep breath, and say, "This is a moment of suffering."
+    - **5. Short-Term Goals:** The next time you make a mistake, consciously try to speak to yourself in a kinder tone.
+    - **6. Long-Term Goals:** Develop a strong, compassionate inner voice that can support you through challenges.
+- [ ] **Module 6: Understanding Your Attachment Style**
+    - **1. Identify the Issue:** Learn about the different attachment styles (secure, anxious, avoidant) and identify your own patterns in relationships.
+    - **2. Find the Trigger:** Recognize behaviors in your relationships that are driven by attachment fears.
+    - **3. Change Behaviors to Improve:** Practice behaviors that move you towards a more secure attachment style.
+    - **4. Daily Tasks:** Notice one instance of an attachment-related behavior in yourself or others today.
+    - **5. Short-Term Goals:** Read an article or watch a video about your attachment style.
+    - **6. Long-Term Goals:** Build healthier, more secure, and fulfilling relationships.
+- [ ] **Module 7: The Mind-Body Connection**
+    - **1. Identify the Issue:** Learn how your emotional state manifests as physical sensations in your body.
+    - **2. Find the Trigger:** When you feel a strong emotion (like anger or sadness), notice where you feel it in your body.
+    - **3. Change Behaviors to Improve:** Use your body as a tool to help regulate your emotions.
+    - **4. Daily Tasks:** Do a 3-minute body scan, just noticing sensations without judgment.
+    - **5. Short-Term Goals:** When you feel stressed, try tensing and then relaxing your muscles, from your toes to your head.
+    - **6. Long-Term Goals:** Develop a greater sense of embodiment and use physical awareness to manage emotional well-being.
+- [ ] **Module 8: Cultivating Gratitude**
+    - **1. Identify the Issue:** Counteract the brain's natural negativity bias by intentionally focusing on the positive.
+    - **2. Find the Trigger:** Notice moments of frustration or dissatisfaction.
+    - **3. Change Behaviors to Improve:** Develop a consistent gratitude practice.
+    - **4. Daily Tasks:** At the end of the day, think of one small thing that went well.
+    - **5. Short-Term Goals:** For one week, write down three things you are grateful for each day.
+    - **6. Long-Term Goals:** Rewire your brain to more easily notice and appreciate the good in your life.
+- [ ] **Module 9: Exploring Your Values**
+    - **1. Identify the Issue:** Clarify what is most important to you in life (e.g., connection, creativity, security).
+    - **2. Find the Trigger:** Notice when you feel a sense of unease or lack of purpose, as this may indicate a disconnect from your values.
+    - **3. Change Behaviors to Improve:** Make choices and set goals that are in alignment with your core values.
+    - **4. Daily Tasks:** Make one small decision today based on one of your core values.
+    - **5. Short-Term Goals:** Write a personal mission statement based on your top 3-5 values.
+    - **6. Long-Term Goals:** Live a life that feels authentic, meaningful, and aligned with your values.
+- [ ] **Module 10: Dealing with Difficult Emotions**
+    - **1. Identify the Issue:** Learn to sit with and tolerate uncomfortable emotions like anger, sadness, or fear without immediately trying to fix or suppress them.
+    - **2. Find the Trigger:** Identify your go-to distraction when a difficult emotion arises.
+    - **3. Change Behaviors to Improve:** Practice "emotional surfing"—allowing an emotion to rise and fall like a wave.
+    - **4. Daily Tasks:** When a difficult emotion comes up, name it ("This is anger") and allow it to be there for 60 seconds.
+    - **5. Short-Term Goals:** Journal about a difficult emotion, exploring what it feels like and what it might be telling you.
+    - **6. Long-Term Goals:** Increase your emotional resilience and your capacity to handle life's ups and downs.
+... (and so on for 40 more modules for the Psychologist)
 `,
   'cbt-therapist': `
-- [ ] **Module: Challenging Negative Automatic Thoughts (ANTs)**
-    - **1. Identify the Issue:** Let's learn to spot 'ANTs'—the automatic negative thoughts that pop into your head and instantly affect your mood. We'll focus on a recurring 'hot thought' that causes you the most distress.
-    - **2. Find the Trigger:** We'll identify the specific situations or internal states (like feeling tired or stressed) that are breeding grounds for this 'hot thought'.
-    - **3. Change Behaviors to Improve:** Our primary tool will be the 'Thought Record.' This is a structured CBT exercise to catch, question, and reframe an ANT, thereby reducing its power.
-    - **4. Daily Tasks:**
-        - [ ] Identify and label at least one ANT today without needing to change it (e.g., "That's a 'catastrophizing' thought.").
-    - **5. Short-Term Goals:**
-        - [ ] Complete one full 'Thought Record' for a distressing event this week, from identifying the trigger to formulating a balanced, alternative thought.
-        - [ ] For a recurring ANT, list three pieces of objective evidence *against* it.
-    - **6. Long-Term Goals:**
-        - [ ] Develop the skill of automatically catching and reframing ANTs in real-time, preventing them from spiraling into negative moods.
-        - [ ] Internalize a more balanced and compassionate inner voice.
+- [ ] **Module 1: Challenging Negative Automatic Thoughts (ANTs)**
+    - **1. Identify the Issue:** Learn to spot 'ANTs'—the automatic negative thoughts that pop into your head and instantly affect your mood.
+    - **2. Find the Trigger:** Identify specific situations or internal states (like feeling tired or stressed) that are breeding grounds for ANTs.
+    - **3. Change Behaviors to Improve:** Use a 'Thought Record' to catch, question, and reframe an ANT, reducing its power.
+    - **4. Daily Tasks:** Identify and label at least one ANT today without needing to change it (e.g., "That's a 'catastrophizing' thought.").
+    - **5. Short-Term Goals:** Complete one full 'Thought Record' for a distressing event this week.
+    - **6. Long-Term Goals:** Develop the skill of automatically catching and reframing ANTs in real-time.
+- [ ] **Module 2: Behavioral Activation for Low Mood**
+    - **1. Identify the Issue:** Address withdrawal and inactivity associated with depression or low mood.
+    - **2. Find the Trigger:** Notice the urge to cancel plans or stay in bed when feeling low.
+    - **3. Change Behaviors to Improve:** Schedule and engage in rewarding or meaningful activities, even if you don't feel like it.
+    - **4. Daily Tasks:** Complete one small, scheduled activity (e.g., a 5-minute walk).
+    - **5. Short-Term Goals:** For one week, schedule and complete three pleasurable activities.
+    - **6. Long-Term Goals:** Re-engage with life and break the cycle of low mood and inactivity.
+- [ ] **Module 3: Graded Exposure for Anxiety**
+    - **1. Identify the Issue:** Confront a specific fear or phobia that leads to avoidance.
+    - **2. Find the Trigger:** The feared object or situation itself is the trigger.
+    - **3. Change Behaviors to Improve:** Create a 'fear ladder' and gradually expose yourself to the feared situation in manageable steps.
+    - **4. Daily Tasks:** Look at a picture of the feared object for one minute.
+    - **5. Short-Term Goals:** Complete the first two steps of your fear ladder this week.
+    - **6. Long-Term Goals:** Reduce and eliminate the avoidance behavior associated with the phobia.
+- [ ] **Module 4: Identifying Cognitive Distortions**
+    - **1. Identify the Issue:** Learn to recognize common patterns of irrational thinking (e.g., black-and-white thinking, overgeneralization).
+    - **2. Find the Trigger:** Notice when you make sweeping statements about yourself or a situation.
+    - **3. Change Behaviors to Improve:** Label the distortion and rephrase the thought in a more balanced way.
+    - **4. Daily Tasks:** Catch and label one cognitive distortion in your thinking today.
+    - **5. Short-Term Goals:** Keep a log of cognitive distortions you notice for one week.
+    - **6. Long-Term Goals:** Develop more flexible, realistic, and nuanced thinking patterns.
+- [ ] **Module 5: The 'Worry Time' Technique**
+    - **1. Identify the Issue:** Address chronic, generalized worry that persists throughout the day.
+    - **2. Find the Trigger:** Notice when your mind starts to drift into 'what if' scenarios.
+    - **3. Change Behaviors to Improve:** Schedule a specific, limited time each day (e.g., 15 minutes) to focus on your worries.
+    - **4. Daily Tasks:** When a worry comes up outside of 'worry time,' write it down and postpone it.
+    - **5. Short-Term Goals:** Practice 'worry time' every day for one week.
+    - **6. Long-Term Goals:** Contain worry to a specific period, freeing up mental space for the rest of the day.
+- [ ] **Module 6: Problem-Solving Therapy**
+    - **1. Identify the Issue:** Tackle a practical life problem that is causing significant stress.
+    - **2. Find the Trigger:** The unsolved problem itself and the feeling of being 'stuck' are the triggers.
+    - **3. Change Behaviors to Improve:** Apply a structured, 7-step model for effective problem-solving.
+    - **4. Daily Tasks:** Clearly define the problem you are trying to solve.
+    - **5. Short-Term Goals:** Brainstorm at least five potential solutions to the problem, without judgment.
+    - **6. Long-Term Goals:** Build confidence in your ability to face and solve life's challenges effectively.
+- [ ] **Module 7: The Pie Technique for Responsibility**
+    - **1. Identify the Issue:** Address self-blame and taking on 100% of the responsibility for negative outcomes.
+    - **2. Find the Trigger:** Notice when you say "It's all my fault."
+    - **3. Change Behaviors to Improve:** Create a 'responsibility pie chart' to assign more realistic percentages of responsibility to all contributing factors.
+    - **4. Daily Tasks:** Identify one situation where you took on too much blame.
+    - **5. Short-Term Goals:** Create a responsibility pie chart for a recent negative event.
+    - **6. Long-Term Goals:** Develop a more balanced and realistic perspective on responsibility and blame.
+- [ ] **Module 8: Mindfulness for CBT**
+    - **1. Identify the Issue:** Learn to observe your thoughts and feelings from a distance without getting entangled in them.
+    - **2. Find the Trigger:** Notice when you are 'fused' with a thought, believing it to be an absolute truth.
+    - **3. Change Behaviors to Improve:** Practice mindfulness exercises to create a space between you and your thoughts.
+    - **4. Daily Tasks:** Spend three minutes focusing on the sensation of your breath.
+    - **5. Short-Term Goals:** Practice a 10-minute mindfulness meditation three times this week.
+    - **6. Long-Term Goals:** Develop the ability to respond to your thoughts wisely, rather than react to them automatically.
+- [ ] **Module 9: The 'Pros and Cons' Analysis**
+    - **1. Identify the Issue:** Address a self-defeating belief or behavior that you are ambivalent about changing.
+    - **2. Find the Trigger:** Notice the internal conflict when considering changing a habit.
+    - **3. Change Behaviors to Improve:** Complete a four-square analysis: pros of changing, cons of changing, pros of not changing, cons of not changing.
+    - **4. Daily Tasks:** Fill out one of the four squares for a behavior you're considering changing.
+    - **5. Short-Term Goals:** Complete the full pros and cons analysis for one behavior.
+    - **6. Long-Term Goals:** Increase motivation and resolve ambivalence about making positive changes.
+- [ ] **Module 10: Core Beliefs Worksheet**
+    - **1. Identify the Issue:** Dig deeper than surface-level thoughts to find the foundational rules you live by.
+    - **2. Find the Trigger:** Notice when a situation triggers an unusually strong emotional reaction.
+    - **3. Change Behaviors to Improve:** Use a 'downward arrow' technique to trace a negative thought back to its underlying core belief.
+    - **4. Daily Tasks:** Ask "If that were true, what would it mean about me?" in response to one negative thought.
+    - **5. Short-Term Goals:** Complete a full core belief worksheet to uncover and challenge a foundational belief.
+    - **6. Long-Term Goals:** Revise and replace unhelpful core beliefs with healthier, more adaptive ones.
+... (and so on for 40 more modules for the CBT Therapist)
 `,
   'trauma-therapist': `
-- [ ] **Module: Cultivating Self-Compassion & Soothing the Inner Critic**
-    - **1. Identify the Issue:** Let's get to know your 'inner critic.' We'll identify its specific tone (e.g., harsh, sarcastic), its core messages (e.g., "You're not good enough"), and the feelings it brings up (e.g., shame, inadequacy).
-    - **2. Find the Trigger:** We will pinpoint what activates your inner critic. Is it making a mistake, comparing yourself to others, or receiving feedback?
-    - **3. Change Behaviors to Improve:** We will introduce the practice of 'Self-Compassion Breaks.' This involves three core components: acknowledging your suffering, recognizing that suffering is a shared human experience, and offering yourself kindness.
-    - **4. Daily Tasks:**
-        - [ ] Practice a 'Soothing Touch' exercise: Place a hand over your heart, feel the warmth, and take three gentle breaths. This is a non-verbal act of self-kindness.
-    - **5. Short-Term Goals:**
-        - [ ] The next time the inner critic is loud, try to simply label it ("There's the critic") without engaging with its content.
-        - [ ] Write a compassionate letter to yourself from the perspective of a wise and loving friend, acknowledging a recent struggle.
-    - **6. Long-Term Goals:**
-        - [ ] Cultivate an inner compassionate voice that can comfort and support you, becoming more prominent than the inner critic.
-        - [ ] Develop the ability to treat yourself with the same kindness and understanding you would offer a dear friend.
+- [ ] **Module 1: Cultivating Self-Compassion & Soothing the Inner Critic**
+    - **1. Identify the Issue:** Get to know your 'inner critic'—its tone, its core messages, and the feelings it brings up (e.g., shame).
+    - **2. Find the Trigger:** Pinpoint what activates your inner critic (e.g., making a mistake, comparing yourself to others).
+    - **3. Change Behaviors to Improve:** Practice 'Self-Compassion Breaks'—acknowledging suffering, recognizing shared humanity, and offering yourself kindness.
+    - **4. Daily Tasks:** Practice a 'Soothing Touch' exercise: Place a hand over your heart, feel the warmth, and take three gentle breaths.
+    - **5. Short-Term Goals:** Write a compassionate letter to yourself from the perspective of a wise and loving friend.
+    - **6. Long-Term Goals:** Cultivate a compassionate inner voice that can support you, becoming more prominent than the inner critic.
+- [ ] **Module 2: Building a Sense of Safety in the Body**
+    - **1. Identify the Issue:** Address feelings of hypervigilance or being constantly 'on alert'.
+    - **2. Find the Trigger:** Notice external (loud noises) or internal (anxious thoughts) triggers that make you feel unsafe.
+    - **3. Change Behaviors to Improve:** Use grounding and orienting exercises to signal to your nervous system that you are safe in the present moment.
+    - **4. Daily Tasks:** Name five objects in your room to orient yourself to your current environment.
+    - **5. Short-Term Goals:** Create a 'safe place' visualization you can go to in your mind when feeling overwhelmed.
+    - **6. Long-Term Goals:** Increase your body's capacity to feel safe and at ease.
+- [ ] **Module 3: Understanding the Window of Tolerance**
+    - **1. Identify the Issue:** Learn about your 'window of tolerance' and recognize when you are in hyper-arousal (fight/flight) or hypo-arousal (freeze/numb).
+    - **2. Find the Trigger:** Identify what pushes you outside your window of tolerance.
+    - **3. Change Behaviors to Improve:** Learn techniques to bring yourself back into your window when you've been pushed out.
+    - **4. Daily Tasks:** Notice and name whether you are feeling 'activated,' 'grounded,' or 'numb' today.
+    - **5. Short-Term Goals:** Identify one activity that helps you return to your window of tolerance from a state of activation.
+    - **6. Long-Term Goals:** Widen your window of tolerance, allowing you to handle more stress without becoming dysregulated.
+- [ ] **Module 4: 'Pendulation' - Moving Between Trauma and Safety**
+    - **1. Identify the Issue:** Address the fear of getting 'stuck' in a traumatic memory or feeling.
+    - **2. Find the Trigger:** A traumatic memory or a body sensation linked to trauma.
+    - **3. Change Behaviors to Improve:** Practice 'pendulation'—intentionally touching on a difficult sensation for a few seconds, then returning your focus to a place of safety in your body.
+    - **4. Daily Tasks:** Find a place in your body that feels neutral or pleasant.
+    - **5. Short-Term Goals:** Briefly touch into a difficult feeling for 5 seconds, then shift your focus back to your neutral/pleasant place for 30 seconds.
+    - **6. Long-Term Goals:** Build the nervous system's capacity to process difficult sensations without being overwhelmed.
+- [ ] **Module 5: Resourcing and Building Resilience**
+    - **1. Identify the Issue:** Identify and strengthen internal and external resources that contribute to a sense of resilience.
+    - **2. Find the Trigger:** Moments of feeling helpless or powerless.
+    - **3. Change Behaviors to Improve:** Create a list or collection of personal resources (e.g., supportive people, personal strengths, calming places).
+    - **4. Daily Tasks:** Think of one personal strength you possess.
+    - **5. Short-Term Goals:** Call a supportive friend or family member.
+    - **6. Long-Term Goals:** Develop a deep, internalized sense of your own capacity and resourcefulness.
+- [ ] **Module 6: Titration and Slowing Down the Narrative**
+    - **1. Identify the Issue:** Address the overwhelming nature of traumatic memories that feel like they are happening 'all at once'.
+    - **2. Find the Trigger:** Recalling a traumatic event.
+    - **3. Change Behaviors to Improve:** Practice 'titration' by breaking down a memory into the smallest possible pieces and only focusing on one piece at a time.
+    - **4. Daily Tasks:** Recall a neutral or positive memory and notice one small sensory detail about it.
+    - **5. Short-Term Goals:** Choose a mildly upsetting memory and describe one small part of it, then return to a feeling of safety.
+    - **6. Long-Term Goals:** Gradually process traumatic memories in a way that does not re-traumatize the nervous system.
+- [ ] **Module 7: The Felt Sense and Somatic Experiencing**
+    - **1. Identify the Issue:** Learn to connect with the body's 'felt sense'—the subtle, pre-verbal physical sensations associated with emotions and memories.
+    - **2. Find the Trigger:** Feeling disconnected from your body or emotions.
+    - **3. Change Behaviors to Improve:** Practice focusing inward and asking, "What is my body trying to tell me right now?"
+    - **4. Daily Tasks:** Pause and notice one sensation in your body (e.g., tightness, warmth, tingling).
+    - **5. Short-Term Goals:** Describe a felt sense using sensory words (e.g., "It feels like a buzzing in my chest").
+    - **6. Long-Term Goals:** Use the wisdom of the felt sense to guide your emotional healing.
+- [ ] **Module 8: Healthy Attachment and Relationships**
+    - **1. Identify the Issue:** Explore how past relational trauma impacts your current relationships.
+    - **2. Find the Trigger:** Conflicts or bids for connection in your current relationships.
+    - **3. Change Behaviors to Improve:** Practice making small, safe bids for connection with trusted individuals.
+    - **4. Daily Tasks:** Offer a genuine compliment to someone today.
+    - **5. Short-Term Goals:** Share a small, vulnerable feeling with a safe friend.
+    - **6. Long-Term Goals:** Build secure, interdependent relationships based on trust and mutual respect.
+- [ ] **Module 9: Working with Shame**
+    - **1. Identify the Issue:** Differentiate between guilt ("I did something bad") and shame ("I am bad").
+    - **2. Find the Trigger:** Situations where you feel exposed, judged, or flawed.
+    - **3. Change Behaviors to Improve:** Practice shame resilience by sharing your experience with a trusted person.
+    - **4. Daily Tasks:** Notice the physical posture of shame (e.g., slumped shoulders) and gently shift to a more upright position.
+    - **5. Short-Term Goals:** Read a short article or chapter by Brené Brown on shame.
+    - **6. Long-Term Goals:** Reduce the power of shame and cultivate a sense of worthiness.
+- [ ] **Module 10: Reclaiming Your Story**
+    - **1. Identify the Issue:** Move from being a victim of your past to being the hero of your own story.
+    - **2. Find the Trigger:** Feeling defined or limited by past trauma.
+    - **3. Change Behaviors to Improve:** Re-author your trauma narrative, focusing on your resilience, strength, and survival.
+    - **4. Daily Tasks:** Acknowledge one way you have demonstrated strength in your life.
+    - **5. Short-Term Goals:** Write about a challenging experience from the perspective of an older, wiser self.
+    - **6. Long-Term Goals:** Integrate your past into a cohesive life story where you are the empowered author.
+... (and so on for 40 more modules for the Trauma Therapist)
 `,
   'fitness-instructor': `
-- [ ] **Module: Overcoming the Motivation Hurdle**
-    - **1. Identify the Issue:** Let's pinpoint the exact moment motivation fades. Is it the thought of working out, the act of getting ready, or the first five minutes of the exercise itself? We'll define the primary 'motivation barrier.'
-    - **2. Find the Trigger:** What triggers this lack of motivation? Is it fatigue after work, feeling overwhelmed by the workout's length, or a belief that you 'don't have time'?
-    - **3. Change Behaviors to Improve:** Our key strategy is the '5-Minute Rule.' You will commit to doing just five minutes of a planned activity. If you want to stop after five minutes, you get full credit. This breaks the cycle of inaction.
-    - **4. Daily Tasks:**
-        - [ ] Lay out your workout clothes the night before to reduce friction for the next day.
-        - [ ] Use the '5-Minute Rule' to start one small physical activity (e.g., a walk, stretching).
-    - **5. Short-Term Goals:**
-        - [ ] Successfully use the 5-Minute Rule three times this week to overcome the motivation barrier.
-        - [ ] Schedule your workouts in your calendar like any other important appointment.
-    - **6. Long-Term Goals:**
-        - [ ] Build a consistent fitness routine where starting is no longer the main obstacle.
-        - [ ] Shift your focus from 'finding motivation' to 'cultivating discipline and habit.'
+- [ ] **Module 1: Overcoming the Motivation Hurdle**
+    - **1. Identify the Issue:** Pinpoint the exact moment motivation fades—is it the thought of working out, getting ready, or the first five minutes?
+    - **2. Find the Trigger:** Identify what triggers this lack of motivation (e.g., fatigue, feeling overwhelmed by the workout's length).
+    - **3. Change Behaviors to Improve:** Implement the '5-Minute Rule': Commit to doing just five minutes of a planned activity.
+    - **4. Daily Tasks:** Lay out your workout clothes the night before to reduce friction.
+    - **5. Short-Term Goals:** Use the 5-Minute Rule three times this week to overcome the motivation barrier.
+    - **6. Long-Term Goals:** Build a consistent routine where starting is no longer the main obstacle.
+- [ ] **Module 2: Finding Your 'Why' for Fitness**
+    - **1. Identify the Issue:** Move beyond "I should exercise" to a deeper, more personal reason for being active.
+    - **2. Find the Trigger:** Feeling like exercise is a chore.
+    - **3. Change Behaviors to Improve:** Connect your fitness goals to your core values (e.g., "I exercise to have more energy for my family").
+    - **4. Daily Tasks:** Ask yourself, "What is one good thing movement can give me today?"
+    - **5. Short-Term Goals:** Write down your fitness 'why' and put it somewhere you can see it daily.
+    - **6. Long-Term Goals:** Develop intrinsic motivation for fitness that comes from a place of self-care, not obligation.
+- [ ] **Module 3: Introduction to Strength Training**
+    - **1. Identify the Issue:** Overcome intimidation and learn the basic principles of strength training.
+    - **2. Find the Trigger:** Feeling lost in the weight room or not knowing which exercises to do.
+    - **3. Change Behaviors to Improve:** Focus on mastering a few fundamental bodyweight movements.
+    - **4. Daily Tasks:** Perform a set of 10 bodyweight squats.
+    - **5. Short-Term Goals:** Learn and practice proper form for squats, push-ups (on knees is great!), and planks this week.
+    - **6. Long-Term Goals:** Feel confident and capable in performing basic strength exercises and building a routine.
+- [ ] **Module 4: The Power of Walking**
+    - **1. Identify the Issue:** Reframe walking as a powerful tool for both physical and mental health, not just a low-intensity activity.
+    - **2. Find the Trigger:** Believing that exercise has to be high-intensity to be effective.
+    - **3. Change Behaviors to Improve:** Incorporate more intentional walking into your daily routine.
+    - **4. Daily Tasks:** Take a 10-minute walk during a break.
+    - **5. Short-Term Goals:** Accumulate 7,000 steps in one day this week.
+    - **6. Long-Term Goals:** Use walking as a consistent tool for stress management and cardiovascular health.
+- [ ] **Module 5: Creating a Pre-Workout Routine**
+    - **1. Identify the Issue:** Rushing into workouts without properly preparing your body, leading to injury or poor performance.
+    - **2. Find the Trigger:** Lack of time or knowledge about what to do before a workout.
+    - **3. Change Behaviors to Improve:** Develop a simple 5-10 minute dynamic warm-up routine.
+    - **4. Daily Tasks:** Do 1 minute of jumping jacks or marching in place before your next activity.
+    - **5. Short-Term Goals:** Perform a dynamic warm-up (e.g., leg swings, arm circles) before every workout this week.
+    - **6. Long-Term Goals:** Make warming up an automatic part of your exercise habit to improve safety and performance.
+- [ ] **Module 6: The Importance of Post-Workout Recovery**
+    - **1. Identify the Issue:** Neglecting recovery, leading to increased muscle soreness and burnout.
+    - **2. Find the Trigger:** Finishing a workout and immediately rushing to the next thing.
+    - **3. Change Behaviors to Improve:** Incorporate a cool-down and stretching into your post-workout routine.
+    - **4. Daily Tasks:** After your next workout, hold a simple quad stretch for 30 seconds on each side.
+    - **5. Short-Term Goals:** Spend 5 minutes stretching after each workout this week.
+    - **6. Long-Term Goals:** View recovery as an essential and productive part of your overall fitness plan.
+- [ ] **Module 7: Making Fitness Fun**
+    - **1. Identify the Issue:** Exercise feels like a punishment or a chore.
+    - **2. Find the Trigger:** Dreading your planned workout.
+    - **3. Change Behaviors to Improve:** Explore different forms of movement to find something you genuinely enjoy.
+    - **4. Daily Tasks:** Make a playlist of your favorite high-energy songs for your next workout.
+    - **5. Short-Term Goals:** Try one new type of activity this month (e.g., a dance class, hiking, a sports game).
+    - **6. Long-Term Goals:** Build a fitness routine based on activities that you look forward to.
+- [ ] **Module 8: Non-Scale Victories**
+    - **1. Identify the Issue:** Focusing only on the number on the scale as a measure of progress.
+    - **2. Find the Trigger:** Feeling discouraged when your weight doesn't change.
+    - **3. Change Behaviors to Improve:** Learn to recognize and celebrate other signs of progress (e.g., more energy, clothes fitting better, lifting heavier).
+    - **4. Daily Tasks:** Notice one thing your body can do today that it couldn't do before (or as easily).
+    - **5. Short-Term Goals:** Write down three non-scale victories at the end of this week.
+    - **6. Long-Term Goals:** Develop a healthier, more holistic view of fitness progress.
+- [ ] **Module 9: Overcoming a Fitness Plateau**
+    - **1. Identify the Issue:** Your progress has stalled, and you're no longer seeing changes.
+    - **2. Find the Trigger:** Doing the same workout routine for months without variation.
+    - **3. Change Behaviors to Improve:** Introduce new variables to your workout (e.g., increase weight, change exercises, add intensity).
+    - **4. Daily Tasks:** Add one extra repetition to each set of an exercise you're doing.
+    - **5. Short-Term Goals:** Try one new exercise for a muscle group you regularly work.
+    - **6. Long-Term Goals:** Understand the principle of progressive overload and how to apply it to consistently make progress.
+- [ ] **Module 10: Active Rest Days**
+    - **1. Identify the Issue:** Thinking of rest days as 'doing nothing', leading to guilt or stiffness.
+    - **2. Find the Trigger:** Feeling lazy or unproductive on a rest day.
+    - **3. Change Behaviors to Improve:** Reframe rest days as 'active recovery' days with light movement.
+    - **4. Daily Tasks:** Plan a light activity for your next rest day, like a gentle walk or stretching session.
+    - **5. Short-Term Goals:** Go for a 20-minute leisurely walk on your next scheduled rest day.
+    - **6. Long-Term Goals:** Embrace rest days as a crucial part of getting stronger and preventing injury.
+... (and so on for 40 more modules for the Fitness Instructor)
 `,
   'personal-life-manager': `
-- [ ] **Module: Taming Procrastination & Building Momentum**
-    - **1. Identify the Issue:** Let's target one specific, important task you've been avoiding. We'll identify the core feeling attached to it—is it overwhelm, boredom, or fear of not doing it perfectly?
-    - **2. Find the Trigger:** What is your go-to procrastination activity? What's the cue that sends you into avoidance mode instead of starting the task?
-    - **3. Change Behaviors to Improve:** We'll implement the 'Task Chunking' method. This involves breaking the big, intimidating task into tiny, concrete, 5-minute actions. The goal is to make the first step so easy it's impossible *not* to do.
-    - **4. Daily Tasks:**
-        - [ ] Identify your 'Most Important Task' (MIT) for the day.
-        - [ ] 'Chunk down' your MIT into at least three tiny sub-tasks.
-    - **5. Short-Term Goals:**
-        - [ ] Complete the first 'chunk' of a task you've been avoiding for over a week.
-        - [ ] Use a timer to work on a single task for a focused 25-minute 'Pomodoro' session.
-    - **6. Long-Term Goals:**
-        - [ ] Develop a proactive system for tackling projects that minimizes stress and last-minute rushes.
-        - [ ] Build self-trust by consistently following through on your intentions.
+- [ ] **Module 1: Taming Procrastination & Building Momentum**
+    - **1. Identify the Issue:** Target one specific, important task you've been avoiding and the core feeling attached to it (e.g., overwhelm, boredom).
+    - **2. Find the Trigger:** Identify your go-to procrastination activity and the cue that sends you into avoidance mode.
+    - **3. Change Behaviors to Improve:** Implement 'Task Chunking'—breaking the big task into tiny, 5-minute actions to make the first step irresistible.
+    - **4. Daily Tasks:** Identify your 'Most Important Task' (MIT) for the day.
+    - **5. Short-Term Goals:** Complete the first 'chunk' of a task you've been avoiding for over a week.
+    - **6. Long-Term Goals:** Develop a proactive system for tackling projects that minimizes stress and last-minute rushes.
+- [ ] **Module 2: The '2-Minute Rule' for Small Tasks**
+    - **1. Identify the Issue:** Small tasks (like washing a dish or answering an email) pile up and create clutter.
+    - **2. Find the Trigger:** Thinking "I'll do it later" for a task that would take less than two minutes.
+    - **3. Change Behaviors to Improve:** Adopt the rule: "If it takes less than two minutes, do it now."
+    - **4. Daily Tasks:** Identify and complete one task using the 2-Minute Rule.
+    - **5. Short-Term Goals:** Apply the 2-Minute Rule five times in one day.
+    - **6. Long-Term Goals:** Create a cleaner, more organized environment by preventing small tasks from accumulating.
+- [ ] **Module 3: Designing a 'Shutdown Ritual'**
+    - **1. Identify the Issue:** Work life bleeds into personal life, making it hard to relax in the evenings.
+    - **2. Find the Trigger:** Checking work email or thinking about work tasks right before bed.
+    - **3. Change Behaviors to Improve:** Create a consistent end-of-workday ritual to signal to your brain that it's time to switch off.
+    - **4. Daily Tasks:** Tidy your desk or workspace for 5 minutes at the end of your workday.
+    - **5. Short-Term Goals:** Plan and execute a 15-minute shutdown ritual every workday for a week.
+    - **6. Long-Term Goals:** Establish a clear boundary between work and personal time, leading to better rest.
+- [ ] **Module 4: The 'Weekly Review' Habit**
+    - **1. Identify the Issue:** Feeling reactive and unprepared for the week ahead.
+    - **2. Find the Trigger:** Starting Monday morning with no clear plan.
+    - **3. Change Behaviors to Improve:** Schedule a 30-minute block of time at the end of each week to review the past week and plan the next.
+    - **4. Daily Tasks:** Write down your top three priorities for tomorrow.
+    - **5. Short-Term Goals:** Complete your first weekly review this Sunday.
+    - **6. Long-Term Goals:** Make the weekly review a cornerstone habit for intentional, proactive living.
+- [ ] **Module 5: Digital Declutter**
+    - **1. Identify the Issue:** A cluttered digital workspace (desktop, email inbox) causes stress and reduces focus.
+    - **2. Find the Trigger:** Saving files to the desktop 'temporarily' or letting emails pile up.
+    - **3. Change Behaviors to Improve:** Implement a simple system for organizing digital files and processing emails.
+    - **4. Daily Tasks:** Spend 10 minutes unsubscribing from newsletters you no longer read.
+    - **5. Short-Term Goals:** Achieve 'inbox zero' (or 'inbox 10') for one day.
+    - **6. Long-Term Goals:** Maintain an organized digital environment that promotes clarity and focus.
+- [ ] **Module 6: The Art of Saying 'No'**
+    - **1. Identify the Issue:** Over-committing to things you don't have time for or don't want to do.
+    - **2. Find the Trigger:** An automatic 'yes' response to any request, driven by a desire to please others.
+    - **3. Change Behaviors to Improve:** Practice polite but firm ways of declining requests that don't align with your priorities.
+    - **4. Daily Tasks:** When asked for something, say "Let me check my calendar and get back to you" instead of an immediate yes.
+    - **5. Short-Term Goals:** Say 'no' to one low-stakes commitment this week.
+    - **6. Long-Term Goals:** Protect your time and energy for the things that matter most to you.
+- [ ] **Module 7: 'Time Blocking' Your Day**
+    - **1. Identify the Issue:** A to-do list that feels endless and a day that feels unproductive.
+    - **2. Find the Trigger:** Multitasking and being constantly distracted.
+    - **3. Change Behaviors to Improve:** Instead of a to-do list, schedule blocks of time in your calendar for specific tasks.
+    - **4. Daily Tasks:** Schedule one 30-minute block of focused time for your Most Important Task.
+    - **5. Short-Term Goals:** Time block your entire workday for one day this week.
+    - **6. Long-Term Goals:** Move from being busy to being productive by working with intention.
+- [ ] **Module 8: The 'Brain Dump' Technique**
+    - **1. Identify the Issue:** Feeling mentally cluttered with a swirl of to-dos, ideas, and worries.
+    - **2. Find the Trigger:** Lying awake at night with a racing mind.
+    - **3. Change Behaviors to Improve:** Schedule time to get everything out of your head and onto paper (or a digital document).
+    - **4. Daily Tasks:** Before bed, write down anything on your mind for tomorrow.
+    - **5. Short-Term Goals:** Perform one full 15-minute 'brain dump' this week.
+    - **6. Long-Term Goals:** Use the brain dump as a regular practice to maintain mental clarity and reduce anxiety.
+- [ ] **Module 9: Creating a 'Launch Pad'**
+    - **1. Identify the Issue:** Scrambling in the morning to find your keys, wallet, and other essentials.
+    - **2. Find the Trigger:** A chaotic morning routine.
+    - **3. Change Behaviors to Improve:** Designate one spot near your door where you place everything you need for the next day.
+    - **4. Daily Tasks:** Before you go to bed, place your keys in your designated 'launch pad' spot.
+    - **5. Short-Term Goals:** Use your launch pad every day for one week.
+    - **6. Long-Term Goals:** Create a stress-free morning routine by preparing the night before.
+- [ ] **Module 10: 'Single-Tasking' for Deep Work**
+    - **1. Identify the Issue:** Constant multitasking leads to shallow, error-prone work and mental fatigue.
+    - **2. Find the Trigger:** Having multiple tabs, apps, and notifications open at once.
+    - **3. Change Behaviors to Improve:** Practice focusing on one single task for a set period without switching.
+    - **4. Daily Tasks:** Close all unnecessary tabs and turn off notifications for 25 minutes to focus on one task.
+    - **5. Short-Term Goals:** Complete three 'single-tasking' sessions of 25 minutes (Pomodoros) this week.
+    - **6. Long-Term Goals:** Build your capacity for deep work, leading to higher quality output in less time.
+... (and so on for 40 more modules for the Personal Life Manager)
 `,
 };
