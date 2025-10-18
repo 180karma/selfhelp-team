@@ -116,78 +116,21 @@ export default function AgentChatPage() {
 
   const handleAgentResponse = async (message: string, currentHistory: ChatMessage[]) => {
     setIsLoading(true);
-    const goalsToMarkAsCongratulated: Goal[] = [];
+
     try {
       let personaWithContext = agent!.persona;
 
-      // 1. Add AI-generated profile from local storage
       const profileKey = `thrivewell-profile-${agentId}`;
       const savedProfileItem = localStorage.getItem(profileKey);
-      let profile: AiMentalHealthProfile | null = null;
       if (savedProfileItem) {
-        profile = JSON.parse(savedProfileItem);
-        if (profile && profile.profileData) {
+        const profile = JSON.parse(savedProfileItem);
+        if (profile.profileData) {
           personaWithContext += `\n\n## My Internal Profile Summary About the User:\n${profile.profileData}`;
         }
-        if (profile && profile.roadmap) {
-          personaWithContext += `\n\n## My Clinical Roadmap:\n${profile.roadmap}`;
+        if (profile.roadmap) {
+            personaWithContext += `\n\n## My Clinical Roadmap:\n${profile.roadmap}`;
         }
       }
-
-      // 2. Load all notes and create briefings
-      const notesKey = 'thrivewell-notes';
-      const allNotes: AiMentalHealthNote[] = JSON.parse(localStorage.getItem(notesKey) || '[]');
-      
-      const myNotes = allNotes.filter(note => note.aiAgentId === agentId);
-      const otherAgentsNotes = allNotes.filter(note => note.aiAgentId !== agentId);
-
-      // Create "My Previous Notes" section
-      if (myNotes.length > 0) {
-        const myNotesText = myNotes
-          .map(note => `On ${new Date(note.timestamp as string).toLocaleDateString()}, I noted:\n${note.noteData}`)
-          .join('\n\n');
-        personaWithContext += `\n\n## My Previous Notes (To pick up where I left off):\n${myNotesText}`;
-      }
-      
-      // Create "Cross-Functional Briefing" from relevant other agents
-      const relevantOtherNotes = otherAgentsNotes.filter(note => {
-        const otherAgent = agents.find(a => a.id === note.aiAgentId);
-        // Check for shared categories between current agent and the note's agent
-        return otherAgent && otherAgent.categories.some(cat => agent!.categories.includes(cat));
-      });
-
-      if (relevantOtherNotes.length > 0) {
-        const briefingText = relevantOtherNotes
-          .map(note => {
-            const otherAgent = agents.find(a => a.id === note.aiAgentId);
-            return `On ${new Date(note.timestamp as string).toLocaleDateString()}, my colleague ${otherAgent?.givenName.split(' ')[0]} (${otherAgent?.role}) noted:\n${note.noteData}`;
-          })
-          .join('\n\n');
-        personaWithContext += `\n\n## Cross-Functional Briefing (For context from the team):\n${briefingText}`;
-      }
-
-       // 3. Load goals to provide context on active and completed tasks
-      if (user) {
-        const goalsKey = `thrivewell-goals-${user.uid}`;
-        const allGoals: Goal[] = JSON.parse(localStorage.getItem(goalsKey) || '[]');
-        
-        const activeGoals = allGoals.filter(g => !g.completed);
-        const completedAndNotCongratulated = allGoals.filter(g => g.completed && !g.congratulated);
-        goalsToMarkAsCongratulated.push(...completedAndNotCongratulated);
-
-        if (activeGoals.length > 0) {
-          const activeGoalsText = activeGoals.map(g => `- ${g.title} (Category: ${g.category})`).join('\n');
-          personaWithContext += `\n\n## User's Active Goals (To avoid repetition):\n${activeGoalsText}`;
-        }
-
-        if (completedAndNotCongratulated.length > 0) {
-          const completedGoalsText = completedAndNotCongratulated
-            .map(g => `- ${g.title} (Completed on: ${new Date(g.completedAt!).toLocaleDateString()})`)
-            .join('\n');
-          personaWithContext += `\n\n## User's Recently Completed Goals (Acknowledge and congratulate!):\n${completedGoalsText}`;
-        }
-      }
-
 
       const genkitHistory = toGenkitHistory(currentHistory);
       const result = await agentChat({
@@ -209,19 +152,6 @@ export default function AgentChatPage() {
       }
     } finally {
       setIsLoading(false);
-      // After the agent responds, mark the goals as congratulated
-      if (user && goalsToMarkAsCongratulated.length > 0) {
-          const goalsKey = `thrivewell-goals-${user.uid}`;
-          const allGoals: Goal[] = JSON.parse(localStorage.getItem(goalsKey) || '[]');
-          const goalIdsToUpdate = new Set(goalsToMarkAsCongratulated.map(g => g.id));
-          
-          const updatedGoals = allGoals.map(goal => 
-              goalIdsToUpdate.has(goal.id) ? { ...goal, congratulated: true } : goal
-          );
-
-          localStorage.setItem(goalsKey, JSON.stringify(updatedGoals));
-          console.log('Marked goals as congratulated:', goalsToMarkAsCongratulated.map(g => g.title));
-      }
     }
   };
 
@@ -492,5 +422,7 @@ export default function AgentChatPage() {
     </Card>
   );
 }
+
+    
 
     
