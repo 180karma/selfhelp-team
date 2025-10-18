@@ -9,6 +9,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+import { getRandomAcknowledgement } from '@/lib/acknowledgements';
 
 // Define schemas inside the file, but do not export them.
 const AgentChatInputSchema = z.object({
@@ -19,6 +20,7 @@ const AgentChatInputSchema = z.object({
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history.'),
   message: z.string().describe('The latest user message.'),
+  lastAcknowledgement: z.string().optional().describe('The last acknowledgement used by the agent, to avoid repetition.'),
 });
 type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
@@ -33,6 +35,7 @@ const AgentChatOutputSchema = z.object({
             addedBy: z.string().describe("The name of the agent adding the task.")
         }).describe("A mandatory task for the user to add to their goal list if they agree.").optional()
     }).describe("A multiple-choice question to ask the user.").optional(),
+    acknowledgement: z.string().describe("A conversational acknowledgement to show the user you've understood their last message."),
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
 
@@ -43,12 +46,14 @@ const agentChatFlow = ai.defineFlow(
     outputSchema: AgentChatOutputSchema,
   },
   async (input) => {
-    const { persona, userName, history, message } = input;
+    const { persona, userName, history, message, lastAcknowledgement } = input;
+    
+    const acknowledgement = getRandomAcknowledgement(lastAcknowledgement);
 
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.`,
+      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour response will be prefaced with the phrase: "${acknowledgement}". Your task is to provide the rest of the response that naturally follows that opening. Do not repeat the acknowledgement. Just provide your own conversational response.`,
       output: {
         schema: AgentChatOutputSchema,
       }
@@ -61,8 +66,9 @@ const agentChatFlow = ai.defineFlow(
     }
     
     return {
-        response: output.response,
+        response: `${acknowledgement} ${output.response}`,
         question: output.question,
+        acknowledgement: acknowledgement,
     };
   }
 );
