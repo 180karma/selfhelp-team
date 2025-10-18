@@ -359,7 +359,7 @@ export default function AgentChatPage() {
                   )}>
                     <p className={cn(
                       "whitespace-pre-wrap",
-                      message.role === 'user' ? 'text-[10px]' : 'text-sm'
+                      message.role === 'user' ? 'text-sm' : 'text-sm'
                     )}>{message.content}</p>
                      {message.role === 'model' && message.question && isLastMessage && !isLoading && (
                       <div className="mt-4 space-y-2">
@@ -422,7 +422,3 @@ export default function AgentChatPage() {
     </Card>
   );
 }
-
-    
-
-    
