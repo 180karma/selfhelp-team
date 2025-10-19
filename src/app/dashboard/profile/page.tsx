@@ -94,7 +94,21 @@ export default function ProfilePage() {
                 const agent = getAgentInfo(profile.aiAgentId);
                 const agentNotes = notesByProfile[profile.aiAgentId] || [];
                 if (!agent) return null;
-                const roadmapItems = (profile.roadmap as Module[]) || [];
+                
+                let roadmapItems: Module[] = [];
+                if (profile.roadmap) {
+                    if (typeof profile.roadmap === 'string') {
+                        try {
+                            roadmapItems = JSON.parse(profile.roadmap);
+                        } catch (e) {
+                            console.error("Failed to parse roadmap string:", e);
+                            roadmapItems = [];
+                        }
+                    } else if (Array.isArray(profile.roadmap)) {
+                        roadmapItems = profile.roadmap;
+                    }
+                }
+
                 return (
                     <AccordionItem value={profile.id} key={profile.id}>
                         <AccordionTrigger>
