@@ -61,7 +61,7 @@ Your task is to act as a treatment planner. You will analyze a user's questionna
 **Instructions:**
 
 1.  **Analyze the Answers:** Review the user's questionnaire answers below to identify the 3 to 5 most critical areas for intervention. These can be considered the core issues or 'wounds'.
-2.  **Create Modules:** For each critical area, create a "Module" object. Order the modules from most to least urgent.
+2.  **Create Modules:** For each critical area, create a "Module" object. Order the modules from most to least urgent. Each module MUST have a 'completed' property, which should be set to 'false'.
 3.  **Define Detailed Module Structure:** Each module MUST contain a comprehensive 'steps' object to guide the user through a resolution process. The steps must be detailed and actionable, covering the following:
     *   **identify:** A concise description of the core issue or 'wound' to be explored.
     *   **trigger:** A prompt to help the user identify what situations, thoughts, or feelings trigger this issue.
