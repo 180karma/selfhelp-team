@@ -35,7 +35,8 @@ type ChatMessage = {
     text: string;
     options: string[];
     addTask?: ProposedTask;
-  }
+  };
+  suggestedReplies?: string[];
 };
 
 type Inputs = {
@@ -140,7 +141,7 @@ export default function AgentChatPage() {
         message: message,
       });
 
-      setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question }]);
+      setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question, suggestedReplies: result.suggestedReplies }]);
 
     } catch (error: any) {
       console.error('Error chatting with agent:', error);
@@ -231,6 +232,13 @@ export default function AgentChatPage() {
     }
     
     // Let the agent respond to the selected option
+    handleAgentResponse(userMessage.content, newHistory);
+  };
+
+  const handleSuggestedReplyClick = (reply: string) => {
+    const userMessage: ChatMessage = { role: 'user', content: reply };
+    const newHistory = [...history, userMessage];
+    setHistory(newHistory);
     handleAgentResponse(userMessage.content, newHistory);
   };
 
@@ -361,25 +369,45 @@ export default function AgentChatPage() {
                       "whitespace-pre-wrap",
                       message.role === 'user' ? 'text-sm' : 'text-sm'
                     )}>{message.content}</p>
-                     {message.role === 'model' && message.question && isLastMessage && !isLoading && (
-                      <div className="mt-4 space-y-2">
-                         <p className="font-semibold text-sm">{message.question.text}</p>
-                         <div className="flex flex-col space-y-2">
-                           {message.question.options.map((option, i) => (
-                            <Button 
-                              key={i} 
-                              variant="outline" 
-                              size="sm"
-                              className="justify-start"
-                              onClick={() => handleOptionClick(option, message.question!.text, message.question!.addTask)}
-                              disabled={isLoading}
-                            >
-                              {option}
-                            </Button>
-                           ))}
-                         </div>
-                         <p className="text-xs text-muted-foreground italic mt-2">Or type your own response below.</p>
-                      </div>
+                     {isLastMessage && !isLoading && message.role === 'model' && (
+                        <>
+                          {message.question && (
+                            <div className="mt-4 space-y-2">
+                              <p className="font-semibold text-sm">{message.question.text}</p>
+                              <div className="flex flex-col space-y-2">
+                                {message.question.options.map((option, i) => (
+                                  <Button 
+                                    key={i} 
+                                    variant="outline" 
+                                    size="sm"
+                                    className="justify-start"
+                                    onClick={() => handleOptionClick(option, message.question!.text, message.question!.addTask)}
+                                    disabled={isLoading}
+                                  >
+                                    {option}
+                                  </Button>
+                                ))}
+                              </div>
+                              <p className="text-xs text-muted-foreground italic mt-2">Or type your own response below.</p>
+                            </div>
+                          )}
+                          {message.suggestedReplies && !message.question && (
+                             <div className="mt-4 flex flex-col space-y-2">
+                                {message.suggestedReplies.map((reply, i) => (
+                                  <Button 
+                                    key={i} 
+                                    variant="outline" 
+                                    size="sm"
+                                    className="justify-start"
+                                    onClick={() => handleSuggestedReplyClick(reply)}
+                                    disabled={isLoading}
+                                  >
+                                    {reply}
+                                  </Button>
+                                ))}
+                              </div>
+                          )}
+                        </>
                     )}
                   </div>
                    {message.role === 'user' && (

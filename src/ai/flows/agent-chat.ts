@@ -33,6 +33,7 @@ const AgentChatOutputSchema = z.object({
             addedBy: z.string().describe("The name of the agent adding the task.")
         }).describe("A mandatory task for the user to add to their goal list if they agree.").optional()
     }).describe("A multiple-choice question to ask the user.").optional(),
+    suggestedReplies: z.array(z.string()).describe("A list of simple suggested replies for the user to continue the conversation when no direct question is asked. e.g. ['Okay, sounds good', 'Can you explain more?']").optional(),
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
 
@@ -48,7 +49,7 @@ const agentChatFlow = ai.defineFlow(
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.`,
+      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nWhen you are making a statement or providing a resolution plan (and NOT asking a multiple-choice question), you can provide a few simple 'suggestedReplies' for the user to click, like 'Okay, that makes sense' or 'Can you explain that differently?'. This helps the user know how to proceed.`,
       output: {
         schema: AgentChatOutputSchema,
       }
@@ -63,6 +64,7 @@ const agentChatFlow = ai.defineFlow(
     return {
         response: output.response,
         question: output.question,
+        suggestedReplies: output.suggestedReplies,
     };
   }
 );
