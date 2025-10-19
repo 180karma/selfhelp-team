@@ -43,10 +43,10 @@ const prompt = ai.definePrompt({
 
 You have just finished a session with a user named {{{userName}}}. Your two main tasks are to document this specific session.
 
-1.  **Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of **only this conversation**. This note will be added to the user's file. Structure it with the following headers, and use bullet points under each:
-    *   **Key Issues Discussed:** Main problems or topics the user raised in this session.
-    *   **User's Responses & Insights:** How the user felt, thought, and behaved during this discussion.
-    *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with the user in this session.
+1.  **Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of **only this conversation**. Refer to the user by their name, {{{userName}}}. Structure it with the following headers, and use bullet points under each:
+    *   **Key Issues Discussed:** Main problems or topics {{{userName}}} raised in this session.
+    *   **User's Responses & Insights:** How {{{userName}}} felt, thought, and behaved during this discussion.
+    *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with {{{userName}}} in this session.
 
 2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Current Roadmap." Your goal is to evolve this plan. The roadmap is provided as a JSON string.
     *   **CRITICAL INSTRUCTION:** Find the primary module that was discussed in the conversation and change its \`completed\` property from \`false\` to \`true\`.

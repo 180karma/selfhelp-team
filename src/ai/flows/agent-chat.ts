@@ -49,7 +49,7 @@ const agentChatFlow = ai.defineFlow(
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour primary goal is to follow the session structure defined in your persona. If you are starting a new module, your first step is ALWAYS to introduce the topic and then administer the two-question mini-assessment. After the user completes it, you will proceed with the exploratory phase.\n\nWhen you are making a statement or providing a resolution plan (and NOT asking a multiple-choice question), you can provide a few simple 'suggestedReplies' for the user to click, like 'Okay, that makes sense' or 'Can you explain that differently?'. This helps the user know how to proceed.`,
+      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour primary goal is to follow the session structure defined in your persona. If you are starting a new module, your first step is ALWAYS to introduce the topic and then administer the two-question mini-assessment. After the user completes it, you will proceed with the exploratory phase.`,
       output: {
         schema: AgentChatOutputSchema,
       }

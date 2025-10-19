@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -28,6 +29,7 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
   
   const questionnaire = questionnaires.find((q) => q.agentId === agentId);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isSubmittingFinal, setIsSubmittingFinal] = useState(false);
   
   const currentQuestion = questionnaire?.questions[currentQuestionIndex];
 
@@ -42,13 +44,13 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     resolver: zodResolver(formSchema),
   });
 
-  const { isSubmitting } = form.formState;
+  const { formState: { isSubmitting } } = form;
 
   if (!questionnaire || !currentQuestion) {
     return <p>Questionnaire not found for this agent.</p>;
   }
 
-  const handleNext = (data: z.infer<typeof formSchema>) => {
+  const handleNext = async (data: z.infer<typeof formSchema>) => {
     form.clearErrors(); 
     // Persist answer temporarily in session storage
     sessionStorage.setItem(`q_${agentId}_${currentQuestion.id}`, data[currentQuestion.id]);
@@ -60,11 +62,12 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
       // If it's the last question, we also need to trigger the final submit logic
       const latestAnswers = { ...data };
       sessionStorage.setItem(`q_${agentId}_${currentQuestion.id}`, latestAnswers[currentQuestion.id]);
-      handleSubmit();
+      await handleSubmit();
     }
   };
 
   const handleSubmit = async () => {
+    setIsSubmittingFinal(true);
     const answers: { [key: string]: string } = {};
     questionnaire.questions.forEach(q => {
       const answer = sessionStorage.getItem(`q_${agentId}_${q.id}`);
@@ -113,6 +116,8 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
             title: 'AI Analysis Failed',
             description: 'Could not generate the AI profile summary or roadmap.',
         });
+    } finally {
+        setIsSubmittingFinal(false);
     }
 
     // Clean up session storage
@@ -169,8 +174,8 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
             />
           </CardContent>
           <CardFooter>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            <Button type="submit" disabled={isSubmitting || isSubmittingFinal}>
+              {(isSubmitting || isSubmittingFinal) ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               {currentQuestionIndex < questionnaire.questions.length - 1 ? 'Next' : 'Finish & Create My Plan'}
             </Button>
           </CardFooter>
