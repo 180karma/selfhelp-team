@@ -203,7 +203,7 @@ export default function AgentChatPage() {
 
   const handleOptionClick = (option: string, originalQuestion: string, proposedTask?: ProposedTask) => {
     // Add the user's choice to the history immediately for a responsive feel
-    const userMessage: ChatMessage = { role: 'user', content: `Regarding "${originalQuestion}", I chose: ${option}` };
+    const userMessage: ChatMessage = { role: 'user', content: option };
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
 
