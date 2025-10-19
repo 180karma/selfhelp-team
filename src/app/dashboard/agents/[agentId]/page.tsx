@@ -183,7 +183,7 @@ export default function AgentChatPage() {
         persona: agent!.persona,
         userName: userName || 'friend',
         history: genkitHistory,
-        roadmap: currentRoadmap ? JSON.stringify(currentRoadmap, null, 2) : '[]',
+        roadmap: currentRoadmap,
       });
       
       const note: AiMentalHealthNote = {
@@ -385,7 +385,7 @@ export default function AgentChatPage() {
   }
 
   return (
-    <Card className="flex h-full flex-col">
+    <Card className="flex h-full flex-col border-0 rounded-none shadow-none">
       <CardHeader className="flex flex-row items-center justify-between border-b p-3 sm:p-4 md:p-6">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
@@ -408,7 +408,7 @@ export default function AgentChatPage() {
               
               return (
                 <div key={index} className={cn(
-                  `flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`,
+                  `flex flex-col gap-2`,
                   isLastMessage ? 'animate-fade-in' : '',
                 )}>
                   {message.role === 'model' && (
@@ -421,7 +421,7 @@ export default function AgentChatPage() {
                     </div>
                   )}
                    {message.role === 'user' && (
-                     <div className="flex items-center gap-2">
+                     <div className="flex items-center gap-2 self-end">
                         <p className="text-sm font-semibold text-muted-foreground">You</p>
                         <Avatar className="h-8 w-8">
                           <AvatarImage src={user?.photoURL ?? "https://picsum.photos/seed/user-avatar/40/40"} />

@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -169,8 +170,7 @@ export default function DashboardLayout({
           {/* Overlay when menu is open */}
           {mobileMenuOpen && (
             <div
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm"
-              style={{ top: 'auto' }}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
               onClick={closeMobileMenu}
             />
           )}
@@ -267,28 +267,28 @@ export default function DashboardLayout({
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
-          {/* Desktop Header */}
-          <header className="sticky top-0 z-10 hidden md:flex h-14 items-center gap-2 sm:gap-4 border-b bg-background px-3 sm:px-4 lg:h-[60px] lg:px-6">
-            <SidebarTrigger className="md:hidden flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              {/* Can add page title here */}
-            </div>
-            <div className="flex-shrink-0">
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col min-h-screen">
+            {/* Desktop Header */}
+            <header className="sticky top-0 z-30 hidden md:flex h-14 items-center gap-2 sm:gap-4 border-b bg-background px-3 sm:px-4 lg:h-[60px] lg:px-6">
+              <SidebarTrigger className="md:hidden flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                {/* Can add page title here */}
+              </div>
+              <div className="flex-shrink-0">
+                <UserAvatar />
+              </div>
+            </header>
+
+            {/* Mobile Header with Avatar */}
+            <header className="sticky top-0 z-30 flex md:hidden h-14 items-center justify-end gap-2 border-b bg-background px-4">
               <UserAvatar />
-            </div>
-          </header>
-
-          {/* Mobile Header with Avatar */}
-          <header className="sticky z-40 md:hidden flex h-14 items-center justify-end gap-2 border-b bg-background px-4" style={{ top: mobileMenuOpen ? '80vh' : '52px' }}>
-            <UserAvatar />
-          </header>
-
-          {/* Main Content */}
-          <main className="flex-1 p-2 sm:p-4 md:p-6 overflow-hidden" style={{ paddingTop: mobileMenuOpen ? '0' : undefined }}>
-            <div className="h-[calc(100vh-theme(spacing.28))] md:h-[calc(100vh-theme(spacing.28))] overflow-auto">
-              {children}
-            </div>
-          </main>
+            </header>
+            
+            <main className="flex-1 p-2 sm:p-4 md:p-6 overflow-y-auto">
+                {children}
+            </main>
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </FirebaseClientProvider>
