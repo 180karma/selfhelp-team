@@ -23,7 +23,7 @@ type SummarizeConversationInput = z.infer<typeof SummarizeConversationInputSchem
 
 const SummarizeConversationOutputSchema = z.object({
   noteData: z.string().describe("A concise summary of the conversation, focusing on key issues, user responses, and resolution practices discussed."),
-  updatedRoadmap: z.string().describe("The updated version of the clinical roadmap. The agent should check off the item that was discussed in the conversation, for example: - [x] Discussed topic. The agent can also add, remove, or rephrase items based on the conversation to better tailor the long-term plan."),
+  updatedRoadmap: z.string().describe("The updated version of the clinical roadmap as a clean JSON string, with the relevant module marked as completed."),
 });
 type SummarizeConversationOutput = z.infer<typeof SummarizeConversationOutputSchema>;
 
@@ -47,9 +47,11 @@ Your two main tasks are:
     *   **User's Responses & Insights:** How the user felt, thought, and behaved during the discussion.
     *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with the user.
 
-2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Clinical Roadmap." Your goal is to evolve this plan. The roadmap is provided as a JSON string.
-    *   **Mark Completion:** Find the primary module that was discussed and mark its 'completed' property to 'true'.
-    *   **Edit & Add (If Necessary):** Based on what you learned, you can add new follow-up items to the notes, rephrase existing module titles for clarity, or adjust the order to better fit the user's journey. Return the entire, updated roadmap as a **clean and valid JSON string with no markdown formatting**.
+2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Current Roadmap." Your goal is to evolve this plan. The roadmap is provided as a JSON string.
+    *   **CRITICAL INSTRUCTION:** Find the primary module that was discussed in the conversation and change its \`completed\` property from \`false\` to \`true\`.
+    *   **OUTPUT REQUIREMENT:** You MUST return the entire, updated roadmap as a **clean and valid JSON string**. Do NOT use any markdown formatting (like \`\`\`json\` or \`- [x]\`).
+
+    **Example:** If the original roadmap had a module like \`{"title": "Understanding Anxiety", "completed": false, ...}\`, and you discussed anxiety, the returned roadmap string should contain \`{"title": "Understanding Anxiety", "completed": true, ...}\`.
 
 Do not include conversational filler. This is an internal process for tracking progress and refining the user's plan.
 
