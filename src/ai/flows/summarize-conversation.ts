@@ -49,7 +49,7 @@ Your two main tasks are:
 
 2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Clinical Roadmap." Your goal is to evolve this plan. The roadmap is provided as a JSON string.
     *   **Mark Completion:** Find the primary module that was discussed and mark its 'completed' property to 'true'.
-    *   **Edit & Add (If Necessary):** Based on what you learned, you can add new follow-up items to the notes, rephrase existing module titles for clarity, or adjust the order to better fit the user's journey. Return the entire, updated roadmap as a JSON string.
+    *   **Edit & Add (If Necessary):** Based on what you learned, you can add new follow-up items to the notes, rephrase existing module titles for clarity, or adjust the order to better fit the user's journey. Return the entire, updated roadmap as a **clean and valid JSON string with no markdown formatting**.
 
 Do not include conversational filler. This is an internal process for tracking progress and refining the user's plan.
 

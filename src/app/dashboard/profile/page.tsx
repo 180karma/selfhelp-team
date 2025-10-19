@@ -108,6 +108,11 @@ export default function ProfilePage() {
                         roadmapItems = profile.roadmap;
                     }
                 }
+                 // Ensure roadmapItems is an array before mapping
+                if (!Array.isArray(roadmapItems)) {
+                    console.error("Roadmap is not an array:", roadmapItems);
+                    roadmapItems = [];
+                }
 
                 return (
                     <AccordionItem value={profile.id} key={profile.id}>
