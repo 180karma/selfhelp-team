@@ -26,7 +26,7 @@ import {
   User,
   Menu,
   X,
-  HeartHand,
+  HeartHandshake,
 } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -121,7 +121,7 @@ export default function DashboardLayout({
                     "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-3",
                     isActive('/dashboard/mantras') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
                   )}>
-                    <HeartHand className="w-5 h-5" />
+                    <HeartHandshake className="w-5 h-5" />
                     <span className="font-medium">Mantras</span>
                   </div>
                 </Link>
@@ -223,7 +223,7 @@ export default function DashboardLayout({
                 <Link href="/dashboard/mantras" passHref>
                   <SidebarMenuButton
                     isActive={isActive('/dashboard/mantras')}
-                    icon={<HeartHand />}
+                    icon={<HeartHandshake />}
                     tooltip="Mantras"
                   >
                     Mantras

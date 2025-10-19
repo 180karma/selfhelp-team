@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useUser } from '@/firebase';
 import type { Mantra } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
-import { HeartHand } from 'lucide-react';
+import { HeartHandshake } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { agents } from '@/lib/agents';
 
@@ -51,7 +51,7 @@ export default function MantrasPage() {
   return (
     <div className="space-y-6">
       <h1 className="font-headline text-3xl font-bold flex items-center gap-2">
-        <HeartHand className="h-8 w-8 text-primary" />
+        <HeartHandshake className="h-8 w-8 text-primary" />
         Your Mantras
       </h1>
       <p className="text-muted-foreground">
