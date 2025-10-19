@@ -347,23 +347,32 @@ export default function AgentChatPage() {
               
               return (
                 <div key={index} className={cn(
-                  `flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`,
+                  `flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`,
                   isLastMessage ? 'animate-fade-in' : 'animate-fade-out',
                   isSecondToLast && 'animate-quick-fade-in'
                 )}>
                   {message.role === 'model' && (
-                    <div className="flex flex-col items-center gap-1">
-                      <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
-                      <Avatar>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
                         <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                         <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                       </Avatar>
+                      <p className="text-sm font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                     </div>
                   )}
+                   {message.role === 'user' && (
+                     <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-muted-foreground">You</p>
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={user?.photoURL ?? "https://picsum.photos/seed/user-avatar/40/40"} />
+                          <AvatarFallback>{user?.email?.charAt(0).toUpperCase() ?? 'U'}</AvatarFallback>
+                        </Avatar>
+                     </div>
+                   )}
                   <div className={cn('rounded-lg p-3', 
                       message.role === 'user' 
-                      ? 'bg-secondary text-secondary-foreground max-w-xs' 
-                      : 'bg-muted max-w-prose'
+                      ? 'bg-secondary text-secondary-foreground max-w-md self-end' 
+                      : 'bg-muted max-w-prose self-start'
                   )}>
                     <p className={cn(
                       "whitespace-pre-wrap",
@@ -410,23 +419,17 @@ export default function AgentChatPage() {
                         </>
                     )}
                   </div>
-                   {message.role === 'user' && (
-                     <Avatar>
-                       <AvatarImage src={user?.photoURL ?? "https://picsum.photos/seed/user-avatar/40/40"} />
-                       <AvatarFallback>{user?.email?.charAt(0).toUpperCase() ?? 'U'}</AvatarFallback>
-                    </Avatar>
-                   )}
                 </div>
               )
             })}
             {isLoading && (
-              <div className="flex items-start gap-4 animate-fade-in">
-                <div className="flex flex-col items-center gap-1">
-                   <p className="text-[10px] font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
-                  <Avatar>
+              <div className="flex flex-col items-start gap-2 animate-fade-in">
+                 <div className="flex items-center gap-2">
+                  <Avatar className="h-8 w-8">
                     <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                     <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                   </Avatar>
+                   <p className="text-sm font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                 </div>
                 <div className="max-w-prose rounded-lg p-3 bg-muted">
                   <Skeleton className="h-4 w-24" />
