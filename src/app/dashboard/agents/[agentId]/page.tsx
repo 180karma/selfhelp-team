@@ -22,6 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { roadmaps } from '@/lib/roadmaps';
 import type { Module } from '@/lib/roadmaps';
+import { Loader2 } from 'lucide-react';
 
 
 type ProposedTask = {
@@ -112,7 +113,13 @@ export default function AgentChatPage() {
     
     const roadmapData = localStorage.getItem(`thrivewell-roadmap-${agentId}`);
     if (roadmapData) {
-        setCurrentRoadmap(JSON.parse(roadmapData));
+        try {
+            setCurrentRoadmap(JSON.parse(roadmapData));
+        } catch (error) {
+            console.error("Failed to parse roadmap from local storage:", error);
+            // Fallback to default if parsing fails
+            setCurrentRoadmap(roadmaps[agentId] || null);
+        }
     } else {
         setCurrentRoadmap(roadmaps[agentId] || null);
     }
@@ -337,9 +344,22 @@ export default function AgentChatPage() {
   }
 
   const handleQuestionnaireComplete = (data: DocumentData) => {
+    // This function will be called when the questionnaire is submitted
     setAssessment({ answers: data });
     setShowQuestionnaire(false);
-    // Let the standard useEffect handle the introduction after this.
+  
+    // After questionnaire is complete, re-fetch the roadmap from local storage
+    const roadmapData = localStorage.getItem(`thrivewell-roadmap-${agentId}`);
+    if (roadmapData) {
+      try {
+        setCurrentRoadmap(JSON.parse(roadmapData));
+      } catch (error) {
+        console.error("Failed to parse roadmap after questionnaire:", error);
+        setCurrentRoadmap(roadmaps[agentId] || null);
+      }
+    }
+  
+    // The useEffect will now see the new assessment and roadmap and trigger the first message
     setIntroSent(false); 
     setHistory([]);
   };
@@ -386,7 +406,7 @@ export default function AgentChatPage() {
 
   return (
     <Card className="flex h-full flex-col border-0 rounded-none shadow-none">
-      <CardHeader className="flex flex-row items-center justify-between border-b p-3 sm:p-4 md:p-6">
+       <CardHeader className="sticky top-0 z-20 flex flex-row items-center justify-between border-b bg-background/80 p-3 backdrop-blur-sm sm:p-4 md:p-6">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
               <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
@@ -404,7 +424,6 @@ export default function AgentChatPage() {
           <div className="space-y-4 sm:space-y-6 pr-2 sm:pr-4">
             {history.map((message, index) => {
               const isLastMessage = index === history.length - 1;
-              const isSecondToLast = index === history.length - 2;
               
               return (
                 <div key={index} className={cn(
@@ -510,7 +529,11 @@ export default function AgentChatPage() {
                    <p className="text-xs italic">({agent.role})</p>
                 </div>
                 <div className="max-w-[90%] sm:max-w-prose rounded-lg p-3 bg-muted">
-                  <Skeleton className="h-4 w-24" />
+                  <div className="flex items-center space-x-2">
+                    <div className="h-2 w-2 rounded-full bg-foreground/50 animate-pulse"></div>
+                    <div className="h-2 w-2 rounded-full bg-foreground/50 animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                    <div className="h-2 w-2 rounded-full bg-foreground/50 animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                  </div>
                 </div>
               </div>
             )}
@@ -525,11 +548,10 @@ export default function AgentChatPage() {
             className="min-w-0 flex-1"
           />
           <Button type="submit" disabled={isLoading || isAnsweringModuleQuestions} className="flex-shrink-0">
-            Send
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send'}
           </Button>
         </form>
       </CardContent>
     </Card>
   );
 }
-
