@@ -56,22 +56,22 @@ const prompt = ai.definePrompt({
   input: { schema: CreateRoadmapInputSchema },
   output: { schema: CreateRoadmapOutputSchema },
   prompt: `You are a senior clinician with the following persona: {{{persona}}}.
-Your task is to act as a treatment planner. You will analyze a user's answers to your initial questionnaire and create a personalized **Clinical Roadmap**.
+Your task is to act as a treatment planner. You will analyze a user's questionnaire answers and create a personalized **Clinical Roadmap**.
 
 **Instructions:**
 
-1.  **Analyze the Answers:** Review the user's questionnaire answers below to identify the 3 to 5 most critical areas for intervention.
-2.  **Create Modules:** For each critical area, create a "Module" object.
-3.  **Define Module Structure:** Each module MUST contain the following structured \`steps\` to guide the user:
-    *   **identify:** A concise description of the core issue to be explored.
-    *   **trigger:** A prompt to help the user identify what triggers this issue.
-    *   **origin:** A gentle question to explore the root of this behavior or feeling.
-    *   **behavior_change:** A concrete technique or practice to create change.
-    *   **daily_task:** A very small, actionable daily task.
-    *   **short_term_goal:** A measurable goal for the next 1-2 weeks.
-    *   **long_term_goal:** A broader goal for the next 2-3 months.
+1.  **Analyze the Answers:** Review the user's questionnaire answers below to identify the 3 to 5 most critical areas for intervention. These can be considered the core issues or 'wounds'.
+2.  **Create Modules:** For each critical area, create a "Module" object. Order the modules from most to least urgent.
+3.  **Define Detailed Module Structure:** Each module MUST contain a comprehensive 'steps' object to guide the user through a resolution process. The steps must be detailed and actionable, covering the following:
+    *   **identify:** A concise description of the core issue or 'wound' to be explored.
+    *   **trigger:** A prompt to help the user identify what situations, thoughts, or feelings trigger this issue.
+    *   **origin:** A gentle, exploratory question to help the user reflect on the root of this behavior or feeling.
+    *   **behavior_change:** A concrete therapeutic technique, practice, or reframing exercise to create change. This is the core 'resolution plan' for the module.
+    *   **daily_task:** A very small, specific, and actionable daily task that reinforces the behavior_change.
+    *   **short_term_goal:** A measurable, achievable goal for the next 1-2 weeks.
+    *   **long_term_goal:** A broader, aspirational goal for the next 2-3 months.
 4.  **Create Module Questions:** For each module, you must also create two relevant multiple-choice questions in a \`questions\` array. These will be used for a mini-assessment at the start of each module session. The questions should be distinct and designed to get a baseline on the module's topic.
-5.  **Return as an Array:** The final output should be an array of these module objects, ordered from most to least urgent.
+5.  **Return as an Array:** The final output should be an array of these detailed module objects.
 
 **Questionnaire Answers:**
 {{#each questionnaireAnswers}}
