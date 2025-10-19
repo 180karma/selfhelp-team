@@ -1,6 +1,19 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import { cn } from '@/lib/utils';
+
+const fontBody = Inter({
+  subsets: ['latin'],
+  variable: '--font-body',
+});
+
+const fontHeadline = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-headline',
+});
 
 export const metadata: Metadata = {
   title: 'ThriveWell',
@@ -14,15 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="font-body antialiased">
+      <body className={cn('font-body antialiased', fontBody.variable, fontHeadline.variable)}>
         {children}
         <Toaster />
       </body>
