@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { analyzeUserProfile } from '@/ai/flows/analyze-user-profile';
+import { createRoadmap } from '@/ai/flows/create-roadmap';
 import { agents } from '@/lib/agents';
 import { roadmaps } from '@/lib/roadmaps';
 import { DocumentData } from 'firebase/firestore';
@@ -68,38 +69,44 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     questionnaire.questions.forEach(q => {
       const answer = sessionStorage.getItem(`q_${agentId}_${q.id}`);
       if(answer) {
-        answers[q.id] = answer;
+        answers[q.question] = answer; // Use question text as key for AI
       }
     });
     
-    // Save answers to local storage
+    // Save raw answers to local storage
     localStorage.setItem(`thrivewell-assessment-${agentId}`, JSON.stringify({ answers }));
       
-    // Generate AI profile and save to local storage
+    // Generate AI profile and personalized roadmap
     try {
         const agent = agents.find(a => a.id === agentId);
         if (agent) {
+            // Generate the initial profile summary
             const { profileData } = await analyzeUserProfile({
                 persona: agent.persona,
                 questionnaireAnswers: answers,
             });
 
-            const roadmap = roadmaps[agentId];
+            // Generate the personalized roadmap
+            const { roadmap } = await createRoadmap({
+                persona: agent.persona,
+                questionnaireAnswers: answers,
+            });
 
+            // Save both to local storage
             const profileKey = `thrivewell-profile-${agentId}`;
             const profileToSave = {
                 aiAgentId: agentId,
                 profileData: profileData,
-                roadmap: roadmap,
             };
             localStorage.setItem(profileKey, JSON.stringify(profileToSave));
+            localStorage.setItem(`thrivewell-roadmap-${agentId}`, JSON.stringify(roadmap));
         }
     } catch (error) {
-        console.error("Failed to generate AI profile:", error);
+        console.error("Failed to generate AI profile or roadmap:", error);
          toast({
             variant: 'destructive',
             title: 'AI Analysis Failed',
-            description: 'Could not generate the AI profile summary.',
+            description: 'Could not generate the AI profile summary or roadmap.',
         });
     }
 
@@ -109,8 +116,8 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     });
 
     toast({
-      title: 'Profile Updated!',
-      description: "Your answers have been saved to this browser.",
+      title: 'Profile Created!',
+      description: "Your personalized roadmap has been created. Your answers are saved to this browser.",
     });
 
     onComplete(answers);
@@ -159,7 +166,7 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
           <CardFooter>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              {currentQuestionIndex < questionnaire.questions.length - 1 ? 'Next' : 'Finish'}
+              {currentQuestionIndex < questionnaire.questions.length - 1 ? 'Next' : 'Finish & Create My Plan'}
             </Button>
           </CardFooter>
         </form>
