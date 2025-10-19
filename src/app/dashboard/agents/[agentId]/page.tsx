@@ -183,7 +183,7 @@ export default function AgentChatPage() {
         persona: agent!.persona,
         userName: userName || 'friend',
         history: genkitHistory,
-        roadmap: currentRoadmap,
+        roadmap: JSON.stringify(currentRoadmap),
       });
       
       const note: AiMentalHealthNote = {
@@ -412,12 +412,13 @@ export default function AgentChatPage() {
                   isLastMessage ? 'animate-fade-in' : '',
                 )}>
                   {message.role === 'model' && (
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
+                    <div className="flex items-end gap-2 text-sm text-muted-foreground">
+                       <Avatar className="h-8 w-8">
                         <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                         <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                       </Avatar>
-                      <p className="text-sm font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
+                      <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>
+                      <p className="text-xs italic">({agent.role})</p>
                     </div>
                   )}
                    {message.role === 'user' && (
@@ -485,12 +486,13 @@ export default function AgentChatPage() {
             })}
              {isAnsweringModuleQuestions && (
                   <div className="flex flex-col items-start gap-2 animate-fade-in w-full">
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
+                    <div className="flex items-end gap-2 text-sm text-muted-foreground">
+                       <Avatar className="h-8 w-8">
                         <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                         <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                       </Avatar>
-                      <p className="text-sm font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
+                      <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>
+                      <p className="text-xs italic">({agent.role})</p>
                     </div>
                     <div className="rounded-lg p-3 bg-muted max-w-[90%] sm:max-w-prose self-start w-full sm:w-auto">
                         {renderCurrentQuestion()}
@@ -499,12 +501,13 @@ export default function AgentChatPage() {
              )}
             {isLoading && !isAnsweringModuleQuestions && (
               <div className="flex flex-col items-start gap-2 animate-fade-in">
-                 <div className="flex items-center gap-2">
+                 <div className="flex items-end gap-2 text-sm text-muted-foreground">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
                     <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                   </Avatar>
-                   <p className="text-sm font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
+                   <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>
+                   <p className="text-xs italic">({agent.role})</p>
                 </div>
                 <div className="max-w-[90%] sm:max-w-prose rounded-lg p-3 bg-muted">
                   <Skeleton className="h-4 w-24" />
@@ -529,3 +532,4 @@ export default function AgentChatPage() {
     </Card>
   );
 }
+
