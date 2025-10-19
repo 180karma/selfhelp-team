@@ -80,26 +80,31 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     try {
         const agent = agents.find(a => a.id === agentId);
         if (agent) {
-            // Generate the initial profile summary
-            const { profileData } = await analyzeUserProfile({
-                persona: agent.persona,
-                questionnaireAnswers: answers,
-            });
+             const userGoals = JSON.parse(localStorage.getItem(`thrivewell-goals-${agentId}`) || '[]');
+             const conversationNotes = JSON.parse(localStorage.getItem('thrivewell-notes') || '[]').filter((n: any) => n.aiAgentId === agentId);
 
-            // Generate the personalized roadmap
-            const { roadmap } = await createRoadmap({
+            // Generate the initial profile summary & roadmap in parallel
+            const [profileResult, roadmapResult] = await Promise.all([
+              analyzeUserProfile({
                 persona: agent.persona,
                 questionnaireAnswers: answers,
-            });
+                conversationNotes: conversationNotes,
+                goals: userGoals,
+              }),
+              createRoadmap({
+                persona: agent.persona,
+                questionnaireAnswers: answers,
+              })
+            ]);
 
             // Save both to local storage
             const profileKey = `thrivewell-profile-${agentId}`;
             const profileToSave = {
                 aiAgentId: agentId,
-                profileData: profileData,
+                profileData: profileResult.profileData,
             };
             localStorage.setItem(profileKey, JSON.stringify(profileToSave));
-            localStorage.setItem(`thrivewell-roadmap-${agentId}`, JSON.stringify(roadmap));
+            localStorage.setItem(`thrivewell-roadmap-${agentId}`, JSON.stringify(roadmapResult.roadmap));
         }
     } catch (error) {
         console.error("Failed to generate AI profile or roadmap:", error);

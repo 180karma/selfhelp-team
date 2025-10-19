@@ -2,7 +2,7 @@
 'use server';
 
 /**
- * @fileOverview A flow to summarize a conversation with an AI agent.
+ * @fileOverview A flow to summarize a single conversation with an AI agent into a clinical note.
  *
  * - summarizeConversation - A function that creates a summary note of a conversation.
  */
@@ -22,7 +22,7 @@ const SummarizeConversationInputSchema = z.object({
 type SummarizeConversationInput = z.infer<typeof SummarizeConversationInputSchema>;
 
 const SummarizeConversationOutputSchema = z.object({
-  noteData: z.string().describe("A concise summary of the conversation, focusing on key issues, user responses, and resolution practices discussed."),
+  noteData: z.string().describe("A concise clinical note summarizing the conversation, focusing on key issues, user responses, and resolution practices discussed. This note will be added to the user's history for future analysis."),
   updatedRoadmap: z.string().describe("The updated version of the clinical roadmap as a clean JSON string, with the relevant module marked as completed."),
 });
 type SummarizeConversationOutput = z.infer<typeof SummarizeConversationOutputSchema>;
@@ -41,11 +41,12 @@ const prompt = ai.definePrompt({
   output: { schema: SummarizeConversationOutputSchema },
   prompt: `You are an AI agent with the following persona: {{{persona}}}
 
-Your two main tasks are:
-1.  **Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of our conversation with the user, {{{userName}}}. Structure it with the following headers, and use bullet points under each:
-    *   **Key Issues Discussed:** Main problems or topics the user raised.
-    *   **User's Responses & Insights:** How the user felt, thought, and behaved during the discussion.
-    *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with the user.
+You have just finished a session with a user named {{{userName}}}. Your two main tasks are to document this specific session.
+
+1.  **Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of **only this conversation**. This note will be added to the user's file. Structure it with the following headers, and use bullet points under each:
+    *   **Key Issues Discussed:** Main problems or topics the user raised in this session.
+    *   **User's Responses & Insights:** How the user felt, thought, and behaved during this discussion.
+    *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with the user in this session.
 
 2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Current Roadmap." Your goal is to evolve this plan. The roadmap is provided as a JSON string.
     *   **CRITICAL INSTRUCTION:** Find the primary module that was discussed in the conversation and change its \`completed\` property from \`false\` to \`true\`.
@@ -53,9 +54,9 @@ Your two main tasks are:
 
     **Example:** If the original roadmap had a module like \`{"title": "Understanding Anxiety", "completed": false, ...}\`, and you discussed anxiety, the returned roadmap string should contain \`{"title": "Understanding Anxiety", "completed": true, ...}\`.
 
-Do not include conversational filler. This is an internal process for tracking progress and refining the user's plan.
+Do not include conversational filler. This is an internal process for tracking progress.
 
-Conversation History:
+Conversation History to Summarize:
 {{#each history}}
 - {{role}}: {{content.[0].text}}
 {{/each}}
