@@ -31,7 +31,7 @@ export default function ProfilePage() {
         // Also load roadmap for this agent
         const roadmapData = localStorage.getItem(`thrivewell-roadmap-${agent.id}`);
         if(roadmapData) {
-            parsedData.roadmap = JSON.parse(roadmapData);
+            parsedData.roadmap = roadmapData; // Keep as string for now
         }
 
         storedProfiles.push(parsedData);
@@ -101,8 +101,8 @@ export default function ProfilePage() {
                         try {
                             roadmapItems = JSON.parse(profile.roadmap);
                         } catch (e) {
-                            console.error("Failed to parse roadmap string:", e);
-                            roadmapItems = [];
+                            console.error("Failed to parse roadmap string:", e, "Raw data:", profile.roadmap);
+                            roadmapItems = []; // Fallback to empty array on parse error
                         }
                     } else if (Array.isArray(profile.roadmap)) {
                         roadmapItems = profile.roadmap;
@@ -110,7 +110,7 @@ export default function ProfilePage() {
                 }
                  // Ensure roadmapItems is an array before mapping
                 if (!Array.isArray(roadmapItems)) {
-                    console.error("Roadmap is not an array:", roadmapItems);
+                    console.error("Roadmap is not an array after processing:", roadmapItems);
                     roadmapItems = [];
                 }
 
