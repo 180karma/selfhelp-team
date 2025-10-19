@@ -17,7 +17,7 @@ const SummarizeConversationInputSchema = z.object({
     role: z.enum(['user', 'model']),
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history to be summarized.'),
-  roadmap: z.string().describe('The current clinical roadmap markdown checklist.'),
+  roadmap: z.any().describe('The current clinical roadmap, which can be a string or a JSON object.'),
 });
 type SummarizeConversationInput = z.infer<typeof SummarizeConversationInputSchema>;
 
@@ -47,9 +47,9 @@ Your two main tasks are:
     *   **User's Responses & Insights:** How the user felt, thought, and behaved during the discussion.
     *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with the user.
 
-2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Clinical Roadmap." Your goal is to evolve this plan.
-    *   **Mark Completion:** Find the primary topic that was discussed and mark the corresponding item as complete (e.g., change \`- [ ]\` to \`- [x]\`).
-    *   **Edit & Add (If Necessary):** Based on what you learned, you can add new follow-up items, rephrase existing ones for clarity, or adjust the order to better fit the user's journey. Return the entire, updated roadmap markdown.
+2.  **Update the Clinical Roadmap:** Review the conversation and the provided "Clinical Roadmap." Your goal is to evolve this plan. The roadmap is provided as a JSON string.
+    *   **Mark Completion:** Find the primary module that was discussed and mark its 'completed' property to 'true'.
+    *   **Edit & Add (If Necessary):** Based on what you learned, you can add new follow-up items to the notes, rephrase existing module titles for clarity, or adjust the order to better fit the user's journey. Return the entire, updated roadmap as a JSON string.
 
 Do not include conversational filler. This is an internal process for tracking progress and refining the user's plan.
 
@@ -58,7 +58,7 @@ Conversation History:
 - {{role}}: {{content.[0].text}}
 {{/each}}
 
-Current Roadmap:
+Current Roadmap (JSON format):
 {{{roadmap}}}
 `,
 });
@@ -71,7 +71,13 @@ const summarizeConversationFlow = ai.defineFlow(
     outputSchema: SummarizeConversationOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    // If the roadmap is an object, stringify it for the prompt.
+    const processedInput = {
+      ...input,
+      roadmap: typeof input.roadmap === 'object' ? JSON.stringify(input.roadmap, null, 2) : input.roadmap,
+    };
+
+    const { output } = await prompt(processedInput);
     return output!;
   }
 );

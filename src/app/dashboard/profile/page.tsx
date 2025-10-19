@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -8,6 +9,7 @@ import { Users, MessageSquareText, CheckSquare, Square } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useMemo, useState, useEffect } from 'react';
 import { useUser } from '@/firebase';
+import { Module } from '@/lib/roadmaps';
 
 export default function ProfilePage() {
   const { user } = useUser();
@@ -25,6 +27,13 @@ export default function ProfilePage() {
         const parsedData = JSON.parse(profileData);
         // Add a unique ID for the accordion key
         parsedData.id = `profile-${agent.id}`;
+        
+        // Also load roadmap for this agent
+        const roadmapData = localStorage.getItem(`thrivewell-roadmap-${agent.id}`);
+        if(roadmapData) {
+            parsedData.roadmap = JSON.parse(roadmapData);
+        }
+
         storedProfiles.push(parsedData);
       }
     });
@@ -85,7 +94,7 @@ export default function ProfilePage() {
                 const agent = getAgentInfo(profile.aiAgentId);
                 const agentNotes = notesByProfile[profile.aiAgentId] || [];
                 if (!agent) return null;
-                const roadmapItems = profile.roadmap?.split('\n').filter(line => line.trim().startsWith('- [')) || [];
+                const roadmapItems = (profile.roadmap as Module[]) || [];
                 return (
                     <AccordionItem value={profile.id} key={profile.id}>
                         <AccordionTrigger>
@@ -106,7 +115,7 @@ export default function ProfilePage() {
                                 </CardContent>
                             </Card>
 
-                            {profile.roadmap && (
+                            {roadmapItems.length > 0 && (
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="roadmap">
                                         <Card>
@@ -119,12 +128,10 @@ export default function ProfilePage() {
                                             <AccordionContent>
                                                 <CardContent className="pt-0 space-y-2">
                                                     {roadmapItems.map((item, index) => {
-                                                        const isChecked = item.includes('[x]');
-                                                        const text = item.replace(/- \[[x ]\] /, '');
                                                         return (
                                                             <div key={index} className="flex items-start gap-2 text-sm">
-                                                                {isChecked ? <CheckSquare className="h-4 w-4 mt-0.5 text-primary flex-shrink-0" /> : <Square className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />}
-                                                                <span className={isChecked ? 'text-muted-foreground line-through' : 'text-foreground'}>{text}</span>
+                                                                {item.completed ? <CheckSquare className="h-4 w-4 mt-0.5 text-primary flex-shrink-0" /> : <Square className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />}
+                                                                <span className={item.completed ? 'text-muted-foreground line-through' : 'text-foreground'}>{item.title}</span>
                                                             </div>
                                                         );
                                                     })}

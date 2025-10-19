@@ -1,4 +1,6 @@
+
 import { Timestamp } from 'firebase/firestore';
+import { Module } from './roadmaps';
 
 export type DiaryEntry = {
   id: string;
@@ -39,7 +41,7 @@ export type AiMentalHealthProfile = {
     userId: string;
     aiAgentId: string;
     profileData: string;
-    roadmap: string;
+    roadmap: Module[] | string;
 }
 
 export type AiMentalHealthNote = {

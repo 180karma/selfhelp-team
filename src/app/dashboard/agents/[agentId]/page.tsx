@@ -20,6 +20,8 @@ import type { AiMentalHealthNote, Goal, GoalCategory, AiMentalHealthProfile } fr
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { roadmaps } from '@/lib/roadmaps';
+import type { Module } from '@/lib/roadmaps';
 
 
 type ProposedTask = {
@@ -67,10 +69,15 @@ export default function AgentChatPage() {
   const { user } = useUser();
   const [userName, setUserName] = useState<string>('');
 
+  const [currentRoadmap, setCurrentRoadmap] = useState<Module[] | null>(null);
+  const [currentModule, setCurrentModule] = useState<Module | null>(null);
+  const [moduleQuestionIndex, setModuleQuestionIndex] = useState(0);
+  const [moduleAnswers, setModuleAnswers] = useState<Record<string, string>>({});
+  const [isAnsweringModuleQuestions, setIsAnsweringModuleQuestions] = useState(false);
+
   // Get user's name from multiple sources
   useEffect(() => {
     if (user) {
-      // Priority: 1. Firebase displayName, 2. localStorage, 3. Prompt user
       if (user.displayName) {
         const firstName = user.displayName.split(' ')[0];
         setUserName(firstName);
@@ -80,7 +87,6 @@ export default function AgentChatPage() {
         if (storedName) {
           setUserName(storedName);
         } else {
-          // Prompt user for their name
           const name = prompt('Welcome! Please enter your first name so our agents can address you properly:');
           if (name && name.trim()) {
             const firstName = name.trim().split(' ')[0];
@@ -97,12 +103,20 @@ export default function AgentChatPage() {
   const [assessment, setAssessment] = useState<DocumentData | null>(null);
   const [isLoadingAssessment, setIsLoadingAssessment] = useState(true);
 
-  // Fetch initial assessment from localStorage
+  // Fetch initial assessment & roadmap from localStorage
   useEffect(() => {
     const assessmentData = localStorage.getItem(`thrivewell-assessment-${agentId}`);
     if (assessmentData) {
       setAssessment(JSON.parse(assessmentData));
     }
+    
+    const roadmapData = localStorage.getItem(`thrivewell-roadmap-${agentId}`);
+    if (roadmapData) {
+        setCurrentRoadmap(JSON.parse(roadmapData));
+    } else {
+        setCurrentRoadmap(roadmaps[agentId] || null);
+    }
+
     setIsLoadingAssessment(false);
   }, [agentId]);
 
@@ -128,9 +142,9 @@ export default function AgentChatPage() {
         if (profile.profileData) {
           personaWithContext += `\n\n## My Internal Profile Summary About the User:\n${profile.profileData}`;
         }
-        if (profile.roadmap) {
-            personaWithContext += `\n\n## My Clinical Roadmap:\n${profile.roadmap}`;
-        }
+      }
+       if (currentRoadmap) {
+            personaWithContext += `\n\n## My Clinical Roadmap:\n${JSON.stringify(currentRoadmap.find(m => !m.completed) || currentRoadmap[0], null, 2)}`;
       }
 
       const genkitHistory = toGenkitHistory(currentHistory);
@@ -164,17 +178,12 @@ export default function AgentChatPage() {
     }
     
     try {
-        const profileKey = `thrivewell-profile-${agentId}`;
-        const savedProfileItem = localStorage.getItem(profileKey);
-        const profile: AiMentalHealthProfile | null = savedProfileItem ? JSON.parse(savedProfileItem) : null;
-        const currentRoadmap = profile?.roadmap || '';
-
       const genkitHistory = toGenkitHistory(currentHistory);
       const { noteData, updatedRoadmap } = await summarizeConversation({
         persona: agent!.persona,
         userName: userName || 'friend',
         history: genkitHistory,
-        roadmap: currentRoadmap,
+        roadmap: currentRoadmap ? JSON.stringify(currentRoadmap, null, 2) : '[]',
       });
       
       const note: AiMentalHealthNote = {
@@ -190,9 +199,14 @@ export default function AgentChatPage() {
       existingNotes.push(note);
       localStorage.setItem(notesKey, JSON.stringify(existingNotes));
       
-      if (profile) {
-        profile.roadmap = updatedRoadmap;
-        localStorage.setItem(profileKey, JSON.stringify(profile));
+      if (updatedRoadmap) {
+          try {
+              const parsedRoadmap = JSON.parse(updatedRoadmap);
+              setCurrentRoadmap(parsedRoadmap);
+              localStorage.setItem(`thrivewell-roadmap-${agentId}`, updatedRoadmap);
+          } catch (e) {
+              console.error("Failed to parse and save updated roadmap:", e);
+          }
       }
 
       console.log('Conversation note and updated roadmap saved automatically to local storage.');
@@ -202,13 +216,30 @@ export default function AgentChatPage() {
     }
   };
 
-  const handleOptionClick = (option: string, originalQuestion: string, proposedTask?: ProposedTask) => {
-    // Add the user's choice to the history immediately for a responsive feel
+ const handleOptionClick = (option: string, originalQuestion: string, proposedTask?: ProposedTask) => {
     const userMessage: ChatMessage = { role: 'user', content: option };
+    
+    if (isAnsweringModuleQuestions && currentModule) {
+      const questionId = currentModule.questions[moduleQuestionIndex].id;
+      const newAnswers = { ...moduleAnswers, [questionId]: option };
+      setModuleAnswers(newAnswers);
+
+      if (moduleQuestionIndex < currentModule.questions.length - 1) {
+        setHistory(prev => [...prev, userMessage]);
+        setModuleQuestionIndex(prev => prev + 1);
+      } else {
+        setIsAnsweringModuleQuestions(false);
+        setHistory(prev => [...prev, userMessage]);
+        handleAgentResponse(`I've completed the questionnaire for the '${currentModule.title}' module. My answers were: ${JSON.stringify(newAnswers)}. Now, what's the next step?`, [...history, userMessage]);
+        setModuleQuestionIndex(0);
+        setModuleAnswers({});
+      }
+      return;
+    }
+
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
 
-    // Check if the user agreed and a task was proposed
     const userSaidYes = option.toLowerCase().includes('yes');
 
     if (userSaidYes && proposedTask && user) {
@@ -231,7 +262,6 @@ export default function AgentChatPage() {
         });
     }
     
-    // Let the agent respond to the selected option
     handleAgentResponse(userMessage.content, newHistory);
   };
 
@@ -242,26 +272,31 @@ export default function AgentChatPage() {
     handleAgentResponse(userMessage.content, newHistory);
   };
 
+  const startModuleQuestionnaire = (module: Module) => {
+    setCurrentModule(module);
+    setModuleQuestionIndex(0);
+    setModuleAnswers({});
+    setIsAnsweringModuleQuestions(true);
+  };
 
   useEffect(() => {
     if (!isLoadingAssessment) {
       if (!assessment) {
         setShowQuestionnaire(true);
-      } else if (history.length === 0 && !introSent) {
+      } else if (history.length === 0 && !introSent && currentRoadmap) {
         setIntroSent(true);
-        const allNotes = JSON.parse(localStorage.getItem('thrivewell-notes') || '[]');
-        const myNotes = allNotes.filter((note: AiMentalHealthNote) => note.aiAgentId === agentId);
-        if (myNotes.length === 0) {
-          // This is the first session
-          handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question based on your new clinical roadmap.", []);
+        const nextModule = currentRoadmap.find(m => !m.completed);
+
+        if (nextModule) {
+           setHistory([{ role: 'model', content: `Hello ${userName || 'friend'}, I'm ${agent?.givenName.split(' ')[0]}. It's good to connect with you. I've reviewed your file and I'm here to support you.\n\nFor our session today, let's explore the topic of **'${nextModule.title}'**. To help me understand where you're at, I have just a couple of multiple-choice questions for you.` }]);
+           startModuleQuestionnaire(nextModule);
         } else {
-          // This is a returning session
-          handleAgentResponse("Hello again, please review my file, including your previous notes and any relevant briefings from the team. Let's pick up where we left off based on your clinical roadmap.", []);
+             setHistory([{ role: 'model', content: `Welcome back, ${userName || 'friend'}! It looks like you have completed all the modules in your roadmap. That's a huge accomplishment! How can I help you today?` }]);
         }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assessment, isLoadingAssessment, introSent]);
+  }, [assessment, isLoadingAssessment, introSent, currentRoadmap]);
 
 
   useEffect(() => {
@@ -284,10 +319,10 @@ export default function AgentChatPage() {
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      handleSaveNote(); // Also save when component unmounts
+      handleSaveNote();
     };
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentRoadmap]);
 
   if (!agent) {
     notFound();
@@ -302,11 +337,11 @@ export default function AgentChatPage() {
   }
 
   const handleQuestionnaireComplete = (data: DocumentData) => {
-    setAssessment({ answers: data }); // Update local state with new assessment data
+    setAssessment({ answers: data });
     setShowQuestionnaire(false);
-    setIntroSent(true);
-     // After completing questionnaire, it's always the first session
-    handleAgentResponse("Hello, please introduce yourself based on my profile and ask your first question based on your new clinical roadmap.", []);
+    // Let the standard useEffect handle the introduction after this.
+    setIntroSent(false); 
+    setHistory([]);
   };
 
   if (showQuestionnaire) {
@@ -322,6 +357,32 @@ export default function AgentChatPage() {
     reset();
     handleAgentResponse(data.message, newHistory);
   };
+  
+  const renderCurrentQuestion = () => {
+    if (!isAnsweringModuleQuestions || !currentModule) return null;
+    const question = currentModule.questions[moduleQuestionIndex];
+
+    return (
+        <div className="mt-4 space-y-2 animate-fade-in">
+          <p className="font-semibold text-sm">{question.question}</p>
+          <div className="flex flex-col space-y-2">
+            {question.options.map((option, i) => (
+              <Button 
+                key={i} 
+                variant="outline" 
+                size="sm"
+                className="justify-start"
+                onClick={() => handleOptionClick(option, question.question)}
+                disabled={isLoading}
+              >
+                {option}
+              </Button>
+            ))}
+          </div>
+           <p className="text-xs text-muted-foreground italic mt-2">Please select an answer to continue.</p>
+        </div>
+    )
+  }
 
   return (
     <Card className="flex h-full flex-col">
@@ -348,8 +409,7 @@ export default function AgentChatPage() {
               return (
                 <div key={index} className={cn(
                   `flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`,
-                  isLastMessage ? 'animate-fade-in' : 'animate-fade-out',
-                  isSecondToLast && 'animate-quick-fade-in'
+                  isLastMessage ? 'animate-fade-in' : '',
                 )}>
                   {message.role === 'model' && (
                     <div className="flex items-center gap-2">
@@ -378,7 +438,8 @@ export default function AgentChatPage() {
                       "whitespace-pre-wrap",
                       message.role === 'user' ? 'text-sm' : 'text-sm'
                     )}>{message.content}</p>
-                     {isLastMessage && !isLoading && message.role === 'model' && (
+                    
+                    {isLastMessage && !isLoading && message.role === 'model' && !isAnsweringModuleQuestions && (
                         <>
                           {message.question && (
                             <div className="mt-4 space-y-2">
@@ -422,7 +483,21 @@ export default function AgentChatPage() {
                 </div>
               )
             })}
-            {isLoading && (
+             {isAnsweringModuleQuestions && (
+                  <div className="flex flex-col items-start gap-2 animate-fade-in">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+                        <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <p className="text-sm font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
+                    </div>
+                    <div className="rounded-lg p-3 bg-muted max-w-prose self-start">
+                        {renderCurrentQuestion()}
+                    </div>
+                  </div>
+             )}
+            {isLoading && !isAnsweringModuleQuestions && (
               <div className="flex flex-col items-start gap-2 animate-fade-in">
                  <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8">
@@ -443,9 +518,9 @@ export default function AgentChatPage() {
             {...register('message', { required: true })}
             placeholder="Type your message..."
             autoComplete="off"
-            disabled={isLoading}
+            disabled={isLoading || isAnsweringModuleQuestions}
           />
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading || isAnsweringModuleQuestions}>
             Send
           </Button>
         </form>
