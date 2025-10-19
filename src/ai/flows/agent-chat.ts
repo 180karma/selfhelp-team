@@ -31,8 +31,13 @@ const AgentChatOutputSchema = z.object({
             title: z.string().describe("The title of the task to add to the user's goal list."),
             category: z.enum(['Daily Task', 'Short-Term Goal', 'Long-Term Goal']).describe("The category of the task (Daily, Short-Term, or Long-Term)."),
             addedBy: z.string().describe("The name of the agent adding the task.")
-        }).describe("A mandatory task for the user to add to their goal list if they agree.").optional()
+        }).describe("A mandatory task for the user to add to their goal list if they agree.").optional(),
     }).describe("A multiple-choice question to ask the user.").optional(),
+    mantra: z.object({
+        text: z.string().describe("A short, powerful mantra for the user to repeat."),
+        aim: z.string().describe("A brief explanation of what the mantra is intended to help with."),
+        assignedBy: z.string().describe("The name of the agent assigning the mantra.")
+    }).describe("A mantra to provide to the user.").optional(),
     suggestedReplies: z.array(z.string()).describe("A list of simple suggested replies for the user to continue the conversation when no direct question is asked. e.g. ['Okay, sounds good', 'Can you explain more?']").optional(),
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
@@ -64,6 +69,7 @@ const agentChatFlow = ai.defineFlow(
     return {
         response: output.response,
         question: output.question,
+        mantra: output.mantra,
         suggestedReplies: output.suggestedReplies,
     };
   }

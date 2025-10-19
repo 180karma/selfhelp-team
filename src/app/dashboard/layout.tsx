@@ -26,6 +26,7 @@ import {
   User,
   Menu,
   X,
+  HeartHand,
 } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -114,10 +115,20 @@ export default function DashboardLayout({
                     <span className="font-medium">Diary</span>
                   </div>
                 </Link>
+
+                <Link href="/dashboard/mantras" onClick={closeMobileMenu}>
+                  <div className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-3",
+                    isActive('/dashboard/mantras') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                  )}>
+                    <HeartHand className="w-5 h-5" />
+                    <span className="font-medium">Mantras</span>
+                  </div>
+                </Link>
                 
                 <Link href="/dashboard/profile" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-3",
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-4",
                     isActive('/dashboard/profile') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
                   )}>
                     <User className="w-5 h-5" />
@@ -127,7 +138,7 @@ export default function DashboardLayout({
                 
                 <Link href="/dashboard/agents" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-4",
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-5",
                     pathname.startsWith('/dashboard/agents') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
                   )}>
                     <Users className="w-5 h-5" />
@@ -137,7 +148,7 @@ export default function DashboardLayout({
                 
                 <Link href="/dashboard/subscription" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-5",
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-6",
                     isActive('/dashboard/subscription') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
                   )}>
                     <Crown className="w-5 h-5" />
@@ -148,7 +159,7 @@ export default function DashboardLayout({
                 <div className="border-t pt-2 mt-2">
                   <Link href="/dashboard/settings" onClick={closeMobileMenu}>
                     <div className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-6",
+                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-7",
                       isActive('/dashboard/settings') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
                     )}>
                       <Settings className="w-5 h-5" />
@@ -157,7 +168,7 @@ export default function DashboardLayout({
                   </Link>
                   
                   <Link href="/" onClick={closeMobileMenu}>
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent transition-colors opacity-0 animate-menu-item menu-item-7">
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent transition-colors opacity-0 animate-menu-item menu-item-8">
                       <LogOut className="w-5 h-5" />
                       <span className="font-medium">Log Out</span>
                     </div>
@@ -205,6 +216,17 @@ export default function DashboardLayout({
                     tooltip="Diary"
                   >
                     Diary
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <Link href="/dashboard/mantras" passHref>
+                  <SidebarMenuButton
+                    isActive={isActive('/dashboard/mantras')}
+                    icon={<HeartHand />}
+                    tooltip="Mantras"
+                  >
+                    Mantras
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -281,7 +303,7 @@ export default function DashboardLayout({
             </header>
 
             {/* Mobile Header with Avatar */}
-            <header className="sticky top-0 z-30 flex md:hidden h-14 items-center justify-end gap-2 border-b bg-background px-4">
+            <header className="sticky top-[52px] md:top-0 z-40 flex md:hidden h-14 items-center justify-end gap-2 border-b bg-background px-4">
               <UserAvatar />
             </header>
             

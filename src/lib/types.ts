@@ -27,6 +27,15 @@ export type Goal = {
   congratulated?: boolean;
 };
 
+export type Mantra = {
+    id: string;
+    userId: string;
+    mantra: string;
+    aim: string;
+    assignedBy: string;
+    createdAt: string;
+};
+
 export type AiAgentInteraction = {
   id: string;
   userId: string;

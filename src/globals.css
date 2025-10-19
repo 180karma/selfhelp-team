@@ -1,0 +1,385 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+* {
+  min-width: 0;
+}
+
+@layer base {
+  :root {
+    --background: 200 30% 96%;
+    --foreground: 215 50% 20%;
+    --card: 200 40% 98%;
+    --card-foreground: 215 50% 20%;
+    --popover: 200 40% 98%;
+    --popover-foreground: 215 50% 20%;
+    --primary: 200 85% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 40% 88%;
+    --secondary-foreground: 215 50% 20%;
+    --muted: 200 30% 92%;
+    --muted-foreground: 215 25% 50%;
+    --accent: 195 85% 90%;
+    --accent-foreground: 215 50% 20%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 200 30% 88%;
+    --input: 200 30% 88%;
+    --ring: 200 85% 45%;
+    --radius: 0.5rem;
+    --chart-1: 200 85% 45%;
+    --chart-2: 195 75% 55%;
+    --chart-3: 215 50% 35%;
+    --chart-4: 185 65% 50%;
+    --chart-5: 210 70% 60%;
+    --sidebar-background: 200 30% 96%;
+    --sidebar-foreground: 215 50% 20%;
+    --sidebar-primary: 200 85% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 195 85% 90%;
+    --sidebar-accent-foreground: 215 50% 20%;
+    --sidebar-border: 200 30% 88%;
+    --sidebar-ring: 200 85% 45%;
+  }
+
+  .dark {
+    --background: 215 50% 15%;
+    --foreground: 200 30% 95%;
+    --card: 215 45% 18%;
+    --card-foreground: 200 30% 95%;
+    --popover: 215 45% 18%;
+    --popover-foreground: 200 30% 95%;
+    --primary: 195 85% 60%;
+    --primary-foreground: 215 50% 15%;
+    --secondary: 215 40% 25%;
+    --secondary-foreground: 200 30% 95%;
+    --muted: 215 35% 22%;
+    --muted-foreground: 200 20% 70%;
+    --accent: 195 75% 30%;
+    --accent-foreground: 200 30% 95%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 200 30% 95%;
+    --border: 215 35% 25%;
+    --input: 215 35% 25%;
+    --ring: 195 85% 60%;
+    --chart-1: 200 85% 50%;
+    --chart-2: 195 75% 60%;
+    --chart-3: 185 65% 55%;
+    --chart-4: 210 70% 65%;
+    --chart-5: 220 75% 70%;
+    --sidebar-background: 215 50% 15%;
+    --sidebar-foreground: 200 30% 95%;
+    --sidebar-primary: 195 85% 60%;
+    --sidebar-primary-foreground: 215 50% 15%;
+    --sidebar-accent: 215 40% 25%;
+    --sidebar-accent-foreground: 200 30% 95%;
+    --sidebar-border: 215 35% 25%;
+    --sidebar-ring: 195 85% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Ensure images don't overflow */
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Prevent text overflow */
+  p, h1, h2, h3, h4, h5, h6, span, div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+@layer utilities {
+  /* Fade Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes quickFadeIn {
+    from {
+      opacity: 0.3;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Slide Animations */
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Scale Animations */
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Gradient Animation */
+  @keyframes gradientShift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Float Animation */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Glow Animation */
+  @keyframes glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4);
+    }
+  }
+
+  /* Shimmer Animation */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  /* Animation Classes */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+  }
+
+  .animate-quick-fade-in {
+    animation: quickFadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+  }
+
+  .animate-slide-in-up {
+    animation: slideInUp 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Stagger delay utilities */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .transition-smooth-slow {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Mobile Menu Animations */
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes menuItemFadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-menu-item {
+    animation: menuItemFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Stagger menu item animations */
+  .menu-item-1 { animation-delay: 0ms; }
+  .menu-item-2 { animation-delay: 40ms; }
+  .menu-item-3 { animation-delay: 80ms; }
+  .menu-item-4 { animation-delay: 120ms; }
+  .menu-item-5 { animation-delay: 160ms; }
+  .menu-item-6 { animation-delay: 200ms; }
+  .menu-item-7 { animation-delay: 240ms; }
+  .menu-item-8 { animation-delay: 280ms; }
+}

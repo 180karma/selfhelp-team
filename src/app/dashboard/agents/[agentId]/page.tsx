@@ -16,7 +16,7 @@ import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
 import { DocumentData } from 'firebase/firestore';
-import type { AiMentalHealthNote, Goal, GoalCategory, AiMentalHealthProfile } from '@/lib/types';
+import type { AiMentalHealthNote, Goal, GoalCategory, AiMentalHealthProfile, Mantra } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -31,6 +31,12 @@ type ProposedTask = {
     addedBy: string;
 };
 
+type ProposedMantra = {
+    text: string;
+    aim: string;
+    assignedBy: string;
+};
+
 type ChatMessage = {
   role: 'user' | 'model';
   content: string;
@@ -39,6 +45,7 @@ type ChatMessage = {
     options: string[];
     addTask?: ProposedTask;
   };
+  mantra?: ProposedMantra;
   suggestedReplies?: string[];
 };
 
@@ -162,7 +169,27 @@ export default function AgentChatPage() {
         message: message,
       });
 
-      setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question, suggestedReplies: result.suggestedReplies }]);
+      setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question, mantra: result.mantra, suggestedReplies: result.suggestedReplies }]);
+
+      if (result.mantra && user) {
+        const newMantra: Mantra = {
+          id: uuidv4(),
+          userId: user.uid,
+          mantra: result.mantra.text,
+          aim: result.mantra.aim,
+          assignedBy: result.mantra.assignedBy,
+          createdAt: new Date().toISOString(),
+        };
+        const mantrasKey = 'thrivewell-mantras';
+        const existingMantras = JSON.parse(localStorage.getItem(mantrasKey) || '[]');
+        existingMantras.push(newMantra);
+        localStorage.setItem(mantrasKey, JSON.stringify(existingMantras));
+        toast({
+          title: "New Mantra Added!",
+          description: `Check your Mantras page to see it.`,
+        });
+      }
+
 
     } catch (error: any) {
       console.error('Error chatting with agent:', error);
@@ -406,7 +433,10 @@ export default function AgentChatPage() {
 
   return (
     <Card className="flex h-full flex-col border-0 rounded-none shadow-none">
-       <CardHeader className="sticky top-0 z-20 flex flex-row items-center justify-between border-b bg-background/80 p-3 backdrop-blur-sm sm:p-4 md:p-6">
+       <header className="sticky top-0 z-50 flex items-center justify-between border-b bg-background/80 p-3 backdrop-blur-sm sm:p-4 md:p-6 md:hidden">
+          {/* This header is for mobile to float over the content */}
+       </header>
+       <CardHeader className="sticky top-0 md:top-[60px] z-20 flex flex-row items-center justify-between border-b bg-background/80 p-3 backdrop-blur-sm sm:p-4 md:p-6">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
               <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
