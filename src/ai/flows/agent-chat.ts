@@ -54,7 +54,7 @@ const agentChatFlow = ai.defineFlow(
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour primary goal is to follow the session structure defined in your persona. If you are starting a new module, your first step is ALWAYS to introduce the topic and then administer the two-question mini-assessment. After the user completes it, you will proceed with the exploratory phase.`,
+      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour primary goal is to follow the session structure defined in your persona. Your first step is ALWAYS to introduce the topic and then administer the two-question mini-assessment. After the user completes it, you will proceed with the exploratory phase.`,
       output: {
         schema: AgentChatOutputSchema,
       }
@@ -79,3 +79,5 @@ const agentChatFlow = ai.defineFlow(
 export async function agentChat(input: AgentChatInput): Promise<AgentChatOutput> {
   return agentChatFlow(input);
 }
+
+    
