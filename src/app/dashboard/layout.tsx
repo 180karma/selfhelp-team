@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -22,11 +23,14 @@ import {
   LogOut,
   Settings,
   User,
+  Menu,
+  X,
 } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { FirebaseClientProvider, useUser } from '@/firebase';
+import { cn } from '@/lib/utils';
 
 function UserAvatar() {
   const { user } = useUser();
@@ -45,11 +49,135 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
 
   return (
     <FirebaseClientProvider>
       <SidebarProvider>
-        <Sidebar>
+        {/* Mobile Pull-Down Menu */}
+        <div className="md:hidden fixed top-0 left-0 right-0 z-50">
+          {/* Tab Handle */}
+          <button
+            onClick={toggleMobileMenu}
+            className={cn(
+              "w-full bg-gradient-to-r from-sky-600 to-blue-700 text-white py-3 px-4 flex items-center justify-between shadow-lg transition-all duration-300 active:scale-[0.98]",
+              mobileMenuOpen ? "rounded-b-none" : "rounded-b-lg"
+            )}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+          >
+            <div className="flex items-center gap-2">
+              <Logo className="w-6 h-6 text-white" />
+              <span className="font-headline text-base font-semibold">ThriveWell</span>
+            </div>
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6 transition-transform duration-300" />
+            ) : (
+              <Menu className="w-6 h-6 transition-transform duration-300" />
+            )}
+          </button>
+
+          {/* Dropdown Menu Content */}
+          <div
+            className={cn(
+              "bg-background border-b shadow-xl overflow-hidden",
+              mobileMenuOpen ? "max-h-[80vh] animate-slide-down" : "max-h-0"
+            )}
+          >
+            {mobileMenuOpen && (
+              <div className="p-4 space-y-2">
+                <Link href="/dashboard" onClick={closeMobileMenu}>
+                  <div className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-1",
+                    isActive('/dashboard') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                  )}>
+                    <LayoutDashboard className="w-5 h-5" />
+                    <span className="font-medium">Dashboard</span>
+                  </div>
+                </Link>
+                
+                <Link href="/dashboard/diary" onClick={closeMobileMenu}>
+                  <div className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-2",
+                    pathname.startsWith('/dashboard/diary') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                  )}>
+                    <BookOpenText className="w-5 h-5" />
+                    <span className="font-medium">Diary</span>
+                  </div>
+                </Link>
+                
+                <Link href="/dashboard/profile" onClick={closeMobileMenu}>
+                  <div className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-3",
+                    isActive('/dashboard/profile') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                  )}>
+                    <User className="w-5 h-5" />
+                    <span className="font-medium">Profile</span>
+                  </div>
+                </Link>
+                
+                <Link href="/dashboard/agents" onClick={closeMobileMenu}>
+                  <div className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-4",
+                    pathname.startsWith('/dashboard/agents') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                  )}>
+                    <Users className="w-5 h-5" />
+                    <span className="font-medium">Wellness Team</span>
+                  </div>
+                </Link>
+                
+                <Link href="/dashboard/subscription" onClick={closeMobileMenu}>
+                  <div className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-5",
+                    isActive('/dashboard/subscription') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                  )}>
+                    <Crown className="w-5 h-5" />
+                    <span className="font-medium">Subscription</span>
+                  </div>
+                </Link>
+
+                <div className="border-t pt-2 mt-2">
+                  <Link href="/dashboard/settings" onClick={closeMobileMenu}>
+                    <div className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-6",
+                      isActive('/dashboard/settings') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                    )}>
+                      <Settings className="w-5 h-5" />
+                      <span className="font-medium">Settings</span>
+                    </div>
+                  </Link>
+                  
+                  <Link href="/" onClick={closeMobileMenu}>
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent transition-colors opacity-0 animate-menu-item menu-item-7">
+                      <LogOut className="w-5 h-5" />
+                      <span className="font-medium">Log Out</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Overlay when menu is open */}
+          {mobileMenuOpen && (
+            <div
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+              style={{ top: 'auto' }}
+              onClick={closeMobileMenu}
+            />
+          )}
+        </div>
+
+        {/* Desktop Sidebar */}
+        <Sidebar className="hidden md:flex">
           <SidebarHeader>
             <div className="flex items-center gap-2">
               <Logo className="w-7 h-7 text-primary" />
@@ -139,15 +267,25 @@ export default function DashboardLayout({
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
-          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
-            <SidebarTrigger className="md:hidden" />
-            <div className="flex-1">
+          {/* Desktop Header */}
+          <header className="sticky top-0 z-10 hidden md:flex h-14 items-center gap-2 sm:gap-4 border-b bg-background px-3 sm:px-4 lg:h-[60px] lg:px-6">
+            <SidebarTrigger className="md:hidden flex-shrink-0" />
+            <div className="flex-1 min-w-0">
               {/* Can add page title here */}
             </div>
+            <div className="flex-shrink-0">
+              <UserAvatar />
+            </div>
+          </header>
+
+          {/* Mobile Header with Avatar */}
+          <header className="sticky z-40 md:hidden flex h-14 items-center justify-end gap-2 border-b bg-background px-4" style={{ top: mobileMenuOpen ? '80vh' : '52px' }}>
             <UserAvatar />
           </header>
-          <main className="flex-1 p-2 sm:p-4 md:p-6">
-            <div className="h-[calc(100vh-theme(spacing.28))]">
+
+          {/* Main Content */}
+          <main className="flex-1 p-2 sm:p-4 md:p-6 overflow-hidden" style={{ paddingTop: mobileMenuOpen ? '0' : undefined }}>
+            <div className="h-[calc(100vh-theme(spacing.28))] md:h-[calc(100vh-theme(spacing.28))] overflow-auto">
               {children}
             </div>
           </main>

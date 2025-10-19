@@ -363,15 +363,15 @@ export default function AgentChatPage() {
     const question = currentModule.questions[moduleQuestionIndex];
 
     return (
-        <div className="mt-4 space-y-2 animate-fade-in">
-          <p className="font-semibold text-sm">{question.question}</p>
-          <div className="flex flex-col space-y-2">
+        <div className="mt-4 space-y-2 animate-fade-in w-full">
+          <p className="font-semibold text-sm break-words">{question.question}</p>
+          <div className="flex flex-col space-y-2 w-full">
             {question.options.map((option, i) => (
               <Button 
                 key={i} 
                 variant="outline" 
                 size="sm"
-                className="justify-start"
+                className="justify-start text-left w-full whitespace-normal h-auto py-2"
                 onClick={() => handleOptionClick(option, question.question)}
                 disabled={isLoading}
               >
@@ -386,22 +386,22 @@ export default function AgentChatPage() {
 
   return (
     <Card className="flex h-full flex-col">
-      <CardHeader className="flex flex-row items-center justify-between border-b">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-12 w-12">
+      <CardHeader className="flex flex-row items-center justify-between border-b p-3 sm:p-4 md:p-6">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
               <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
               <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
             </Avatar>
-            <div>
-              <CardTitle className="font-headline text-2xl">{agent.givenName}</CardTitle>
-              <CardDescription>{agent.roleDescription}</CardDescription>
-              <p className="text-xs text-muted-foreground italic mt-1">AI agents are not a replacement for professional medical or mental health advice.</p>
+            <div className="min-w-0 flex-1">
+              <CardTitle className="font-headline text-lg sm:text-xl md:text-2xl truncate">{agent.givenName}</CardTitle>
+              <CardDescription className="text-xs sm:text-sm truncate">{agent.roleDescription}</CardDescription>
+              <p className="text-xs text-muted-foreground italic mt-1 hidden sm:block">AI agents are not a replacement for professional medical or mental health advice.</p>
             </div>
           </div>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-4 p-6">
-        <ScrollArea className="flex-1" ref={scrollAreaRef}>
-          <div className="space-y-6 pr-4">
+      <CardContent className="flex flex-1 flex-col gap-4 p-3 sm:p-4 md:p-6 overflow-hidden">
+        <ScrollArea className="flex-1 min-w-0" ref={scrollAreaRef}>
+          <div className="space-y-4 sm:space-y-6 pr-2 sm:pr-4">
             {history.map((message, index) => {
               const isLastMessage = index === history.length - 1;
               const isSecondToLast = index === history.length - 2;
@@ -429,28 +429,28 @@ export default function AgentChatPage() {
                         </Avatar>
                      </div>
                    )}
-                  <div className={cn('rounded-lg p-3', 
+                  <div className={cn('rounded-lg p-3 min-w-0', 
                       message.role === 'user' 
-                      ? 'bg-secondary text-secondary-foreground max-w-md self-end' 
-                      : 'bg-muted max-w-prose self-start'
+                      ? 'bg-secondary text-secondary-foreground max-w-[85%] sm:max-w-md self-end' 
+                      : 'bg-muted max-w-[90%] sm:max-w-prose self-start'
                   )}>
                     <p className={cn(
-                      "whitespace-pre-wrap",
+                      "whitespace-pre-wrap break-words",
                       message.role === 'user' ? 'text-sm' : 'text-sm'
                     )}>{message.content}</p>
                     
                     {isLastMessage && !isLoading && message.role === 'model' && !isAnsweringModuleQuestions && (
                         <>
                           {message.question && (
-                            <div className="mt-4 space-y-2">
-                              <p className="font-semibold text-sm">{message.question.text}</p>
-                              <div className="flex flex-col space-y-2">
+                            <div className="mt-4 space-y-2 w-full">
+                              <p className="font-semibold text-sm break-words">{message.question.text}</p>
+                              <div className="flex flex-col space-y-2 w-full">
                                 {message.question.options.map((option, i) => (
                                   <Button 
                                     key={i} 
                                     variant="outline" 
                                     size="sm"
-                                    className="justify-start"
+                                    className="justify-start text-left w-full whitespace-normal h-auto py-2"
                                     onClick={() => handleOptionClick(option, message.question!.text, message.question!.addTask)}
                                     disabled={isLoading}
                                   >
@@ -462,13 +462,13 @@ export default function AgentChatPage() {
                             </div>
                           )}
                           {message.suggestedReplies && !message.question && (
-                             <div className="mt-4 flex flex-col space-y-2">
+                             <div className="mt-4 flex flex-col space-y-2 w-full">
                                 {message.suggestedReplies.map((reply, i) => (
                                   <Button 
                                     key={i} 
                                     variant="outline" 
                                     size="sm"
-                                    className="justify-start"
+                                    className="justify-start text-left w-full whitespace-normal h-auto py-2"
                                     onClick={() => handleSuggestedReplyClick(reply)}
                                     disabled={isLoading}
                                   >
@@ -484,7 +484,7 @@ export default function AgentChatPage() {
               )
             })}
              {isAnsweringModuleQuestions && (
-                  <div className="flex flex-col items-start gap-2 animate-fade-in">
+                  <div className="flex flex-col items-start gap-2 animate-fade-in w-full">
                     <div className="flex items-center gap-2">
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
@@ -492,7 +492,7 @@ export default function AgentChatPage() {
                       </Avatar>
                       <p className="text-sm font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                     </div>
-                    <div className="rounded-lg p-3 bg-muted max-w-prose self-start">
+                    <div className="rounded-lg p-3 bg-muted max-w-[90%] sm:max-w-prose self-start w-full sm:w-auto">
                         {renderCurrentQuestion()}
                     </div>
                   </div>
@@ -506,21 +506,22 @@ export default function AgentChatPage() {
                   </Avatar>
                    <p className="text-sm font-semibold text-muted-foreground">{agent.givenName.split(' ')[0]}</p>
                 </div>
-                <div className="max-w-prose rounded-lg p-3 bg-muted">
+                <div className="max-w-[90%] sm:max-w-prose rounded-lg p-3 bg-muted">
                   <Skeleton className="h-4 w-24" />
                 </div>
               </div>
             )}
           </div>
         </ScrollArea>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2 border-t pt-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2 border-t pt-3 sm:pt-4 flex-shrink-0">
           <Input
             {...register('message', { required: true })}
             placeholder="Type your message..."
             autoComplete="off"
             disabled={isLoading || isAnsweringModuleQuestions}
+            className="min-w-0 flex-1"
           />
-          <Button type="submit" disabled={isLoading || isAnsweringModuleQuestions}>
+          <Button type="submit" disabled={isLoading || isAnsweringModuleQuestions} className="flex-shrink-0">
             Send
           </Button>
         </form>

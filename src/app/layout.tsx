@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import { Poppins, Slabo_27px } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
-const fontBody = Inter({
+const fontBody = Poppins({
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
   variable: '--font-body',
 });
 
-const fontHeadline = Plus_Jakarta_Sans({
+const fontHeadline = Slabo_27px({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['400'],
   variable: '--font-headline',
 });
 

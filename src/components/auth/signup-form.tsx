@@ -64,15 +64,15 @@ export function SignUpForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+            <FormItem className="animate-slide-in-left animation-delay-100">
+              <FormLabel className="font-medium">Name</FormLabel>
               <FormControl>
-                <Input placeholder="Your Name" {...field} />
+                <Input placeholder="Your Name" {...field} className="font-light" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,10 +82,10 @@ export function SignUpForm() {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
+            <FormItem className="animate-slide-in-left animation-delay-200">
+              <FormLabel className="font-medium">Email</FormLabel>
               <FormControl>
-                <Input placeholder="name@example.com" {...field} />
+                <Input placeholder="name@example.com" {...field} className="font-light" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -95,16 +95,20 @@ export function SignUpForm() {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
+            <FormItem className="animate-slide-in-left animation-delay-300">
+              <FormLabel className="font-medium">Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
+                <Input type="password" placeholder="••••••••" {...field} className="font-light" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+        <Button 
+          type="submit" 
+          className="w-full mt-6 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white border-0 shadow-xl hover:shadow-sky-400/50 animate-slide-in-left animation-delay-400 font-medium" 
+          disabled={form.formState.isSubmitting}
+        >
           {form.formState.isSubmitting ? 'Creating account...' : 'Create Account'}
         </Button>
       </form>
