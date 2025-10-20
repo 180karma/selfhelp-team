@@ -24,11 +24,13 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-headline text-3xl font-bold">Welcome back, {userName}!</h1>
-      <p className="text-muted-foreground">
+      <h1 className="font-headline text-3xl font-bold animate-fade-in">Welcome back, {userName}!</h1>
+      <p className="text-muted-foreground animate-fade-in animation-delay-100">
         Here's a look at your goals. Your AI wellness team can help you add tasks and objectives.
       </p>
-      <GoalManager />
+      <div className="animate-fade-in animation-delay-200">
+        <GoalManager />
+      </div>
     </div>
   );
 }

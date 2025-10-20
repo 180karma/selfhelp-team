@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function DiaryPage() {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between animate-fade-in">
         <h1 className="font-headline text-3xl font-bold">My Diary</h1>
         <Button asChild>
           <Link href="/dashboard/diary/new">
@@ -15,7 +15,9 @@ export default function DiaryPage() {
           </Link>
         </Button>
       </div>
-      <DiaryList />
+      <div className="animate-fade-in animation-delay-100">
+        <DiaryList />
+      </div>
     </div>
   );
 }

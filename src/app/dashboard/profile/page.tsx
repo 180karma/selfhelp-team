@@ -71,11 +71,11 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="font-headline text-3xl font-bold">Team Notes</h1>
+        <h1 className="font-headline text-3xl font-bold animate-fade-in">Team Notes</h1>
         <div className="space-y-4">
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full animate-fade-in animation-delay-100" />
+            <Skeleton className="h-20 w-full animate-fade-in animation-delay-200" />
+            <Skeleton className="h-20 w-full animate-fade-in animation-delay-300" />
         </div>
       </div>
     );
@@ -83,13 +83,13 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-headline text-3xl font-bold">Team Notes</h1>
-      <p className="text-muted-foreground">
+      <h1 className="font-headline text-3xl font-bold animate-fade-in">Team Notes</h1>
+      <p className="text-muted-foreground animate-fade-in animation-delay-100">
         As you interact with your AI wellness team, they create profiles and notes from your conversations. These are saved to your browser.
       </p>
 
       {profiles && profiles.length > 0 ? (
-         <Accordion type="single" collapsible className="w-full" defaultValue={profiles[0].id}>
+         <Accordion type="single" collapsible className="w-full animate-fade-in animation-delay-200" defaultValue={profiles[0].id}>
             {profiles.map(profile => {
                 const agent = getAgentInfo(profile.aiAgentId);
                 const agentNotes = notesByProfile[profile.aiAgentId] || [];
@@ -197,7 +197,7 @@ export default function ProfilePage() {
             })}
          </Accordion>
       ) : (
-        <Card>
+        <Card className="animate-fade-in animation-delay-200">
           <CardContent className="p-6">
             <p className="text-muted-foreground">
               No AI profiles have been generated yet. Complete an agent questionnaire to get started.

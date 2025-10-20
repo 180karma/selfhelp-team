@@ -3,8 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export default function SubscriptionPage() {
   return (
     <div className="space-y-6">
-      <h1 className="font-headline text-3xl font-bold">Subscription</h1>
-      <Card>
+      <h1 className="font-headline text-3xl font-bold animate-fade-in">Subscription</h1>
+      <Card className="animate-scale-in animation-delay-100">
         <CardHeader>
           <CardTitle className="font-headline">Manage Your Plan</CardTitle>
           <CardDescription>

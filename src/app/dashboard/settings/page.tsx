@@ -145,9 +145,9 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-headline text-3xl font-bold">Settings</h1>
+      <h1 className="font-headline text-3xl font-bold animate-fade-in">Settings</h1>
       
-      <Card>
+      <Card className="animate-fade-in animation-delay-100">
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2">
             <User className="h-5 w-5" />
@@ -179,7 +179,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
       
-      <Card className="border-destructive">
+      <Card className="border-destructive animate-fade-in animation-delay-200">
         <CardHeader>
           <CardTitle className="font-headline text-destructive">Danger Zone</CardTitle>
           <CardDescription>

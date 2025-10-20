@@ -52,13 +52,28 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
   const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
+    if (mobileMenuOpen) {
+      // If closing, trigger animation first
+      setIsClosing(true);
+      setTimeout(() => {
+        setMobileMenuOpen(false);
+        setIsClosing(false);
+      }, 300); // Match animation duration
+    } else {
+      setMobileMenuOpen(true);
+    }
   };
 
   const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
+    setIsClosing(true);
+    // Small delay to show click feedback before closing
+    setTimeout(() => {
+      setMobileMenuOpen(false);
+      setIsClosing(false);
+    }, 200); // Slightly faster for navigation
   };
 
   return (
@@ -90,16 +105,17 @@ export default function DashboardLayout({
           {/* Dropdown Menu Content */}
           <div
             className={cn(
-              "bg-background border-b shadow-xl overflow-hidden",
-              mobileMenuOpen ? "max-h-[80vh] animate-slide-down" : "max-h-0"
+              "relative bg-background border-b shadow-xl overflow-hidden z-50 transition-all duration-300",
+              mobileMenuOpen && !isClosing ? "max-h-[80vh] animate-slide-down" : isClosing ? "max-h-0 animate-slide-up" : "max-h-0"
             )}
           >
             {mobileMenuOpen && (
               <div className="p-4 space-y-2">
                 <Link href="/dashboard" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-1",
-                    isActive('/dashboard') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 opacity-0 animate-menu-item menu-item-1",
+                    "active:scale-95 active:bg-primary/20",
+                    isActive('/dashboard') ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:scale-[1.02]"
                   )}>
                     <LayoutDashboard className="w-5 h-5" />
                     <span className="font-medium">Dashboard</span>
@@ -108,8 +124,9 @@ export default function DashboardLayout({
                 
                 <Link href="/dashboard/diary" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-2",
-                    pathname.startsWith('/dashboard/diary') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 opacity-0 animate-menu-item menu-item-2",
+                    "active:scale-95 active:bg-primary/20",
+                    pathname.startsWith('/dashboard/diary') ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:scale-[1.02]"
                   )}>
                     <BookOpenText className="w-5 h-5" />
                     <span className="font-medium">Diary</span>
@@ -118,8 +135,9 @@ export default function DashboardLayout({
 
                 <Link href="/dashboard/mantras" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-3",
-                    isActive('/dashboard/mantras') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 opacity-0 animate-menu-item menu-item-3",
+                    "active:scale-95 active:bg-primary/20",
+                    isActive('/dashboard/mantras') ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:scale-[1.02]"
                   )}>
                     <HeartHandshake className="w-5 h-5" />
                     <span className="font-medium">Mantras</span>
@@ -128,8 +146,9 @@ export default function DashboardLayout({
                 
                 <Link href="/dashboard/profile" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-4",
-                    isActive('/dashboard/profile') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 opacity-0 animate-menu-item menu-item-4",
+                    "active:scale-95 active:bg-primary/20",
+                    isActive('/dashboard/profile') ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:scale-[1.02]"
                   )}>
                     <User className="w-5 h-5" />
                     <span className="font-medium">Profile</span>
@@ -138,8 +157,9 @@ export default function DashboardLayout({
                 
                 <Link href="/dashboard/agents" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-5",
-                    pathname.startsWith('/dashboard/agents') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 opacity-0 animate-menu-item menu-item-5",
+                    "active:scale-95 active:bg-primary/20",
+                    pathname.startsWith('/dashboard/agents') ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:scale-[1.02]"
                   )}>
                     <Users className="w-5 h-5" />
                     <span className="font-medium">Wellness Team</span>
@@ -148,8 +168,9 @@ export default function DashboardLayout({
                 
                 <Link href="/dashboard/subscription" onClick={closeMobileMenu}>
                   <div className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-6",
-                    isActive('/dashboard/subscription') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 opacity-0 animate-menu-item menu-item-6",
+                    "active:scale-95 active:bg-primary/20",
+                    isActive('/dashboard/subscription') ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:scale-[1.02]"
                   )}>
                     <Crown className="w-5 h-5" />
                     <span className="font-medium">Subscription</span>
@@ -159,8 +180,9 @@ export default function DashboardLayout({
                 <div className="border-t pt-2 mt-2">
                   <Link href="/dashboard/settings" onClick={closeMobileMenu}>
                     <div className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors opacity-0 animate-menu-item menu-item-7",
-                      isActive('/dashboard/settings') ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 opacity-0 animate-menu-item menu-item-7",
+                      "active:scale-95 active:bg-primary/20",
+                      isActive('/dashboard/settings') ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:scale-[1.02]"
                     )}>
                       <Settings className="w-5 h-5" />
                       <span className="font-medium">Settings</span>
@@ -168,7 +190,7 @@ export default function DashboardLayout({
                   </Link>
                   
                   <Link href="/" onClick={closeMobileMenu}>
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent transition-colors opacity-0 animate-menu-item menu-item-8">
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 hover:bg-accent hover:scale-[1.02] active:scale-95 active:bg-destructive/20 opacity-0 animate-menu-item menu-item-8">
                       <LogOut className="w-5 h-5" />
                       <span className="font-medium">Log Out</span>
                     </div>
@@ -177,15 +199,15 @@ export default function DashboardLayout({
               </div>
             )}
           </div>
-
-          {/* Overlay when menu is open */}
-          {mobileMenuOpen && (
-            <div
-              className="fixed inset-0 bg-black/20 z-40"
-              onClick={closeMobileMenu}
-            />
-          )}
         </div>
+
+        {/* Overlay when menu is open */}
+        {mobileMenuOpen && (
+          <div
+            className="md:hidden fixed inset-0 bg-black/20 z-40"
+            onClick={closeMobileMenu}
+          />
+        )}
 
         {/* Desktop Sidebar */}
         <Sidebar className="hidden md:flex">

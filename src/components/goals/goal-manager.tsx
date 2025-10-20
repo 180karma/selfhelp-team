@@ -177,7 +177,7 @@ export function GoalManager() {
   const renderGoalList = (category: GoalCategory) => {
     const filteredGoals = activeGoals.filter((goal) => goal.category === category);
     return (
-      <Card>
+      <Card className="transition-all hover:shadow-md">
         <CardHeader>
           <CardTitle className="font-headline">{category}</CardTitle>
         </CardHeader>
@@ -188,7 +188,7 @@ export function GoalManager() {
                 const isJournalGoal = goal.title.toLowerCase().includes('journal');
                 
                 return (
-                    <div key={goal.id} className="flex items-start space-x-3">
+                    <div key={goal.id} className="flex items-start space-x-3 transition-all hover:translate-x-1">
                     <Checkbox
                         id={goal.id}
                         checked={false} // Checkbox only triggers dialog
@@ -199,10 +199,10 @@ export function GoalManager() {
                     <div className="flex-1">
                         <label
                         htmlFor={goal.id}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                         >
                         {isJournalGoal ? (
-                            <Link href={`/dashboard/diary/new?title=${encodeURIComponent(goal.title)}&type=daily`} className="underline underline-offset-4 cursor-pointer hover:text-primary">
+                            <Link href={`/dashboard/diary/new?title=${encodeURIComponent(goal.title)}&type=daily`} className="underline underline-offset-4 cursor-pointer hover:text-primary transition-colors">
                                 {goal.title}
                             </Link>
                         ) : (
@@ -231,7 +231,7 @@ export function GoalManager() {
   return (
     <div className="space-y-8">
       <Dialog open={!!goalToComplete} onOpenChange={(open) => !open && handleCloseDialog()}>
-        <DialogContent>
+        <DialogContent className="animate-scale-in">
           <DialogHeader>
             <DialogTitle>Complete: {goalToComplete?.title}</DialogTitle>
             <DialogDescription>
@@ -290,12 +290,12 @@ export function GoalManager() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(addGoal)} className="flex flex-col sm:flex-row items-start gap-4">
+            <form onSubmit={form.handleSubmit(addGoal)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
-                  <FormItem className="flex-grow w-full">
+                  <FormItem>
                     <FormLabel className="sr-only">Goal Title</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., Drink 8 glasses of water" {...field} />
@@ -304,32 +304,34 @@ export function GoalManager() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="sr-only">Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="w-full sm:w-[180px]">
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Daily Task">Daily Task</SelectItem>
-                        <SelectItem value="Short-Term Goal">Short-Term Goal</SelectItem>
-                        <SelectItem value="Long-Term Goal">Long-Term Goal</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-                {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlusCircle className="mr-2 h-4 w-4" />}
-                Add Goal
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel className="sr-only">Category</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Daily Task">Daily Task</SelectItem>
+                          <SelectItem value="Short-Term Goal">Short-Term Goal</SelectItem>
+                          <SelectItem value="Long-Term Goal">Long-Term Goal</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto sm:min-w-[120px]">
+                  {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+                  Add Goal
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>
