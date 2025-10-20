@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, BookHeart, UserCheck, BarChart3 } from 'lucide-react';
@@ -77,9 +76,12 @@ export default function Home() {
               alt={`Slideshow image ${index + 1}`}
               fill
               className={cn(
-                "object-cover transition-opacity duration-[2000ms] ease-in-out",
+                "object-cover transition-all ease-in-out",
+                "duration-500", // Fade transition
+                "hover:scale-105",
                 index === currentIndex ? "opacity-100" : "opacity-0"
               )}
+              style={{ transitionDuration: index === currentIndex ? '5000ms' : '500ms' }} // Long duration for zoom
               priority={index === 0}
             />
           ))}
