@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -12,24 +13,32 @@ export default function Home() {
 
   const features = [
     {
-      icon: <BookHeart className="h-10 w-10 text-primary" />,
+      icon: <BookHeart className="h-10 w-10 text-white" />,
       title: 'Mindful Journaling',
       description: 'Record your thoughts, dreams, and gratitude. Our AI helps you find patterns and insights.',
+      image: 'https://picsum.photos/seed/journaling/600/400',
+      hint: 'journal writing',
     },
     {
-      icon: <UserCheck className="h-10 w-10 text-primary" />,
+      icon: <UserCheck className="h-10 w-10 text-white" />,
       title: 'Personalized Assessments',
       description: 'Understand your attachment style, behavioral patterns, and more with our guided assessments.',
+      image: 'https://picsum.photos/seed/assessments/600/400',
+      hint: 'personal growth',
     },
     {
-      icon: <Users className="h-10 w-10 text-primary" />,
+      icon: <Users className="h-10 w-10 text-white" />,
       title: 'AI Wellness Team',
       description: 'Chat with AI agents like a nutritionist, therapist, and fitness instructor for personalized advice.',
+      image: 'https://picsum.photos/seed/team/600/400',
+      hint: 'team collaboration',
     },
     {
-      icon: <BarChart3 className="h-10 w-10 text-primary" />,
+      icon: <BarChart3 className="h-10 w-10 text-white" />,
       title: 'Track Your Growth',
       description: 'Visualize your journey towards wellbeing and celebrate your progress along the way.',
+      image: 'https://picsum.photos/seed/growth/600/400',
+      hint: 'growth chart',
     },
   ];
 
@@ -80,23 +89,30 @@ export default function Home() {
               {features.map((feature, index) => (
                 <Card 
                   key={feature.title} 
-                  className="text-center group opacity-0 animate-scale-in bg-gradient-to-br from-card to-sky-50/30 backdrop-blur-sm"
+                  className="text-center group opacity-0 animate-scale-in overflow-hidden relative"
                   style={{
                     animationDelay: `${(index + 1) * 100}ms`,
                     animationFillMode: 'forwards'
                   }}
                 >
-                  <CardHeader>
-                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-sky-100 to-blue-100 group-hover:from-sky-200 group-hover:to-blue-200 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+                  <Image
+                    src={feature.image}
+                    alt={feature.title}
+                    width={600}
+                    height={400}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    data-ai-hint={feature.hint}
+                  />
+                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/70 transition-colors duration-300" />
+                  <div className="relative z-10 flex flex-col items-center justify-center h-full p-6 text-white">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
                       <div className="transition-transform duration-300 group-hover:scale-110">
                         {feature.icon}
                       </div>
                     </div>
-                    <CardTitle className="font-headline text-xl font-normal">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground font-light leading-relaxed">{feature.description}</p>
-                  </CardContent>
+                    <CardTitle className="font-headline text-xl font-normal text-white">{feature.title}</CardTitle>
+                    <p className="text-white/80 font-light leading-relaxed mt-2">{feature.description}</p>
+                  </div>
                 </Card>
               ))}
             </div>
