@@ -76,11 +76,12 @@ export default function Home() {
               alt={`Slideshow image ${index + 1}`}
               fill
               className={cn(
-                "object-cover transition-opacity ease-in-out duration-1000",
-                "hover:scale-105",
-                index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+                "object-cover transition-opacity duration-1000 ease-in-out",
+                index === currentIndex ? "opacity-100 z-10 scale-105" : "opacity-0 z-0 scale-100"
               )}
-              style={{ transition: 'opacity 1s ease-in-out, transform 5s ease-out' }}
+              style={{
+                transition: 'opacity 1s ease-in-out, transform 6s ease-in-out',
+              }}
               priority={index === 0}
             />
           ))}
