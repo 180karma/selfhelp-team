@@ -76,17 +76,16 @@ export default function Home() {
               alt={`Slideshow image ${index + 1}`}
               fill
               className={cn(
-                "object-cover transition-all ease-in-out",
-                "duration-500", // Fade transition
+                "object-cover transition-opacity ease-in-out duration-1000",
                 "hover:scale-105",
-                index === currentIndex ? "opacity-100" : "opacity-0"
+                index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
               )}
-              style={{ transitionDuration: index === currentIndex ? '5000ms' : '500ms' }} // Long duration for zoom
+              style={{ transition: 'opacity 1s ease-in-out, transform 5s ease-out' }}
               priority={index === 0}
             />
           ))}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-          <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white px-4">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 z-20" />
+          <div className="relative z-30 flex h-full flex-col items-center justify-center text-center text-white px-4">
             <h1 className="font-headline text-4xl font-normal md:text-6xl lg:text-7xl animate-fade-in tracking-normal">
               Welcome to <span className="bg-gradient-to-r from-sky-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent animate-gradient-shift" style={{backgroundSize: '200% 200%'}}>ThriveWell</span>
             </h1>
