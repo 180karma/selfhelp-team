@@ -1,15 +1,38 @@
 
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, BookHeart, UserCheck, BarChart3 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const slideshowImages = [
+  "https://images.pexels.com/photos/1387037/pexels-photo-1387037.jpeg",
+  "https://images.pexels.com/photos/1153369/pexels-photo-1153369.jpeg",
+  "https://images.pexels.com/photos/3363111/pexels-photo-3363111.jpeg",
+  "https://images.pexels.com/photos/5699431/pexels-photo-5699431.jpeg",
+  "https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg",
+  "https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg",
+  "https://images.pexels.com/photos/863977/pexels-photo-863977.jpeg",
+  "https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg"
+];
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find((img) => img.id === 'hero-background');
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % slideshowImages.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const features = [
     {
@@ -47,16 +70,19 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <section className="relative h-[60vh] w-full overflow-hidden">
-          {heroImage && (
+          {slideshowImages.map((src, index) => (
             <Image
-              src={heroImage.imageUrl}
-              alt={heroImage.description}
+              key={src}
+              src={src}
+              alt={`Slideshow image ${index + 1}`}
               fill
-              className="object-cover transition-transform duration-[5000ms] ease-out hover:scale-105"
-              data-ai-hint={heroImage.imageHint}
-              priority
+              className={cn(
+                "object-cover transition-opacity duration-[2000ms] ease-in-out",
+                index === currentIndex ? "opacity-100" : "opacity-0"
+              )}
+              priority={index === 0}
             />
-          )}
+          ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
           <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white px-4">
             <h1 className="font-headline text-4xl font-normal md:text-6xl lg:text-7xl animate-fade-in tracking-normal">
