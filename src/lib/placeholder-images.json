@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "A group of friends jumping for joy on a beach at sunset, silhouetted against the light.",
-      "imageUrl": "https://images.unsplash.com/photo-1519558260268-cde7e03a0152?q=80&w=1920",
-      "imageHint": "friends beach"
+      "description": "A person's hands covered in colorful holi powder, held up towards the sky.",
+      "imageUrl": "https://images.pexels.com/photos/1387037/pexels-photo-1387037.jpeg",
+      "imageHint": "holi powder"
     }
   ]
 }
