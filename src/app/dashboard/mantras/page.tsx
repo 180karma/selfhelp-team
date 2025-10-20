@@ -62,11 +62,11 @@ export default function MantrasPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {mantras.map((mantra) => (
             <Card key={mantra.id} className="flex flex-col">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold">"{mantra.mantra}"</CardTitle>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg font-semibold leading-relaxed">"{mantra.mantra}"</CardTitle>
               </CardHeader>
-              <CardContent className="flex-grow">
-                <p className="text-muted-foreground">{mantra.aim}</p>
+              <CardContent className="flex-grow pb-4">
+                <p className="text-sm text-muted-foreground">{mantra.aim}</p>
               </CardContent>
               <CardContent className="flex items-center gap-2 border-t pt-4">
                  <Avatar className="h-8 w-8">
