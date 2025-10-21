@@ -6,6 +6,7 @@ import { agents } from '@/lib/agents';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 
 export default function AgentsPage() {
@@ -21,9 +22,12 @@ export default function AgentsPage() {
           <Link 
             href={`/dashboard/agents/${agent.id}`} 
             key={agent.id} 
-            className={`block hover:ring-2 hover:ring-primary rounded-lg animate-scale-in animation-delay-${Math.min(index + 2, 6) * 100}`}
+            className={`block rounded-lg animate-scale-in animation-delay-${Math.min(index + 2, 6) * 100}`}
           >
-            <Card className="h-full transition-all hover:shadow-lg">
+            <Card className={cn(
+              "h-full transition-all hover:shadow-lg",
+              `border-l-4 border-${agent.color}-300 hover:border-${agent.color}-400`
+            )}>
               <CardHeader className="flex flex-row items-center gap-4">
                  <Avatar>
                   <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
