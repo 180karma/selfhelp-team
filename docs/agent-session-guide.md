@@ -505,4 +505,3 @@ Use this checklist for every session:
 - [ ] Session notes documented
 
 **All checkboxes must be completed before ending session.**
-
