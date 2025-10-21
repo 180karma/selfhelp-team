@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -33,6 +33,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { FirebaseClientProvider, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
+import { NeuroGuideViewer } from '@/components/dev/NeuroGuideViewer';
 
 function UserAvatar() {
   const { user } = useUser();
@@ -54,6 +55,21 @@ export default function DashboardLayout({
   const isChatPage = pathname.includes('/dashboard/agents/');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [showNeuroGuide, setShowNeuroGuide] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey) {
+        event.preventDefault();
+        setShowNeuroGuide(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const toggleMobileMenu = () => {
     if (mobileMenuOpen) {
@@ -79,6 +95,7 @@ export default function DashboardLayout({
 
   return (
     <FirebaseClientProvider>
+      <NeuroGuideViewer open={showNeuroGuide} onOpenChange={setShowNeuroGuide} />
       <SidebarProvider>
         {/* Mobile Pull-Down Menu */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-50">
