@@ -7,6 +7,20 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'border-emerald-300',
+    'border-sky-300',
+    'border-amber-300',
+    'border-violet-300',
+    'border-rose-300',
+    'border-slate-300',
+    'border-emerald-200',
+    'border-sky-200',
+    'border-amber-200',
+    'border-violet-200',
+    'border-rose-200',
+    'border-slate-200',
+  ],
   theme: {
     container: {
       center: true,

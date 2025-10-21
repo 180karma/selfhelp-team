@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { HeartHandshake } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { agents } from '@/lib/agents';
+import { cn } from '@/lib/utils';
 
 export default function MantrasPage() {
   const { user } = useUser();
@@ -27,9 +28,8 @@ export default function MantrasPage() {
     setIsLoading(false);
   }, [user]);
 
-  const getAgentAvatar = (agentName: string) => {
-    const agent = agents.find(a => a.givenName === agentName);
-    return agent?.avatarUrl;
+  const getAgentInfo = (agentName: string) => {
+    return agents.find(a => a.givenName === agentName);
   };
 
   if (isLoading) {
@@ -60,26 +60,37 @@ export default function MantrasPage() {
 
       {mantras.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {mantras.map((mantra) => (
-            <Card key={mantra.id} className="flex flex-col">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-semibold leading-relaxed">"{mantra.mantra}"</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-grow pb-4">
-                <p className="text-sm text-muted-foreground">{mantra.aim}</p>
-              </CardContent>
-              <CardContent className="flex items-center gap-2 border-t pt-4">
-                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={getAgentAvatar(mantra.assignedBy)} alt={mantra.assignedBy} className="object-cover object-center" />
-                  <AvatarFallback>{mantra.assignedBy.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className="text-sm">
-                    <p className="font-semibold">Assigned by</p>
-                    <p className="text-muted-foreground">{mantra.assignedBy.split(' ')[0]}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {mantras.map((mantra) => {
+            const agent = getAgentInfo(mantra.assignedBy);
+            return (
+              <Card 
+                key={mantra.id} 
+                className={cn(
+                  "flex flex-col border-l-4",
+                  agent ? `border-${agent.color}-300` : 'border-border'
+                )}
+              >
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg font-semibold leading-relaxed">"{mantra.mantra}"</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow pb-4">
+                  <p className="text-sm text-muted-foreground">{mantra.aim}</p>
+                </CardContent>
+                <CardContent className="flex items-center gap-2 border-t pt-4">
+                  {agent && (
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
+                      <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div className="text-sm">
+                      <p className="font-semibold">Assigned by</p>
+                      <p className="text-muted-foreground">{mantra.assignedBy.split(' ')[0]}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
       ) : (
         <Card>

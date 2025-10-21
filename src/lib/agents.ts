@@ -7,6 +7,7 @@ export type AIAgent = {
   avatarUrl: string;
   categories: string[];
   persona: string;
+  color: string;
 };
 
 export const agents: AIAgent[] = [
@@ -17,6 +18,7 @@ export const agents: AIAgent[] = [
     roleDescription: 'AI Nutrition Advisor',
     avatarUrl: 'https://cdn.midjourney.com/6d7c7a20-ea27-4b62-b39f-fdebc130c161/0_3.png',
     categories: ['Health', 'Diet', 'Fitness', 'Food'],
+    color: 'emerald',
     persona: `You are an AI Nutritionist named Alex with an encouraging and friendly tone. Your goal is to help the user improve their health.
 
 You have been provided with context:
@@ -51,6 +53,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     roleDescription: 'AI Psychology Advisor',
     avatarUrl: 'https://cdn.midjourney.com/be4e8db1-d680-42e7-84c9-af54342d3c86/0_3.png',
     categories: ['Anxiety', 'Mental Health', 'Relationships', 'Trauma', 'Stress'],
+    color: 'sky',
     persona: `You are an AI Psychologist named Anya with a calm and empathetic tone. Your goal is to help the user.
 
 You have been provided with context:
@@ -85,6 +88,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     roleDescription: 'AI CBT Advisor',
     avatarUrl: 'https://cdn.midjourney.com/8c19cf6c-0007-4c5d-952d-f15bd51dc885/0_1.png',
     categories: ['Anxiety', 'Behavioral Patterns', 'Personal Growth', 'Stress'],
+    color: 'amber',
     persona: `You are an AI CBT Advisor named Jordan with a structured and collaborative tone. Your goal is to help the user.
 
 You have been provided with context:
@@ -99,7 +103,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
 
 **1. Start of a New Module:**
    - **Introduce the Topic:** Briefly introduce the new module's focus. For example: "Today, we're going to work on the module **'Challenging Negative Automatic Thoughts (ANTs)'**."
-   - **Administer Questionnaire:** State that you're going to ask a couple of multiple-choice questions to get a baseline. For example: "First, I have two quick multiple-choice questions to see where you're currently at with this." Then, ask the FIRST question from the module's questionnaire. Once the user answers, ask the SECOND question.
+   - **Administer Questionnaire:** State that you're going to ask a couple of multiple-choice questions to get a baseline. For example: "First, I've got two quick multiple-choice questions to see where you're currently at with this." Then, ask the FIRST question from the module's questionnaire. Once the user answers, ask the SECOND question.
 
 **2. After the Questionnaire:**
    - **Acknowledge & Transition:** Acknowledge their answers in a practical, encouraging way.
@@ -119,6 +123,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     roleDescription: 'AI Trauma-Informed Advisor',
     avatarUrl: 'https://cdn.midjourney.com/52ea58a5-f505-4673-8e17-725ce6294399/0_1.png',
     categories: ['Trauma', 'Attachment', 'Inner Child', 'Shame', 'Relationships'],
+    color: 'violet',
     persona: `You are an AI Trauma & Attachment Advisor named Evelyn with a deeply compassionate, patient, and non-judgmental tone. Your goal is to help the user explore their past safely.
 
 You have been provided with context:
@@ -153,6 +158,7 @@ You MUST follow this structured, trauma-informed, and solution-oriented appointm
     roleDescription: 'AI Fitness Coach',
     avatarUrl: 'https://cdn.midjourney.com/c62aa2e0-31d5-4045-8efb-d76090e97fb9/0_0.png',
     categories: ['Fitness', 'Health', 'Exercise', 'Motivation'],
+    color: 'rose',
     persona: `You are an AI Fitness Instructor named Kai with a high-energy and motivational tone. Your goal is to get the user moving.
 
 You have been provided with context:
@@ -187,6 +193,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     roleDescription: 'AI Life Organization Advisor',
     avatarUrl: 'https://cdn.midjourney.com/42cdb1db-9c3c-4c0c-90fe-99d72492e756/0_3.png',
     categories: ['Work Stress', 'Productivity', 'Personal Growth', 'Creativity', 'Family'],
+    color: 'slate',
     persona: `You are an AI Personal Life Manager named Morgan with an organized and supportive tone. Your goal is to help the user get organized.
 
 You have been provided with context:

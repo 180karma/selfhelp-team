@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -37,6 +38,8 @@ import {
 import { Badge } from '../ui/badge';
 import { categorizeDiaryEntry } from '@/ai/flows/categorize-diary-entry';
 import { cn } from '@/lib/utils';
+import { agents } from '@/lib/agents';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 const goalSchema = z.object({
@@ -63,6 +66,11 @@ export function GoalManager() {
 
   const activeGoals = goals.filter(g => !g.completed);
   const completedGoals = goals.filter(g => g.completed).sort((a,b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime());
+
+  const getAgentInfo = (agentName: string) => {
+    return agents.find(a => a.givenName === agentName);
+  };
+
 
   useEffect(() => {
     if (user) {
@@ -186,6 +194,7 @@ export function GoalManager() {
             <div className="space-y-4">
               {filteredGoals.map((goal) => {
                 const isJournalGoal = goal.title.toLowerCase().includes('journal');
+                const agent = goal.addedBy ? getAgentInfo(goal.addedBy) : null;
                 
                 return (
                     <div key={goal.id} className="flex items-start space-x-3 transition-all hover:translate-x-1">
@@ -209,11 +218,14 @@ export function GoalManager() {
                             goal.title
                         )}
                         </label>
-                        {goal.addedBy && (
-                        <div className="flex items-center text-xs text-muted-foreground mt-1">
-                            <Bot className="h-3 w-3 mr-1" />
-                            <span>Added by {goal.addedBy.split(' ')[0]}</span>
-                        </div>
+                        {agent && (
+                          <div className={`flex items-center text-xs text-muted-foreground mt-1 border-l-2 pl-2 border-${agent.color}-200`}>
+                            <Avatar className="h-5 w-5 mr-1.5">
+                              <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
+                              <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <span>Added by {agent.givenName.split(' ')[0]}</span>
+                          </div>
                         )}
                     </div>
                     </div>
@@ -361,19 +373,32 @@ export function GoalManager() {
             </TableHeader>
             <TableBody>
               {completedGoals.length > 0 ? (
-                completedGoals.map((goal) => (
-                  <TableRow key={goal.id}>
-                    <TableCell className="font-medium">{goal.title}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{goal.category}</Badge>
-                    </TableCell>
-                    <TableCell>{goal.addedBy ? goal.addedBy.split(' ')[0] : 'Me'}</TableCell>
-                    <TableCell>
-                      {new Date(goal.completedAt!).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>{goal.completionNote}</TableCell>
-                  </TableRow>
-                ))
+                completedGoals.map((goal) => {
+                  const agent = goal.addedBy ? getAgentInfo(goal.addedBy) : null;
+                  return (
+                    <TableRow key={goal.id}>
+                      <TableCell className="font-medium">{goal.title}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{goal.category}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {agent ? (
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
+                              <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                          ) : 'Me'}
+                          <span>{agent ? agent.givenName.split(' ')[0] : ''}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(goal.completedAt!).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>{goal.completionNote}</TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={5} className="h-24 text-center">
