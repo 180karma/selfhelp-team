@@ -168,6 +168,10 @@ export default function AgentChatPage() {
         history: genkitHistory,
         message: message,
       });
+        
+      if (!result) {
+        throw new Error("Flow did not produce a valid output.");
+      }
 
       setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question, mantra: result.mantra, suggestedReplies: result.suggestedReplies }]);
 
@@ -207,13 +211,13 @@ export default function AgentChatPage() {
   const handleSaveNote = async () => {
     const currentHistory = historyRef.current;
 
-    if (currentHistory.length === 0 || !user) {
+    if (currentHistory.length === 0 || !user || !currentRoadmap) {
       return;
     }
     
     try {
       const genkitHistory = toGenkitHistory(currentHistory);
-      const { noteData, updatedRoadmap } = await summarizeConversation({
+      const { noteData, completedModuleTitle } = await summarizeConversation({
         persona: agent!.persona,
         userName: userName || 'friend',
         history: genkitHistory,
@@ -233,14 +237,14 @@ export default function AgentChatPage() {
       existingNotes.push(note);
       localStorage.setItem(notesKey, JSON.stringify(existingNotes));
       
-      if (updatedRoadmap) {
-          try {
-              const parsedRoadmap = JSON.parse(updatedRoadmap);
-              setCurrentRoadmap(parsedRoadmap);
-              localStorage.setItem(`thrivewell-roadmap-${agentId}`, updatedRoadmap);
-          } catch (e) {
-              console.error("Failed to parse and save updated roadmap:", e);
-          }
+      if (completedModuleTitle) {
+          const updatedRoadmap = currentRoadmap.map(module => 
+              module.title === completedModuleTitle 
+                  ? { ...module, completed: true } 
+                  : module
+          );
+          setCurrentRoadmap(updatedRoadmap);
+          localStorage.setItem(`thrivewell-roadmap-${agentId}`, JSON.stringify(updatedRoadmap));
       }
 
       console.log('Conversation note and updated roadmap saved automatically to local storage.');
