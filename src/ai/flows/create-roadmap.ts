@@ -9,7 +9,6 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { Module, ModuleQuestion } from '@/lib/roadmaps';
 
 const CreateRoadmapInputSchema = z.object({
   persona: z.string().describe("The persona of the AI agent who will use this roadmap."),
@@ -18,24 +17,24 @@ const CreateRoadmapInputSchema = z.object({
 export type CreateRoadmapInput = z.infer<typeof CreateRoadmapInputSchema>;
 
 const ModuleQuestionSchema = z.object({
-    id: z.string(),
-    question: z.string(),
-    options: z.array(z.string()),
+    id: z.string().describe("A unique identifier for the question (e.g., 'anxiety_level_past_week')."),
+    question: z.string().describe("The text of the multiple-choice question."),
+    options: z.array(z.string()).describe("An array of 4-5 string options for the user to choose from."),
 });
 
 const ModuleSchema = z.object({
-    title: z.string(),
-    completed: z.boolean(),
+    title: z.string().describe("A concise, user-facing title for the module (e.g., 'Understanding & Managing Anxiety')."),
+    completed: z.boolean().describe("The completion status of the module, which should always be `false` on creation."),
     steps: z.object({
-        identify: z.string(),
-        trigger: z.string(),
-        origin: z.string(),
-        behavior_change: z.string(),
-        daily_task: z.string(),
-        short_term_goal: z.string(),
-        long_term_goal: z.string(),
-    }),
-    questions: z.array(ModuleQuestionSchema),
+        identify: z.string().describe("A concise description of the core issue or 'wound' to be explored."),
+        trigger: z.string().describe("A prompt to help the user identify what situations, thoughts, or feelings trigger this issue."),
+        origin: z.string().describe("A gentle, exploratory question to help the user reflect on the root of this behavior or feeling."),
+        behavior_change: z.string().describe("A concrete therapeutic technique, practice, or reframing exercise to create change. This is the core 'resolution plan' for the module."),
+        daily_task: z.string().describe("A very small, specific, and actionable daily task that reinforces the behavior_change."),
+        short_term_goal: z.string().describe("A measurable, achievable goal for the next 1-2 weeks."),
+        long_term_goal: z.string().describe("A broader, aspirational goal for the next 2-3 months."),
+    }).describe("A comprehensive object containing the step-by-step resolution plan for the module."),
+    questions: z.array(ModuleQuestionSchema).describe("An array of exactly two relevant multiple-choice questions for a mini-assessment at the start of the module session."),
 });
 
 
