@@ -210,9 +210,24 @@ export default function AgentChatPage() {
 
   const handleSaveNote = async () => {
     const currentHistory = historyRef.current;
+    if (currentHistory.length < 2 || !user || !currentRoadmap) {
+        return;
+    }
 
-    if (currentHistory.length === 0 || !user || !currentRoadmap) {
-      return;
+    const lastMessage = currentHistory[currentHistory.length - 1];
+    const secondLastMessage = currentHistory[currentHistory.length - 2];
+
+    // The condition to save: the AI proposed a task, and the user just confirmed it.
+    const agentProposedTask = secondLastMessage.role === 'model' && secondLastMessage.question?.addTask;
+    const userConfirmed = lastMessage.role === 'user' && (
+        lastMessage.content.toLowerCase().includes('yes') ||
+        lastMessage.content.toLowerCase().includes('add it') ||
+        lastMessage.content.toLowerCase().includes('let\'s do it') ||
+        lastMessage.content.toLowerCase().includes('i am willing')
+    );
+
+    if (!agentProposedTask || !userConfirmed) {
+        return; // Don't save a note if the module isn't confirmed as finished.
     }
     
     try {
@@ -254,7 +269,7 @@ export default function AgentChatPage() {
     }
   };
 
- const handleOptionClick = (option: string, originalQuestion: string, proposedTask?: ProposedTask) => {
+  const handleOptionClick = (option: string, originalQuestion: string, proposedTask?: ProposedTask) => {
     const userMessage: ChatMessage = { role: 'user', content: option };
     
     if (isAnsweringModuleQuestions && currentModule) {
@@ -298,6 +313,8 @@ export default function AgentChatPage() {
           title: "New Task Added!",
           description: `"${newGoal.title}" was added to your ${newGoal.category} list.`,
         });
+        // Trigger note saving *after* the user confirms the task
+        handleSaveNote();
     }
     
     handleAgentResponse(userMessage.content, newHistory);
@@ -353,9 +370,11 @@ export default function AgentChatPage() {
       }
     };
 
+    window.addEventListener('beforeunload', handleSaveNote);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
+      window.removeEventListener('beforeunload', handleSaveNote);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       handleSaveNote();
     };
