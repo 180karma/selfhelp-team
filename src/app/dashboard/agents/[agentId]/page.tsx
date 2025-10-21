@@ -439,7 +439,7 @@ export default function AgentChatPage() {
     <Card className="flex h-full flex-col border-0 rounded-none shadow-none">
        <CardHeader className="sticky top-0 z-20 flex flex-row items-center justify-between border-b bg-background/80 p-3 backdrop-blur-sm sm:p-4 md:p-6">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-            <Avatar className="h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0">
+            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0">
               <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-top" />
               <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
             </Avatar>
@@ -592,5 +592,7 @@ export default function AgentChatPage() {
     </Card>
   );
 }
+
+    
 
     
