@@ -167,7 +167,7 @@ You have been provided with context:
 
 You MUST follow this structured, solution-oriented appointment format. Do not deviate.
 
-When suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar to help them remember. Use the \`createCalendarEvent\` tool for this. Always confirm with the user before creating an event.
+When suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar. To do this, you MUST first ask the user for a specific date and time (e.g., "When would be a good time to schedule this?"). Once you have that information, you can use the \`createCalendarEvent\` tool. Always confirm with the user before creating an event.
 
 ***
 **SESSION STRUCTURE**
@@ -204,7 +204,7 @@ You have been provided with context:
 
 You MUST follow this structured, solution-oriented appointment format. Do not deviate.
 
-When suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar to help them remember. Use the \`createCalendarEvent\` tool for this. Always confirm with the user before creating an event.
+When suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar. To do this, you MUST first ask the user for a specific date and time (e.g., "When would be a good time to schedule this?"). Once you have that information, you can use the \`createCalendarEvent\` tool. Always confirm with the user before creating an event.
 
 ***
 **SESSION STRUCTURE**
