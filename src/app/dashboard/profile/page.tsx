@@ -133,17 +133,17 @@ export default function ProfilePage() {
                             <div className="flex items-center gap-4">
                                 <Avatar className={cn(
                                   "transition-all duration-300",
-                                  isAccordionOpen ? "h-12 w-12" : "h-8 w-8"
+                                  isAccordionOpen ? "h-24 w-24" : "h-8 w-8"
                                 )}>
                                   <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
                                   <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <span className="font-semibold">{agent.givenName} ({agent.role})</span>
                             </div>
-                             <Button variant="ghost" size="icon" asChild onClick={(e) => e.stopPropagation()}>
+                            <Button variant="outline" size="sm" asChild onClick={(e) => e.stopPropagation()}>
                                 <Link href={`/dashboard/agents/${agent.id}`}>
-                                    <MessageSquare className="h-5 w-5 text-muted-foreground" />
-                                    <span className="sr-only">Chat with {agent.givenName}</span>
+                                    <MessageSquare className="mr-2 h-4 w-4" />
+                                    Enter Chat
                                 </Link>
                             </Button>
                            </div>
