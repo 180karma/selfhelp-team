@@ -9,6 +9,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+import { createCalendarEventTool } from './google-calendar-tool';
 
 // Define schemas inside the file, but do not export them.
 const AgentChatInputSchema = z.object({
@@ -54,7 +55,8 @@ const agentChatFlow = ai.defineFlow(
     const llmResponse = await ai.generate({
       prompt: message,
       history: history,
-      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour primary goal is to follow the session structure defined in your persona. Your first step is ALWAYS to introduce the topic and then administer the two-question mini-assessment. After the user completes it, you will proceed with the exploratory phase.`,
+      tools: [createCalendarEventTool],
+      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour primary goal is to follow the session structure defined in your persona. Your first step is ALWAYS to introduce the topic and then administer the two-question mini-assessment. After the user completes it, you will proceed with the exploratory phase.\n\nWhen suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar to help them remember. Use the \`createCalendarEvent\` tool for this. Always confirm with the user before creating an event.`,
       output: {
         schema: AgentChatOutputSchema,
       }
@@ -79,5 +81,3 @@ const agentChatFlow = ai.defineFlow(
 export async function agentChat(input: AgentChatInput): Promise<AgentChatOutput> {
   return agentChatFlow(input);
 }
-
-    

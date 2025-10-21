@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { agents } from '@/lib/agents';
-import { Trash2, UserX, User } from 'lucide-react';
+import { Trash2, UserX, User, Link } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/firebase';
 import { deleteUser, updateProfile } from 'firebase/auth';
@@ -143,6 +143,14 @@ export default function SettingsPage() {
     }
   };
 
+  const handleConnectCalendar = () => {
+    // In a real app, this would initiate the OAuth 2.0 flow
+    toast({
+        title: 'Feature In Development',
+        description: 'Full Google Calendar integration is coming soon. This requires setup in the Google Cloud Console.',
+    });
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="font-headline text-3xl font-bold animate-fade-in">Settings</h1>
@@ -178,8 +186,32 @@ export default function SettingsPage() {
           </div>
         </CardContent>
       </Card>
+       <Card className="animate-fade-in animation-delay-200">
+        <CardHeader>
+          <CardTitle className="font-headline flex items-center gap-2">
+            <Link className="h-5 w-5" />
+            Integrations
+          </CardTitle>
+          <CardDescription>
+            Connect your ThriveWell account to other services.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold">Google Calendar</h3>
+              <p className="text-sm text-muted-foreground">
+                Allow AI agents to create events and reminders in your calendar.
+              </p>
+            </div>
+            <Button variant="outline" onClick={handleConnectCalendar}>
+              Connect
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
       
-      <Card className="border-destructive animate-fade-in animation-delay-200">
+      <Card className="border-destructive animate-fade-in animation-delay-300">
         <CardHeader>
           <CardTitle className="font-headline text-destructive">Danger Zone</CardTitle>
           <CardDescription>
