@@ -56,7 +56,7 @@ const agentChatFlow = ai.defineFlow(
       prompt: message,
       history: history,
       tools: [createCalendarEventTool],
-      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour primary goal is to follow the session structure defined in your persona. Your first step is ALWAYS to introduce the topic and then administer the two-question mini-assessment. After the user completes it, you will proceed with the exploratory phase.\n\nWhen suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar to help them remember. Use the \`createCalendarEvent\` tool for this. Always confirm with the user before creating an event.`,
+      system: `${persona}\n\nYou are addressing the user by their first name: ${userName}.\n\nYour primary goal is to follow the session structure defined in your persona. Your first step is ALWAYS to introduce the topic and then administer the two-question mini-assessment. After the user completes it, you will proceed with the exploratory phase.\n\nWhen proposing a task, you MUST populate the 'addTask' object. When providing a mantra, you MUST populate the 'mantra' object. These are not optional if they are part of your resolution plan.\n\nWhen suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar to help them remember. Use the \`createCalendarEvent\` tool for this. Always confirm with the user before creating an event.`,
       output: {
         schema: AgentChatOutputSchema,
       }
