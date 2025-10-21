@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -15,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { agents } from '@/lib/agents';
-import { Trash2, UserX, User, Link } from 'lucide-react';
+import { Trash2, UserX, User, Link as LinkIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/firebase';
 import { deleteUser, updateProfile } from 'firebase/auth';
@@ -83,15 +84,19 @@ export default function SettingsPage() {
       // Clear all notes
       localStorage.removeItem('thrivewell-notes');
       
+      // Clear all mantras
+      localStorage.removeItem('thrivewell-mantras');
+
       // Clear all goals if user exists
       if (user) {
         localStorage.removeItem(`thrivewell-goals-${user.uid}`);
       }
 
-      // Clear agent-specific assessments and profiles
+      // Clear agent-specific assessments, profiles, and roadmaps
       agents.forEach(agent => {
         localStorage.removeItem(`thrivewell-assessment-${agent.id}`);
         localStorage.removeItem(`thrivewell-profile-${agent.id}`);
+        localStorage.removeItem(`thrivewell-roadmap-${agent.id}`);
       });
       
       toast({
@@ -189,7 +194,7 @@ export default function SettingsPage() {
        <Card className="animate-fade-in animation-delay-200">
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2">
-            <Link className="h-5 w-5" />
+            <LinkIcon className="h-5 w-5" />
             Integrations
           </CardTitle>
           <CardDescription>
@@ -289,3 +294,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
