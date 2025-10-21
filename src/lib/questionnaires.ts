@@ -564,5 +564,69 @@ export const questionnaires: Questionnaire[] = [
           options: ['A digital calendar', 'A physical planner/notebook', 'A to-do list app', 'My brain', 'I don\'t have one'],
         }
     ]
+  },
+  {
+    agentId: 'spiritual-guide',
+    title: 'Spiritual & Mindfulness Profile',
+    description: 'This questionnaire is an invitation to explore your inner world. Answer in a way that feels true to you.',
+    questions: [
+      {
+        id: 'mainSpiritualGoal',
+        question: 'What are you seeking most on a spiritual or personal growth level right now?',
+        options: ['A sense of inner peace', 'A deeper connection to the world around me', 'Clarity on my life\'s purpose', 'A way to manage overwhelming thoughts', 'I\'m just exploring and open to anything'],
+      },
+      {
+        id: 'mindfulnessExperience',
+        question: 'What is your experience with meditation or mindfulness practices?',
+        options: ['I practice regularly', 'I\'ve tried it a few times', 'I\'m curious but don\'t know where to start', 'It feels difficult or unappealing to me'],
+      },
+      {
+        id: 'connectionToNature',
+        question: 'How connected do you feel to the natural world?',
+        options: ['Very connected, I spend a lot of time in nature', 'Somewhat connected', 'Not very connected', 'I rarely think about it'],
+      },
+      {
+        id: 'innerCriticVolume',
+        question: 'How loud is your "inner critic" on an average day?',
+        options: ['Mostly quiet', 'A gentle whisper', 'A constant background noise', 'Very loud and demanding'],
+      },
+      {
+        id: 'gratitudePractice',
+        question: 'Do you have a gratitude practice (e.g., journaling, thinking of things you\'re thankful for)?',
+        options: ['Yes, regularly', 'Sometimes', 'Rarely', 'No'],
+      },
+    ]
+  },
+  {
+    agentId: 'relationships-coach',
+    title: 'Relationship Dynamics Profile',
+    description: 'This questionnaire will help your AI Relationships Coach understand your patterns and goals in connecting with others.',
+    questions: [
+      {
+        id: 'primaryRelationshipGoal',
+        question: 'What is your primary goal for your relationships right now?',
+        options: ['Building deeper connections with friends/family', 'Improving communication with my partner', 'Navigating the dating world more confidently', 'Understanding my own patterns in relationships', 'Setting healthier boundaries'],
+      },
+      {
+        id: 'communicationStyle',
+        question: 'How do you typically handle disagreements in a close relationship?',
+        options: ['I tend to avoid conflict', 'I want to talk it out and resolve it right away', 'I get angry or defensive', 'I shut down and need space'],
+      },
+      {
+        id: 'expressingNeeds',
+        question: 'How easy is it for you to ask for what you need from others?',
+        options: ['Very easy, I\'m direct', 'Challenging, I worry about being a burden', 'Very difficult, I usually just do it myself', 'I\'m not always sure what I need'],
+      },
+      {
+        id: 'receivingFeedback',
+        question: 'How do you typically react when receiving criticism or feedback from someone you care about?',
+        options: ['I listen openly and consider it', 'I feel defensive and want to explain myself', 'I feel hurt or rejected', 'I dismiss it if I don\'t agree'],
+      },
+      {
+        id: 'attachmentAnxiety',
+        question: 'In a romantic relationship, which thought is more common for you?',
+        options: ['"I hope they don\'t leave me."', '"I need my space and independence."', '"We are a solid team."', '"I often feel misunderstood."'],
+      },
+    ]
   }
 ];

@@ -207,4 +207,58 @@ export const roadmaps: Roadmaps = {
   'trauma-therapist': [],
   'fitness-instructor': [],
   'personal-life-manager': [],
+  'spiritual-guide': [
+    {
+        "title": "Finding Stillness in a Busy World",
+        "completed": false,
+        "steps": {
+            "identify": "Acknowledge the feeling of being constantly rushed or mentally cluttered.",
+            "trigger": "Notice the moments when you feel most scattered—is it during work, commuting, or even leisure time?",
+            "origin": "Reflect on when you first learned that being 'busy' was a sign of being 'productive' or 'valuable'.",
+            "behavior_change": "Practice the 'moment of pause'—a single, conscious breath taken at various points throughout the day to anchor yourself in the present.",
+            "daily_task": "Take one mindful breath before you start your computer or check your phone in the morning.",
+            "short_term_goal": "Find three opportunities in your day to take a 'moment of pause' for one week.",
+            "long_term_goal": "Cultivate a sense of inner spaciousness, even when your external world is busy."
+        },
+        "questions": [
+            {
+                "id": "mental_clutter",
+                "question": "How would you describe the state of your mind on an average day?",
+                "options": ["Calm and clear", "A gentle stream of thoughts", "Busy and cluttered", "Chaotic and overwhelming"]
+            },
+            {
+                "id": "moments_of_stillness",
+                "question": "How often do you intentionally take moments for quiet or stillness in your day?",
+                "options": ["Several times a day", "Once a day", "A few times a week", "Rarely or never"]
+            }
+        ]
+    }
+  ],
+  'relationships-coach': [
+    {
+        "title": "Navigating Difficult Conversations",
+        "completed": false,
+        "steps": {
+            "identify": "Recognize your current pattern during conflict (e.g., shutting down, getting angry, people-pleasing).",
+            "trigger": "Pinpoint the specific topics or types of people that make you feel most defensive or anxious.",
+            "origin": "Think back to how conflict was handled in your family growing up. What did you learn about disagreement?",
+            "behavior_change": "Practice using 'I feel' statements to express your perspective without blame (e.g., 'I feel unheard when...' instead of 'You never listen...').",
+            "daily_task": "Identify one feeling you have today and state it to yourself as an 'I feel...' statement.",
+            "short_term_goal": "Use an 'I feel' statement in a low-stakes conversation with a safe person.",
+            "long_term_goal": "Confidently navigate difficult conversations while staying connected to the other person."
+        },
+        "questions": [
+            {
+                "id": "conflict_style",
+                "question": "When a disagreement arises with someone close to you, what is your most common initial reaction?",
+                "options": ["I try to solve the problem immediately.", "I need space and tend to withdraw.", "I get anxious and try to smooth things over.", "I get angry and defensive."]
+            },
+            {
+                "id": "expressing_needs",
+                "question": "How easy is it for you to express your needs in a relationship?",
+                "options": ["Very easy", "It's a bit challenging", "It's very difficult", "I'm not even sure what my needs are"]
+            }
+        ]
+    }
+  ],
 };
