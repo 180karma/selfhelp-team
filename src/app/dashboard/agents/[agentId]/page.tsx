@@ -362,7 +362,7 @@ export default function AgentChatPage() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assessment, isLoadingAssessment, agentId, userName, currentRoadmap]);
+  }, [assessment, isLoadingAssessment, introSent, currentRoadmap]);
 
 
   useEffect(() => {
