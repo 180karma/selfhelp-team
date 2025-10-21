@@ -403,10 +403,16 @@ export default function AgentChatPage() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (!data.message.trim()) return;
     const userMessage: ChatMessage = { role: 'user', content: data.message };
-    const newHistory = [...history, userMessage];
-    setHistory(newHistory);
+    
+    if (isAnsweringModuleQuestions && currentModule) {
+        handleOptionClick(data.message, currentModule.questions[moduleQuestionIndex].question);
+    } else {
+        const newHistory = [...history, userMessage];
+        setHistory(newHistory);
+        handleAgentResponse(data.message, newHistory);
+    }
+    
     reset();
-    handleAgentResponse(data.message, newHistory);
   };
   
   const renderCurrentQuestion = () => {
@@ -430,7 +436,7 @@ export default function AgentChatPage() {
               </Button>
             ))}
           </div>
-           <p className="text-xs text-muted-foreground italic mt-2">Please select an answer to continue.</p>
+           <p className="text-xs text-muted-foreground italic mt-2">Please select an answer above, or type your own response below.</p>
         </div>
     )
   }
@@ -579,13 +585,13 @@ export default function AgentChatPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2 border-t pt-3 sm:pt-4 flex-shrink-0">
           <Input
             {...register('message', { required: true })}
-            placeholder="Type your message..."
+            placeholder={isAnsweringModuleQuestions ? "Type your answer..." : "Type your message..."}
             autoComplete="off"
-            disabled={isLoading || isAnsweringModuleQuestions}
+            disabled={isLoading}
             className="min-w-0 flex-1"
           />
-          <Button type="submit" disabled={isLoading || isAnsweringModuleQuestions} className="flex-shrink-0">
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send'}
+          <Button type="submit" disabled={isLoading} className="flex-shrink-0">
+            {isLoading && !isAnsweringModuleQuestions ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send'}
           </Button>
         </form>
       </CardContent>
