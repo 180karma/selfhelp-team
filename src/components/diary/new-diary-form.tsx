@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -16,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useUser } from '@/firebase';
 import { Loader2 } from 'lucide-react';
 import { categorizeDiaryEntry } from '@/ai/flows/categorize-diary-entry';
+import { analyzeTextWithNeuroGuide } from '@/ai/flows/brain-analysis';
 
 
 const formSchema = z.object({
@@ -56,12 +58,17 @@ export function NewDiaryForm({ presetTitle, presetType }: NewDiaryFormProps) {
     }
 
     try {
-      const { categories } = await categorizeDiaryEntry({ diaryEntry: values.content });
+      // Run categorization and brain analysis in parallel
+      const [categorizationResult, brainAnalysisResult] = await Promise.all([
+        categorizeDiaryEntry({ diaryEntry: values.content }),
+        analyzeTextWithNeuroGuide({ textToAnalyze: values.content })
+      ]);
       
       const entryData = {
         ...values,
         id: uuidv4(),
-        categories,
+        categories: categorizationResult.categories,
+        neuroInsightProfile: brainAnalysisResult.neuroInsightProfile,
         createdAt: new Date().toISOString(),
         userId: user.uid,
       };
@@ -73,7 +80,7 @@ export function NewDiaryForm({ presetTitle, presetType }: NewDiaryFormProps) {
 
       toast({
         title: 'Entry Saved!',
-        description: 'Your diary entry has been successfully saved locally.',
+        description: 'Your diary entry has been successfully saved and analyzed locally.',
       });
       form.reset();
       router.push('/dashboard/diary');
@@ -151,7 +158,7 @@ export function NewDiaryForm({ presetTitle, presetType }: NewDiaryFormProps) {
             />
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              {isSubmitting ? 'Saving...' : 'Save Entry'}
+              {isSubmitting ? 'Saving & Analyzing...' : 'Save Entry'}
             </Button>
           </form>
         </Form>

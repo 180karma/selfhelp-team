@@ -16,7 +16,7 @@ import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Questionnaire } from '@/components/agents/questionnaire';
 import { DocumentData } from 'firebase/firestore';
-import type { AiMentalHealthNote, Goal, GoalCategory, AiMentalHealthProfile, Mantra } from '@/lib/types';
+import type { AiMentalHealthNote, Goal, GoalCategory, AiMentalHealthProfile, Mantra, DiaryEntry } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -159,6 +159,18 @@ export default function AgentChatPage() {
       }
        if (currentRoadmap) {
             personaWithContext += `\n\n## My Clinical Roadmap:\n${JSON.stringify(currentRoadmap.find(m => !m.completed) || currentRoadmap[0], null, 2)}`;
+      }
+
+      // Add Neuro-Insight Profile from the latest diary entry
+      if (user) {
+        const allEntries: DiaryEntry[] = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
+        const userEntries = allEntries
+          .filter(e => e.userId === user.uid)
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+        if (userEntries.length > 0 && userEntries[0].neuroInsightProfile) {
+          personaWithContext += `\n\n## Neuro-Insight Profile (from latest diary entry):\n${JSON.stringify(userEntries[0].neuroInsightProfile, null, 2)}`;
+        }
       }
 
       const genkitHistory = toGenkitHistory(currentHistory);
@@ -617,9 +629,3 @@ export default function AgentChatPage() {
     </Card>
   );
 }
-
-    
-
-    
-
-    

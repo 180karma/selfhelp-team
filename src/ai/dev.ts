@@ -1,3 +1,4 @@
+
 'use client';
 import { config } from 'dotenv';
 config();
@@ -9,3 +10,4 @@ import '@/ai/flows/analyze-user-profile.ts';
 import '@/ai/flows/summarize-conversation.ts';
 import '@/ai/flows/create-roadmap.ts';
 import '@/ai/flows/google-calendar-tool.ts';
+import '@/ai/flows/brain-analysis.ts';

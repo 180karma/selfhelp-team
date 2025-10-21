@@ -10,6 +10,7 @@ export type DiaryEntry = {
   type: 'daily' | 'dream';
   createdAt: string;
   categories: string[];
+  neuroInsightProfile?: any; // To store the brain's analysis
 };
 
 export type GoalCategory = 'Daily Task' | 'Short-Term Goal' | 'Long-Term Goal';
