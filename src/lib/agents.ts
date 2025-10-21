@@ -16,7 +16,7 @@ export const agents: AIAgent[] = [
     givenName: 'Alex 🍎',
     role: 'Nutritionist',
     roleDescription: 'AI Nutrition Advisor',
-    avatarUrl: 'https://cdn.midjourney.com/6d7c7a20-ea27-4b62-b39f-fdebc130c161/0_3.png',
+    avatarUrl: 'https://cdn.midjourney.com/da153547-2fbc-480f-9d58-b009c43344f4/0_2.png',
     categories: ['Health', 'Diet', 'Fitness', 'Food'],
     color: 'emerald',
     persona: `You are an AI Nutritionist named Alex with an encouraging and friendly tone. Your goal is to help the user improve their health.
@@ -51,7 +51,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     givenName: 'Anya 🧠',
     role: 'Psychologist',
     roleDescription: 'AI Psychology Advisor',
-    avatarUrl: 'https://cdn.midjourney.com/be4e8db1-d680-42e7-84c9-af54342d3c86/0_3.png',
+    avatarUrl: 'https://cdn.midjourney.com/a6e16048-234f-47a1-b726-8a18276ff2f5/0_1.png',
     categories: ['Anxiety', 'Mental Health', 'Relationships', 'Trauma', 'Stress'],
     color: 'sky',
     persona: `You are an AI Psychologist named Anya with a calm and empathetic tone. Your goal is to help the user.
@@ -86,7 +86,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     givenName: 'Jordan 💡',
     role: 'Cognitive Behavioural Therapist',
     roleDescription: 'AI CBT Advisor',
-    avatarUrl: 'https://cdn.midjourney.com/8c19cf6c-0007-4c5d-952d-f15bd51dc885/0_1.png',
+    avatarUrl: 'https://cdn.midjourney.com/c88f5069-3a6c-4bfa-b5bb-9febec2e2ae5/0_3.png',
     categories: ['Anxiety', 'Behavioral Patterns', 'Personal Growth', 'Stress'],
     color: 'amber',
     persona: `You are an AI CBT Advisor named Jordan with a structured and collaborative tone. Your goal is to help the user.
@@ -121,7 +121,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     givenName: 'Evelyn 🌱',
     role: 'Trauma & Attachment Advisor',
     roleDescription: 'AI Trauma-Informed Advisor',
-    avatarUrl: 'https://cdn.midjourney.com/52ea58a5-f505-4673-8e17-725ce6294399/0_1.png',
+    avatarUrl: 'https://cdn.midjourney.com/fc99a395-84b7-4880-9bd1-a8b918eef167/0_1.png',
     categories: ['Trauma', 'Attachment', 'Inner Child', 'Shame', 'Relationships'],
     color: 'violet',
     persona: `You are an AI Trauma & Attachment Advisor named Evelyn with a deeply compassionate, patient, and non-judgmental tone. Your goal is to help the user explore their past safely.
@@ -156,7 +156,7 @@ You MUST follow this structured, trauma-informed, and solution-oriented appointm
     givenName: 'Kai 💪',
     role: 'Fitness Instructor',
     roleDescription: 'AI Fitness Coach',
-    avatarUrl: 'https://cdn.midjourney.com/c62aa2e0-31d5-4045-8efb-d76090e97fb9/0_0.png',
+    avatarUrl: 'https://cdn.midjourney.com/e36bbb7b-80ed-4ad8-9b4a-b39a9ae41526/0_3.png',
     categories: ['Fitness', 'Health', 'Exercise', 'Motivation'],
     color: 'rose',
     persona: `You are an AI Fitness Instructor named Kai with a high-energy and motivational tone. Your goal is to get the user moving.
@@ -193,7 +193,7 @@ When suggesting tasks or exercises, you can also offer to add them to the user's
     givenName: 'Morgan 📅',
     role: 'Personal Life Manager',
     roleDescription: 'AI Life Organization Advisor',
-    avatarUrl: 'https://cdn.midjourney.com/42cdb1db-9c3c-4c0c-90fe-99d72492e756/0_3.png',
+    avatarUrl: 'https://cdn.midjourney.com/3827be04-1aff-4e9e-855e-015868b0400f/0_2.png',
     categories: ['Work Stress', 'Productivity', 'Personal Growth', 'Creativity', 'Family'],
     color: 'slate',
     persona: `You are an AI Personal Life Manager named Morgan with an organized and supportive tone. Your goal is to help the user get organized.
@@ -230,7 +230,7 @@ When suggesting tasks or exercises, you can also offer to add them to the user's
     givenName: 'Elias 🕊️',
     role: 'Spiritual Guide',
     roleDescription: 'AI Spiritual Companion',
-    avatarUrl: 'https://cdn.midjourney.com/97072a7c-39a0-466d-8857-89139f408221/0_0.png',
+    avatarUrl: 'https://cdn.midjourney.com/u/42261dff-6a22-45b8-b19f-18a9350c227d/fa52d40e4a11dcc00a836cd940e8e7faa84f89021cf2bdc8b627c68d1e4a2d40_384_N.png',
     categories: ['Mindfulness', 'Purpose', 'Connection', 'Meditation'],
     color: 'cyan',
     persona: `You are an AI Spiritual Guide named Elias with a wise, gentle, and expansive tone. Your goal is to help the user connect with their inner self and explore their sense of purpose in a non-denominational way.
@@ -265,7 +265,7 @@ You MUST follow this structured, contemplative, and solution-oriented appointmen
     givenName: 'Chloe 💖',
     role: 'Relationships Coach',
     roleDescription: 'AI Relationship Dynamics Advisor',
-    avatarUrl: 'https://cdn.midjourney.com/f8b44983-6a0f-4404-9843-f6334a362283/0_0.png',
+    avatarUrl: 'https://cdn.midjourney.com/aaa2175c-13fb-4362-9842-f37caee96864/0_3.png',
     categories: ['Relationships', 'Communication', 'Dating', 'Family'],
     color: 'pink',
     persona: `You are an AI Relationships Coach named Chloe with a warm, perceptive, and clear-spoken tone. Your goal is to help the user build healthier and more fulfilling connections with others.
