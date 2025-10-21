@@ -5,18 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { agents } from '@/lib/agents';
-import { Users, MessageSquareText, CheckSquare, Square } from 'lucide-react';
+import { Users, MessageSquareText, CheckSquare, Square, MessageSquare } from 'lucide-react';
 import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useMemo, useState, useEffect } from 'react';
 import { useUser } from '@/firebase';
 import { Module } from '@/lib/roadmaps';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 export default function ProfilePage() {
   const { user } = useUser();
   const [profiles, setProfiles] = useState<AiMentalHealthProfile[]>([]);
   const [notes, setNotes] = useState<AiMentalHealthNote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [openAccordion, setOpenAccordion] = useState<string | undefined>(undefined);
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -38,6 +43,10 @@ export default function ProfilePage() {
         storedProfiles.push(parsedData);
       }
     });
+    
+    if (storedProfiles.length > 0) {
+      setOpenAccordion(storedProfiles[0].id);
+    }
     setProfiles(storedProfiles);
 
     // Load notes from local storage
@@ -90,10 +99,12 @@ export default function ProfilePage() {
       </p>
 
       {profiles && profiles.length > 0 ? (
-         <Accordion type="single" collapsible className="w-full animate-fade-in animation-delay-200" defaultValue={profiles[0].id}>
+         <Accordion type="single" collapsible className="w-full animate-fade-in animation-delay-200" value={openAccordion} onValueChange={setOpenAccordion}>
             {profiles.map(profile => {
                 const agent = getAgentInfo(profile.aiAgentId);
                 const agentNotes = notesByProfile[profile.aiAgentId] || [];
+                const isAccordionOpen = openAccordion === profile.id;
+
                 if (!agent) return null;
                 
                 let roadmapItems: Module[] = [];
@@ -118,13 +129,24 @@ export default function ProfilePage() {
                 return (
                     <AccordionItem value={profile.id} key={profile.id}>
                         <AccordionTrigger>
+                          <div className="flex items-center justify-between w-full">
                             <div className="flex items-center gap-4">
-                                <Avatar className="h-8 w-8">
+                                <Avatar className={cn(
+                                  "transition-all duration-300",
+                                  isAccordionOpen ? "h-12 w-12" : "h-8 w-8"
+                                )}>
                                   <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
                                   <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <span className="font-semibold">{agent.givenName} ({agent.role})</span>
                             </div>
+                             <Button variant="ghost" size="icon" asChild onClick={(e) => e.stopPropagation()}>
+                                <Link href={`/dashboard/agents/${agent.id}`}>
+                                    <MessageSquare className="h-5 w-5 text-muted-foreground" />
+                                    <span className="sr-only">Chat with {agent.givenName}</span>
+                                </Link>
+                            </Button>
+                           </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <div className="space-y-4">
