@@ -222,14 +222,13 @@ export default function AgentChatPage() {
 
   const handleSaveNote = async () => {
     const currentHistory = historyRef.current;
-    if (currentHistory.length < 2 || !user || !currentRoadmap) {
+    if (currentHistory.length < 2 || !user || !currentModule) {
         return;
     }
 
     const lastMessage = currentHistory[currentHistory.length - 1];
     const secondLastMessage = currentHistory[currentHistory.length - 2];
 
-    // The condition to save: the AI proposed a task, and the user just confirmed it.
     const agentProposedTask = secondLastMessage.role === 'model' && secondLastMessage.question?.addTask;
     const userConfirmed = lastMessage.role === 'user' && (
         lastMessage.content.toLowerCase().includes('yes') ||
@@ -239,16 +238,15 @@ export default function AgentChatPage() {
     );
 
     if (!agentProposedTask || !userConfirmed) {
-        return; // Don't save a note if the module isn't confirmed as finished.
+        return;
     }
     
     try {
       const genkitHistory = toGenkitHistory(currentHistory);
-      const { noteData, completedModuleTitle } = await summarizeConversation({
+      const { noteData } = await summarizeConversation({
         persona: agent!.persona,
         userName: userName || 'friend',
         history: genkitHistory,
-        roadmap: JSON.stringify(currentRoadmap),
       });
       
       const note: AiMentalHealthNote = {
@@ -264,14 +262,15 @@ export default function AgentChatPage() {
       existingNotes.push(note);
       localStorage.setItem(notesKey, JSON.stringify(existingNotes));
       
-      if (completedModuleTitle) {
+      if (currentModule && currentRoadmap) {
           const updatedRoadmap = currentRoadmap.map(module => 
-              module.title === completedModuleTitle 
+              module.title === currentModule.title 
                   ? { ...module, completed: true } 
                   : module
           );
           setCurrentRoadmap(updatedRoadmap);
           localStorage.setItem(`thrivewell-roadmap-${agentId}`, JSON.stringify(updatedRoadmap));
+          setCurrentModule(null);
       }
 
       console.log('Conversation note and updated roadmap saved automatically to local storage.');
@@ -391,7 +390,7 @@ export default function AgentChatPage() {
       handleSaveNote();
     };
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRoadmap]);
+  }, [currentModule, currentRoadmap]);
 
   if (!agent) {
     notFound();

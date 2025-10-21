@@ -17,13 +17,11 @@ const SummarizeConversationInputSchema = z.object({
     role: z.enum(['user', 'model']),
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history to be summarized.'),
-  roadmap: z.any().describe('The current clinical roadmap, which can be a string or a JSON object.'),
 });
 type SummarizeConversationInput = z.infer<typeof SummarizeConversationInputSchema>;
 
 const SummarizeConversationOutputSchema = z.object({
   noteData: z.string().describe("A concise clinical note summarizing the conversation, focusing on key issues, user responses, and resolution practices discussed. This note will be added to the user's history for future analysis."),
-  completedModuleTitle: z.string().describe("The title of the module that was completed in this session."),
 });
 type SummarizeConversationOutput = z.infer<typeof SummarizeConversationOutputSchema>;
 
@@ -41,15 +39,12 @@ const prompt = ai.definePrompt({
   output: { schema: SummarizeConversationOutputSchema },
   prompt: `You are an AI agent with the following persona: {{{persona}}}
 
-You have just finished a session with a user named {{{userName}}}. Your two main tasks are to document this specific session.
+You have just finished a session with a user named {{{userName}}}. Your task is to document this specific session.
 
-1.  **Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of **only this conversation**. Refer to the user by their name, {{{userName}}}. Structure it with the following headers, and use bullet points under each:
+**Create a Clinical Note:** From your first-person perspective (using "I"), write a concise, objective clinical-style note summarizing the key points of **only this conversation**. Refer to the user by their name, {{{userName}}}. Structure it with the following headers, and use bullet points under each:
     *   **Key Issues Discussed:** Main problems or topics {{{userName}}} raised in this session.
     *   **User's Responses & Insights:** How {{{userName}}} felt, thought, and behaved during this discussion.
     *   **Resolution & Plan:** Strategies, suggestions, or action items that I discussed with {{{userName}}} in this session.
-
-2.  **Identify Completed Module:** Review the conversation and the provided "Current Roadmap." Your goal is to identify which module was the primary focus of this session.
-    *   **CRITICAL INSTRUCTION:** You MUST return the exact title of the module that was completed in the \`completedModuleTitle\` field.
 
 Do not include conversational filler. This is an internal process for tracking progress.
 
@@ -57,9 +52,6 @@ Conversation History to Summarize:
 {{#each history}}
 - {{role}}: {{content.[0].text}}
 {{/each}}
-
-Current Roadmap (for context):
-{{{roadmap}}}
 `,
 });
 
@@ -71,13 +63,7 @@ const summarizeConversationFlow = ai.defineFlow(
     outputSchema: SummarizeConversationOutputSchema,
   },
   async (input) => {
-    // If the roadmap is an object, stringify it for the prompt.
-    const processedInput = {
-      ...input,
-      roadmap: typeof input.roadmap === 'object' ? JSON.stringify(input.roadmap, null, 2) : input.roadmap,
-    };
-
-    const { output } = await prompt(processedInput);
+    const { output } = await prompt(input);
     if (!output) {
       throw new Error("The AI failed to generate a summary. The output was empty.");
     }
