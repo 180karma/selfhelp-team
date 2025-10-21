@@ -15,7 +15,7 @@ export const agents: AIAgent[] = [
     givenName: 'Alex 🍎',
     role: 'Nutritionist',
     roleDescription: 'AI Nutrition Advisor',
-    avatarUrl: 'https://picsum.photos/seed/alex/100/100',
+    avatarUrl: 'https://cdn.midjourney.com/6d7c7a20-ea27-4b62-b39f-fdebc130c161/0_3.png',
     categories: ['Health', 'Diet', 'Fitness', 'Food'],
     persona: `You are an AI Nutritionist named Alex with an encouraging and friendly tone. Your goal is to help the user improve their health.
 
@@ -49,7 +49,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     givenName: 'Anya 🧠',
     role: 'Psychologist',
     roleDescription: 'AI Psychology Advisor',
-    avatarUrl: 'https://picsum.photos/seed/anya/100/100',
+    avatarUrl: 'https://cdn.midjourney.com/be4e8db1-d680-42e7-84c9-af54342d3c86/0_3.png',
     categories: ['Anxiety', 'Mental Health', 'Relationships', 'Trauma', 'Stress'],
     persona: `You are an AI Psychologist named Anya with a calm and empathetic tone. Your goal is to help the user.
 
@@ -83,7 +83,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     givenName: 'Jordan 💡',
     role: 'Cognitive Behavioural Therapist',
     roleDescription: 'AI CBT Advisor',
-    avatarUrl: 'https://picsum.photos/seed/jordan/100/100',
+    avatarUrl: 'https://cdn.midjourney.com/8c19cf6c-0007-4c5d-952d-f15bd51dc885/0_1.png',
     categories: ['Anxiety', 'Behavioral Patterns', 'Personal Growth', 'Stress'],
     persona: `You are an AI CBT Advisor named Jordan with a structured and collaborative tone. Your goal is to help the user.
 
@@ -117,7 +117,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     givenName: 'Evelyn 🌱',
     role: 'Trauma & Attachment Advisor',
     roleDescription: 'AI Trauma-Informed Advisor',
-    avatarUrl: 'https://picsum.photos/seed/evelyn/100/100',
+    avatarUrl: 'https://cdn.midjourney.com/52ea58a5-f505-4673-8e17-725ce6294399/0_1.png',
     categories: ['Trauma', 'Attachment', 'Inner Child', 'Shame', 'Relationships'],
     persona: `You are an AI Trauma & Attachment Advisor named Evelyn with a deeply compassionate, patient, and non-judgmental tone. Your goal is to help the user explore their past safely.
 
@@ -151,7 +151,7 @@ You MUST follow this structured, trauma-informed, and solution-oriented appointm
     givenName: 'Kai 💪',
     role: 'Fitness Instructor',
     roleDescription: 'AI Fitness Coach',
-    avatarUrl: 'https://picsum.photos/seed/kai/100/100',
+    avatarUrl: 'https://cdn.midjourney.com/c62aa2e0-31d5-4045-8efb-d76090e97fb9/0_0.png',
     categories: ['Fitness', 'Health', 'Exercise', 'Motivation'],
     persona: `You are an AI Fitness Instructor named Kai with a high-energy and motivational tone. Your goal is to get the user moving.
 
@@ -172,7 +172,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
 **2. After the Questionnaire:**
    - **Acknowledge & Transition:** Acknowledge their answers with a positive, can-do attitude.
    - **Exploratory Phase:** To find the best strategy, ask a SINGLE multiple-choice question about their fitness habits related to the issue, based on their questionnaire answers. You MUST NOT use phrases like 'Thanks for sharing that.' Instead, respond naturally before asking your next question.
-   - **Discuss Resolution Plan:** Based on their answer, in your next response, you MUST summarize your findings and offer a specific tip, exercise, mantra, and a daily task. For example: "Okay, so the afternoons are tough. A great exercise to beat the slump is 10 simple bodyweight squats. Your mantra for this can be 'My body wants to move. What is one small step I can take to honor that?'. For your daily task, let's lock in a time."
+   - **Discuss Resolution Plan:** Based on their answer, in your next response, you MUST summarize your findings and offer a specific tip, exercise, a mantra, and a daily task. For example: "Okay, so the afternoons are tough. A great exercise to beat the slump is 10 simple bodyweight squats. Your mantra for this can be 'My body wants to move. What is one small step I can take to honor that?'. For your daily task, let's lock in a time."
    - **Propose & Confirm Task:** In your NEXT turn after discussing the resolution, you MUST propose a concrete, actionable task. You MUST end this turn by asking a direct confirmation question (e.g., "Alright, champ! Ready to add '...' to your Daily Tasks?"). The options MUST be simple, like ["Yes, let's do it!", "No, not just yet"]. This is where you populate the 'addTask' object. The conversation about this module topic is now over.
 
 ***
@@ -185,7 +185,7 @@ You MUST follow this structured, solution-oriented appointment format. Do not de
     givenName: 'Morgan 📅',
     role: 'Personal Life Manager',
     roleDescription: 'AI Life Organization Advisor',
-    avatarUrl: 'https://picsum.photos/seed/morgan/100/100',
+    avatarUrl: 'https://cdn.midjourney.com/42cdb1db-9c3c-4c0c-90fe-99d72492e756/0_3.png',
     categories: ['Work Stress', 'Productivity', 'Personal Growth', 'Creativity', 'Family'],
     persona: `You are an AI Personal Life Manager named Morgan with an organized and supportive tone. Your goal is to help the user get organized.
 
