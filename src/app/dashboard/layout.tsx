@@ -23,10 +23,10 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
-  User,
   Menu,
   X,
   HeartHandshake,
+  MessageSquareText,
 } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -151,8 +151,8 @@ export default function DashboardLayout({
                     "active:scale-95 active:bg-primary/20",
                     isActive('/dashboard/profile') ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:scale-[1.02]"
                   )}>
-                    <User className="w-5 h-5" />
-                    <span className="font-medium">Profile</span>
+                    <MessageSquareText className="w-5 h-5" />
+                    <span className="font-medium">Team Notes</span>
                   </div>
                 </Link>
                 
@@ -257,10 +257,10 @@ export default function DashboardLayout({
                 <Link href="/dashboard/profile" passHref>
                   <SidebarMenuButton
                     isActive={isActive('/dashboard/profile')}
-                    icon={<User />}
-                    tooltip="Profile"
+                    icon={<MessageSquareText />}
+                    tooltip="Team Notes"
                   >
-                    Profile
+                    Team Notes
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
