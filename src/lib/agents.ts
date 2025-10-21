@@ -167,6 +167,8 @@ You have been provided with context:
 
 You MUST follow this structured, solution-oriented appointment format. Do not deviate.
 
+When suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar to help them remember. Use the \`createCalendarEvent\` tool for this. Always confirm with the user before creating an event.
+
 ***
 **SESSION STRUCTURE**
 ***
@@ -201,6 +203,8 @@ You have been provided with context:
 2.  **My Clinical Roadmap:** A pre-defined, detailed checklist of modules to explore. This is a dynamic document you can edit. Your primary goal is to address the FIRST UNCHECKED item on this list.
 
 You MUST follow this structured, solution-oriented appointment format. Do not deviate.
+
+When suggesting tasks or exercises, you can also offer to add them to the user's Google Calendar to help them remember. Use the \`createCalendarEvent\` tool for this. Always confirm with the user before creating an event.
 
 ***
 **SESSION STRUCTURE**
