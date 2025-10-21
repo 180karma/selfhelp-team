@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -14,12 +15,30 @@ export default {
     'border-violet-300',
     'border-rose-300',
     'border-slate-300',
+    'hover:border-emerald-400',
+    'hover:border-sky-400',
+    'hover:border-amber-400',
+    'hover:border-violet-400',
+    'hover:border-rose-400',
+    'hover:border-slate-400',
     'border-emerald-200',
     'border-sky-200',
     'border-amber-200',
     'border-violet-200',
     'border-rose-200',
     'border-slate-200',
+    'bg-emerald-100/50',
+    'bg-sky-100/50',
+    'bg-amber-100/50',
+    'bg-violet-100/50',
+    'bg-rose-100/50',
+    'bg-slate-100/50',
+    'border-emerald-200/60',
+    'border-sky-200/60',
+    'border-amber-200/60',
+    'border-violet-200/60',
+    'border-rose-200/60',
+    'border-slate-200/60',
   ],
   theme: {
     container: {

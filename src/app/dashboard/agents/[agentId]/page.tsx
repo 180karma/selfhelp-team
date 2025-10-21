@@ -439,7 +439,7 @@ export default function AgentChatPage() {
        <CardHeader className="sticky top-0 md:top-[60px] z-20 flex flex-row items-center justify-between border-b bg-background/80 p-3 backdrop-blur-sm sm:p-4 md:p-6">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
-              <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
+              <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-top" />
               <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
@@ -463,7 +463,7 @@ export default function AgentChatPage() {
                   {message.role === 'model' && (
                     <div className="flex items-end gap-2 text-sm text-muted-foreground">
                        <Avatar className="h-8 w-8">
-                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
+                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-top" />
                         <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>
@@ -482,7 +482,7 @@ export default function AgentChatPage() {
                   <div className={cn('rounded-lg p-3 min-w-0', 
                       message.role === 'user' 
                       ? 'bg-secondary text-secondary-foreground max-w-[85%] sm:max-w-md self-end' 
-                      : 'bg-muted max-w-[90%] sm:max-w-prose self-start'
+                      : `max-w-[90%] sm:max-w-prose self-start bg-${agent.color}-100/50 border border-${agent.color}-200/60`
                   )}>
                     <p className={cn(
                       "whitespace-pre-wrap break-words",
@@ -537,13 +537,16 @@ export default function AgentChatPage() {
                   <div className="flex flex-col items-start gap-2 animate-fade-in w-full">
                     <div className="flex items-end gap-2 text-sm text-muted-foreground">
                        <Avatar className="h-8 w-8">
-                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
+                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-top" />
                         <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>
                       <p className="text-xs italic">({agent.role})</p>
                     </div>
-                    <div className="rounded-lg p-3 bg-muted max-w-[90%] sm:max-w-prose self-start w-full sm:w-auto">
+                    <div className={cn(
+                      "rounded-lg p-3 max-w-[90%] sm:max-w-prose self-start w-full sm:w-auto",
+                      `bg-${agent.color}-100/50 border border-${agent.color}-200/60`
+                    )}>
                         {renderCurrentQuestion()}
                     </div>
                   </div>
@@ -552,13 +555,16 @@ export default function AgentChatPage() {
               <div className="flex flex-col items-start gap-2 animate-fade-in">
                  <div className="flex items-end gap-2 text-sm text-muted-foreground">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
+                    <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-top" />
                     <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                   </Avatar>
                    <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>
                    <p className="text-xs italic">({agent.role})</p>
                 </div>
-                <div className="max-w-[90%] sm:max-w-prose rounded-lg p-3 bg-muted">
+                <div className={cn(
+                    "max-w-[90%] sm:max-w-prose rounded-lg p-3",
+                    `bg-${agent.color}-100/50 border border-${agent.color}-200/60`
+                )}>
                   <div className="flex items-center space-x-2">
                     <div className="h-2 w-2 rounded-full bg-foreground/50 animate-pulse"></div>
                     <div className="h-2 w-2 rounded-full bg-foreground/50 animate-pulse" style={{animationDelay: '0.2s'}}></div>
