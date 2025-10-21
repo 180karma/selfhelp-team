@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -35,6 +36,7 @@ const AiMentalHealthNoteSchema = z.object({
 });
 
 const AnalyzeUserProfileInputSchema = z.object({
+  userName: z.string().describe("The user's first name."),
   persona: z.string().describe("The persona of the AI agent who will use this profile."),
   questionnaireAnswers: z.record(z.string()).describe("A JSON object of the user's initial answers, where keys are question IDs and values are the selected options."),
   conversationNotes: z.array(AiMentalHealthNoteSchema).describe("An array of all past clinical notes from conversations with this agent."),
@@ -59,14 +61,14 @@ const prompt = ai.definePrompt({
   output: { schema: AnalyzeUserProfileOutputSchema },
   prompt: `You are an AI agent with the following persona: {{{persona}}}
 
-Your task is to create a comprehensive, updated **Clinical Profile** for a user. This is a living document that should be updated over time. You will synthesize information from three sources: the user's initial questionnaire, the full history of past conversation notes, and their current goals.
+Your task is to create a comprehensive, updated **Clinical Profile** for a user named {{{userName}}}. This is a living document that should be updated over time. You will synthesize information from three sources: the user's initial questionnaire, the full history of past conversation notes, and their current goals.
 
-Write a 3-4 paragraph summary from your professional, first-person perspective (e.g., "My assessment of the client..."). Address the user indirectly (e.g., "The user indicates..." not "You indicated...").
+Write a 3-4 paragraph summary from your professional, first-person perspective (e.g., "My assessment of the client..."). Address the user by their name (e.g., "{{{userName}}} indicates..." or "The client, {{{userName}}}, shows...").
 
 Your summary MUST cover these key areas:
-1.  **Client History & Core Issues:** Briefly summarize the key themes and challenges identified from the initial questionnaire and recurring topics in past notes. What are the core wounds or patterns?
-2.  **Working Progress:** Describe the progress the user has made. What insights have they gained? How have their responses or behaviors changed over time according to the notes?
-3.  **Goals & Tasks Analysis:** Review their assigned tasks and goals. Are they completing them? What does this say about their motivation and engagement?
+1.  **Client History & Core Issues:** Briefly summarize the key themes and challenges identified from the initial questionnaire and recurring topics in past notes. What are the core wounds or patterns for {{{userName}}}?
+2.  **Working Progress:** Describe the progress {{{userName}}} has made. What insights have they gained? How have their responses or behaviors changed over time according to the notes?
+3.  **Goals & Tasks Analysis:** Review their assigned tasks and goals. Are they completing them? What does this say about {{{userName}}}'s motivation and engagement?
 4.  **Overall Assessment:** Provide your current, high-level assessment of the client's journey and outline the most important areas for future focus.
 
 **Source 1: Initial Questionnaire Answers:**
@@ -85,7 +87,7 @@ Your summary MUST cover these key areas:
 - Goal: "{{title}}" (Category: {{category}}, Completed: {{completed}})
 {{/each}}
 
-Now, generate the comprehensive and updated Clinical Profile.
+Now, generate the comprehensive and updated Clinical Profile for {{{userName}}}.
 `,
 });
 

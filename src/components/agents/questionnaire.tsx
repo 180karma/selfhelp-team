@@ -17,6 +17,7 @@ import { createRoadmap } from '@/ai/flows/create-roadmap';
 import { agents } from '@/lib/agents';
 import { roadmaps } from '@/lib/roadmaps';
 import { DocumentData } from 'firebase/firestore';
+import { useUser } from '@/firebase';
 
 
 interface QuestionnaireProps {
@@ -26,6 +27,7 @@ interface QuestionnaireProps {
 
 export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
   const { toast } = useToast();
+  const { user } = useUser();
   
   const questionnaire = questionnaires.find((q) => q.agentId === agentId);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -82,13 +84,15 @@ export function Questionnaire({ agentId, onComplete }: QuestionnaireProps) {
     // Generate AI profile and personalized roadmap
     try {
         const agent = agents.find(a => a.id === agentId);
+        const userName = user?.displayName?.split(' ')[0] || localStorage.getItem('thrivewell-user-name') || 'friend';
         if (agent) {
-             const userGoals = JSON.parse(localStorage.getItem(`thrivewell-goals-${agentId}`) || '[]');
+             const userGoals = JSON.parse(localStorage.getItem(`thrivewell-goals-${user?.uid}`) || '[]');
              const conversationNotes = JSON.parse(localStorage.getItem('thrivewell-notes') || '[]').filter((n: any) => n.aiAgentId === agentId);
 
             // Generate the initial profile summary & roadmap in parallel
             const [profileResult, roadmapResult] = await Promise.all([
               analyzeUserProfile({
+                userName: userName,
                 persona: agent.persona,
                 questionnaireAnswers: answers,
                 conversationNotes: conversationNotes,
