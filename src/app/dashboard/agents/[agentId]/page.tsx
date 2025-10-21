@@ -439,7 +439,7 @@ export default function AgentChatPage() {
        <CardHeader className="sticky top-0 md:top-[60px] z-20 flex flex-row items-center justify-between border-b bg-background/80 p-3 backdrop-blur-sm sm:p-4 md:p-6">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
-              <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+              <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
               <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
@@ -463,7 +463,7 @@ export default function AgentChatPage() {
                   {message.role === 'model' && (
                     <div className="flex items-end gap-2 text-sm text-muted-foreground">
                        <Avatar className="h-8 w-8">
-                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
                         <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>
@@ -537,7 +537,7 @@ export default function AgentChatPage() {
                   <div className="flex flex-col items-start gap-2 animate-fade-in w-full">
                     <div className="flex items-end gap-2 text-sm text-muted-foreground">
                        <Avatar className="h-8 w-8">
-                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+                        <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
                         <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>
@@ -552,7 +552,7 @@ export default function AgentChatPage() {
               <div className="flex flex-col items-start gap-2 animate-fade-in">
                  <div className="flex items-end gap-2 text-sm text-muted-foreground">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+                    <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
                     <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                   </Avatar>
                    <p className="font-semibold">{agent.givenName.split(' ')[0]}</p>

@@ -70,7 +70,7 @@ export default function MantrasPage() {
               </CardContent>
               <CardContent className="flex items-center gap-2 border-t pt-4">
                  <Avatar className="h-8 w-8">
-                  <AvatarImage src={getAgentAvatar(mantra.assignedBy)} />
+                  <AvatarImage src={getAgentAvatar(mantra.assignedBy)} alt={mantra.assignedBy} className="object-cover object-center" />
                   <AvatarFallback>{mantra.assignedBy.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="text-sm">

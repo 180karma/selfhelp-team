@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +26,7 @@ export default function AgentsPage() {
             <Card className="h-full transition-all hover:shadow-lg">
               <CardHeader className="flex flex-row items-center gap-4">
                  <Avatar>
-                  <AvatarImage src={agent.avatarUrl} alt={agent.givenName} />
+                  <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
                   <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>
