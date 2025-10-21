@@ -10,6 +10,7 @@ import type { AiMentalHealthProfile, AiMentalHealthNote } from '@/lib/types';
 import { useMemo, useState, useEffect } from 'react';
 import { useUser } from '@/firebase';
 import { Module } from '@/lib/roadmaps';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function ProfilePage() {
   const { user } = useUser();
@@ -118,7 +119,10 @@ export default function ProfilePage() {
                     <AccordionItem value={profile.id} key={profile.id}>
                         <AccordionTrigger>
                             <div className="flex items-center gap-4">
-                                <Users className="h-5 w-5 text-primary" />
+                                <Avatar className="h-8 w-8">
+                                  <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-center" />
+                                  <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
+                                </Avatar>
                                 <span className="font-semibold">{agent.givenName} ({agent.role})</span>
                             </div>
                         </AccordionTrigger>
