@@ -49,6 +49,17 @@ type ChatMessage = {
   suggestedReplies?: string[];
 };
 
+type SessionPhase = 
+    | 'opening' 
+    | 'issue_identification'
+    | 'core_analysis'
+    | 'psychoeducation'
+    | 'action_planning'
+    | 'goal_assignment'
+    | 'closing_check'
+    | 'closed';
+
+
 type Inputs = {
   message: string;
 };
@@ -71,6 +82,7 @@ export default function AgentChatPage() {
   const { toast } = useToast();
 
   const [history, setHistory] = useState<ChatMessage[]>([]);
+  const [sessionPhase, setSessionPhase] = useState<SessionPhase>('opening');
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -183,6 +195,7 @@ export default function AgentChatPage() {
         userName: userName || 'friend',
         history: genkitHistory,
         message: message,
+        sessionPhase: sessionPhase,
       });
         
       if (!result) {
@@ -190,6 +203,7 @@ export default function AgentChatPage() {
       }
 
       setHistory((prev) => [...prev, { role: 'model', content: result.response, question: result.question, mantra: result.mantra, suggestedReplies: result.suggestedReplies }]);
+      setSessionPhase(result.sessionPhase); // Update session phase
 
       if (result.mantra && user) {
         const newMantra: Mantra = {
@@ -336,6 +350,13 @@ export default function AgentChatPage() {
   };
 
   const handleSuggestedReplyClick = (reply: string) => {
+    if (sessionPhase === 'closed') {
+        // If the session is closed, starting a new message begins a new session.
+        setHistory([]);
+        setSessionPhase('opening');
+        handleAgentResponse(reply, []);
+        return;
+    }
     const userMessage: ChatMessage = { role: 'user', content: reply };
     const newHistory = [...history, userMessage];
     setHistory(newHistory);
@@ -355,16 +376,9 @@ export default function AgentChatPage() {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent && currentRoadmap) {
         setIntroSent(true);
-        const nextModule = currentRoadmap.find(m => !m.completed);
-
-        if (nextModule) {
-           const initialMessage = `Hello ${userName || 'friend'}, I'm ${agent?.givenName.split(' ')[0]}. It's good to connect with you. I've reviewed your file and I'm here to support you.\n\nFor our session today, let's explore the topic of **'${nextModule.title}'**. To help me understand where you're at, I have just a couple of multiple-choice questions for you.`;
-           const initialHistory: ChatMessage[] = [{ role: 'model', content: initialMessage }];
-           setHistory(initialHistory);
-           startModuleQuestionnaire(nextModule);
-        } else {
-             handleAgentResponse(`Welcome back, ${userName || 'friend'}! It looks like you have completed all the modules in your roadmap. That's a huge accomplishment! How can I help you today?`, []);
-        }
+        // This resets the session when the page is loaded/reloaded.
+        setSessionPhase('opening'); 
+        handleAgentResponse(`Hello, this is a new session.`, []);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -382,7 +396,7 @@ export default function AgentChatPage() {
   
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
+      if (document.visibilityState === 'hidden' && sessionPhase !== 'closed') {
         handleSaveNote();
       }
     };
@@ -393,10 +407,12 @@ export default function AgentChatPage() {
     return () => {
       window.removeEventListener('beforeunload', handleSaveNote);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      handleSaveNote();
+      if (sessionPhase !== 'closed') {
+        handleSaveNote();
+      }
     };
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentModule, currentRoadmap]);
+  }, [currentModule, currentRoadmap, sessionPhase]);
 
   if (!agent) {
     notFound();
@@ -438,6 +454,16 @@ export default function AgentChatPage() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (!data.message.trim()) return;
+
+    if (sessionPhase === 'closed') {
+        // If the session is closed, starting a new message begins a new session.
+        setHistory([]);
+        setSessionPhase('opening');
+        handleAgentResponse(data.message, []);
+        reset();
+        return;
+    }
+
     const userMessage: ChatMessage = { role: 'user', content: data.message };
     
     if (isAnsweringModuleQuestions && currentModule) {
@@ -621,7 +647,11 @@ export default function AgentChatPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2 border-t pt-3 sm:pt-4 flex-shrink-0">
           <Input
             {...register('message', { required: true })}
-            placeholder={isAnsweringModuleQuestions ? "Type your answer..." : "Type your message..."}
+            placeholder={
+                sessionPhase === 'closed' 
+                ? "Send a message to start a new session..." 
+                : (isAnsweringModuleQuestions ? "Type your answer..." : "Type your message...")
+            }
             autoComplete="off"
             disabled={isLoading}
             className="min-w-0 flex-1"

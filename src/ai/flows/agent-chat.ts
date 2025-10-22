@@ -20,6 +20,16 @@ const AgentChatInputSchema = z.object({
     content: z.array(z.object({ text: z.string() })),
   })).describe('The conversation history.'),
   message: z.string().describe('The latest user message.'),
+  sessionPhase: z.enum([
+    'opening',
+    'issue_identification',
+    'core_analysis',
+    'psychoeducation',
+    'action_planning',
+    'goal_assignment',
+    'closing_check',
+    'closed'
+  ]).describe("The current phase of the session, to provide short-term memory for the agent."),
 });
 type AgentChatInput = z.infer<typeof AgentChatInputSchema>;
 
@@ -55,7 +65,7 @@ const AgentChatOutputSchema = z.object({
         coreWounds: z.array(z.string()).describe("Core wounds explored."),
         triggersIdentified: z.array(z.string()).describe("Triggers mapped."),
         tasksAssigned: z.array(z.string()).describe("Daily tasks assigned."),
-        goalsSet: z.array(z.string()).describe("Goals set (short and long-term)."),
+        goalsSet: z-array(z.string()).describe("Goals set (short and long-term)."),
         mantraProvided: z.string().optional().describe("Mantra provided, if any."),
     }).optional().describe("Session summary. You MUST provide this during the 'closing_check' phase."),
 });
@@ -78,14 +88,15 @@ const agentChatFlow = ai.defineFlow(
 
 -   **User's Name:** ${userName}
 -   **Your Persona:** ${persona}
+-   **Current Session Phase:** ${input.sessionPhase}
 
 **CRITICAL INSTRUCTIONS:**
-1.  **ADHERE TO THE SESSION GUIDE:** Follow the 8 phases in order. Do not skip phases.
+1.  **ADHERE TO THE SESSION GUIDE:** Based on the current \`sessionPhase\`, you must decide what to do next according to the guide. Determine the next appropriate phase and set it in your response.
 2.  **CORE ANALYSIS:** When in 'core_analysis' phase, you MUST help identify core wounds and map triggers (TRIGGER → THOUGHT → EMOTION → BEHAVIOR → CONSEQUENCE).
 3.  **TASK ASSIGNMENT:** When assigning tasks in the 'goal_assignment' phase, you MUST populate the 'addTask' object. Tasks must be small and specific (5-15 mins).
 4.  **MANTRA ASSIGNMENT:** When providing mantras, you MUST populate the 'mantra' object.
 5.  **CLOSING PROTOCOL:** This is non-negotiable.
-    -   Set \`sessionPhase\` to 'closing_check'.
+    -   When you determine the session is ending, set \`sessionPhase\` to 'closing_check'.
     -   You MUST provide a full summary in the \`sessionSummary\` object during this phase.
     -   Ask the user: "Before we close, is there anything else you'd like to discuss?"
     -   If they say no, set \`sessionPhase\` to 'closed', deliver your closing statement, and STOP. Do not ask more questions.
