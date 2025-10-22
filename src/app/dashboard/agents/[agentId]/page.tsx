@@ -386,7 +386,8 @@ export default function AgentChatPage() {
         }
       }
     }
-  }, [assessment, isLoadingAssessment, introSent, currentRoadmap, history.length, userName, agent, startModuleQuestionnaire]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assessment, isLoadingAssessment, introSent, currentRoadmap]);
 
 
   useEffect(() => {
