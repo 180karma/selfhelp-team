@@ -5,7 +5,7 @@ import { agentChat } from '@/ai/flows/agent-chat';
 import { summarizeConversation } from '@/ai/flows/summarize-conversation';
 import { agents } from '@/lib/agents';
 import { useParams, notFound } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -78,7 +78,7 @@ const toGenkitHistory = (history: ChatMessage[]) => {
 export default function AgentChatPage() {
   const params = useParams();
   const agentId = params.agentId as string;
-  const agent = agents.find((a) => a.id === agentId);
+  const agent = useMemo(() => agents.find((a) => a.id === agentId), [agentId]);
   const { toast } = useToast();
 
   const [history, setHistory] = useState<ChatMessage[]>([]);
@@ -155,7 +155,67 @@ export default function AgentChatPage() {
     historyRef.current = history;
   }, [history]);
 
-  const handleAgentResponse = async (message: string, currentHistory: ChatMessage[]) => {
+  const handleSaveNote = useCallback(async () => {
+    const currentHistory = historyRef.current;
+    if (currentHistory.length < 2 || !user || !currentModule) {
+        return;
+    }
+
+    const lastMessage = currentHistory[currentHistory.length - 1];
+    const secondLastMessage = currentHistory[currentHistory.length - 2];
+
+    const agentProposedTask = secondLastMessage.role === 'model' && secondLastMessage.question?.addTask;
+    const userConfirmed = lastMessage.role === 'user' && (
+        lastMessage.content.toLowerCase().includes('yes') ||
+        lastMessage.content.toLowerCase().includes('add it') ||
+        lastMessage.content.toLowerCase().includes('let\'s do it') ||
+        lastMessage.content.toLowerCase().includes('i am willing')
+    );
+
+    if (!agentProposedTask || !userConfirmed) {
+        return;
+    }
+    
+    try {
+      const genkitHistory = toGenkitHistory(currentHistory);
+      const { noteData } = await summarizeConversation({
+        persona: agent!.persona,
+        userName: userName || 'friend',
+        history: genkitHistory,
+      });
+      
+      const note: AiMentalHealthNote = {
+        id: `note-${agentId}-${Date.now()}`,
+        aiAgentId: agentId,
+        noteData,
+        timestamp: new Date().toISOString(),
+        userId: user?.uid,
+      };
+
+      const notesKey = 'thrivewell-notes';
+      const existingNotes = JSON.parse(localStorage.getItem(notesKey) || '[]');
+      existingNotes.push(note);
+      localStorage.setItem(notesKey, JSON.stringify(existingNotes));
+      
+      if (currentModule && currentRoadmap) {
+          const updatedRoadmap = currentRoadmap.map(module => 
+              module.title === currentModule.title 
+                  ? { ...module, completed: true } 
+                  : module
+          );
+          setCurrentRoadmap(updatedRoadmap);
+          localStorage.setItem(`thrivewell-roadmap-${agentId}`, JSON.stringify(updatedRoadmap));
+          setCurrentModule(null);
+      }
+
+      console.log('Conversation note and updated roadmap saved automatically to local storage.');
+
+    } catch (error: any) {
+       console.error('Error auto-saving note:', error);
+    }
+  }, [user, currentModule, agent, userName, agentId, currentRoadmap]);
+
+  const handleAgentResponse = useCallback(async (message: string, currentHistory: ChatMessage[]) => {
     setIsLoading(true);
   
     try {
@@ -236,67 +296,7 @@ export default function AgentChatPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSaveNote = async () => {
-    const currentHistory = historyRef.current;
-    if (currentHistory.length < 2 || !user || !currentModule) {
-        return;
-    }
-
-    const lastMessage = currentHistory[currentHistory.length - 1];
-    const secondLastMessage = currentHistory[currentHistory.length - 2];
-
-    const agentProposedTask = secondLastMessage.role === 'model' && secondLastMessage.question?.addTask;
-    const userConfirmed = lastMessage.role === 'user' && (
-        lastMessage.content.toLowerCase().includes('yes') ||
-        lastMessage.content.toLowerCase().includes('add it') ||
-        lastMessage.content.toLowerCase().includes('let\'s do it') ||
-        lastMessage.content.toLowerCase().includes('i am willing')
-    );
-
-    if (!agentProposedTask || !userConfirmed) {
-        return;
-    }
-    
-    try {
-      const genkitHistory = toGenkitHistory(currentHistory);
-      const { noteData } = await summarizeConversation({
-        persona: agent!.persona,
-        userName: userName || 'friend',
-        history: genkitHistory,
-      });
-      
-      const note: AiMentalHealthNote = {
-        id: `note-${agentId}-${Date.now()}`,
-        aiAgentId: agentId,
-        noteData,
-        timestamp: new Date().toISOString(),
-        userId: user?.uid,
-      };
-
-      const notesKey = 'thrivewell-notes';
-      const existingNotes = JSON.parse(localStorage.getItem(notesKey) || '[]');
-      existingNotes.push(note);
-      localStorage.setItem(notesKey, JSON.stringify(existingNotes));
-      
-      if (currentModule && currentRoadmap) {
-          const updatedRoadmap = currentRoadmap.map(module => 
-              module.title === currentModule.title 
-                  ? { ...module, completed: true } 
-                  : module
-          );
-          setCurrentRoadmap(updatedRoadmap);
-          localStorage.setItem(`thrivewell-roadmap-${agentId}`, JSON.stringify(updatedRoadmap));
-          setCurrentModule(null);
-      }
-
-      console.log('Conversation note and updated roadmap saved automatically to local storage.');
-
-    } catch (error: any) {
-       console.error('Error auto-saving note:', error);
-    }
-  };
+  }, [agent, agentId, currentRoadmap, user, userName, toast]);
 
   const handleOptionClick = (option: string, originalQuestion: string, proposedTask?: ProposedTask) => {
     const userMessage: ChatMessage = { role: 'user', content: option };
@@ -363,12 +363,12 @@ export default function AgentChatPage() {
     handleAgentResponse(userMessage.content, newHistory);
   };
 
-  const startModuleQuestionnaire = (module: Module) => {
+  const startModuleQuestionnaire = useCallback((module: Module) => {
     setCurrentModule(module);
     setModuleQuestionIndex(0);
     setModuleAnswers({});
     setIsAnsweringModuleQuestions(true);
-  };
+  }, []);
 
   useEffect(() => {
     if (!isLoadingAssessment) {
@@ -383,6 +383,7 @@ export default function AgentChatPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assessment, isLoadingAssessment, agentId, userName, currentRoadmap]);
+  }, [assessment, isLoadingAssessment, introSent, currentRoadmap, history.length, userName, agent, startModuleQuestionnaire]);
 
 
   useEffect(() => {
@@ -411,8 +412,7 @@ export default function AgentChatPage() {
         handleSaveNote();
       }
     };
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentModule, currentRoadmap, sessionPhase]);
+  }, [handleSaveNote]);
 
   if (!agent) {
     notFound();
