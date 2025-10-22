@@ -145,10 +145,11 @@ export default function AgentChatPage() {
 
   const handleAgentResponse = async (message: string, currentHistory: ChatMessage[]) => {
     setIsLoading(true);
-
+  
     try {
       let personaWithContext = agent!.persona;
-
+  
+      // Add agent's own clinical profile about the user
       const profileKey = `thrivewell-profile-${agentId}`;
       const savedProfileItem = localStorage.getItem(profileKey);
       if (savedProfileItem) {
@@ -157,22 +158,25 @@ export default function AgentChatPage() {
           personaWithContext += `\n\n## My Internal Profile Summary About the User:\n${profile.profileData}`;
         }
       }
-       if (currentRoadmap) {
-            personaWithContext += `\n\n## My Clinical Roadmap:\n${JSON.stringify(currentRoadmap.find(m => !m.completed) || currentRoadmap[0], null, 2)}`;
+  
+      // Add the clinical roadmap
+      if (currentRoadmap) {
+        const nextModule = currentRoadmap.find(m => !m.completed) || currentRoadmap[0];
+        personaWithContext += `\n\n## My Clinical Roadmap:\n${JSON.stringify(nextModule, null, 2)}`;
       }
-
+  
       // Add Neuro-Insight Profile from the latest diary entry
       if (user) {
         const allEntries: DiaryEntry[] = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
         const userEntries = allEntries
           .filter(e => e.userId === user.uid)
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
+  
         if (userEntries.length > 0 && userEntries[0].neuroInsightProfile) {
           personaWithContext += `\n\n## Neuro-Insight Profile (from latest diary entry):\n${JSON.stringify(userEntries[0].neuroInsightProfile, null, 2)}`;
         }
       }
-
+  
       const genkitHistory = toGenkitHistory(currentHistory);
       const result = await agentChat({
         persona: personaWithContext,
@@ -354,10 +358,12 @@ export default function AgentChatPage() {
         const nextModule = currentRoadmap.find(m => !m.completed);
 
         if (nextModule) {
-           setHistory([{ role: 'model', content: `Hello ${userName || 'friend'}, I'm ${agent?.givenName.split(' ')[0]}. It's good to connect with you. I've reviewed your file and I'm here to support you.\n\nFor our session today, let's explore the topic of **'${nextModule.title}'**. To help me understand where you're at, I have just a couple of multiple-choice questions for you.` }]);
+           const initialMessage = `Hello ${userName || 'friend'}, I'm ${agent?.givenName.split(' ')[0]}. It's good to connect with you. I've reviewed your file and I'm here to support you.\n\nFor our session today, let's explore the topic of **'${nextModule.title}'**. To help me understand where you're at, I have just a couple of multiple-choice questions for you.`;
+           const initialHistory: ChatMessage[] = [{ role: 'model', content: initialMessage }];
+           setHistory(initialHistory);
            startModuleQuestionnaire(nextModule);
         } else {
-             setHistory([{ role: 'model', content: `Welcome back, ${userName || 'friend'}! It looks like you have completed all the modules in your roadmap. That's a huge accomplishment! How can I help you today?` }]);
+             handleAgentResponse(`Welcome back, ${userName || 'friend'}! It looks like you have completed all the modules in your roadmap. That's a huge accomplishment! How can I help you today?`, []);
         }
       }
     }
@@ -475,7 +481,7 @@ export default function AgentChatPage() {
     <Card className="flex h-full flex-col border-0 rounded-none shadow-none">
        <CardHeader className="sticky top-0 z-20 flex flex-row items-center justify-between border-b bg-background/80 p-3 backdrop-blur-sm sm:p-4 md:p-6">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-            <Avatar className="h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0">
+            <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
               <AvatarImage src={agent.avatarUrl} alt={agent.givenName} className="object-cover object-top" />
               <AvatarFallback>{agent.givenName.charAt(0)}</AvatarFallback>
             </Avatar>
@@ -628,3 +634,5 @@ export default function AgentChatPage() {
     </Card>
   );
 }
+
+    
