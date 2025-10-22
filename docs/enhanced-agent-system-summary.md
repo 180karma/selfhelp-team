@@ -373,4 +373,3 @@ The system enforces strict compliance through:
 ---
 
 **This enhanced system transforms the AI agents from conversational helpers into structured, protocol-driven therapeutic guides that provide comprehensive, evidence-based mental health support.**
-
