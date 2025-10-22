@@ -57,7 +57,7 @@ const AgentChatOutputSchema = z.object({
         tasksAssigned: z.array(z.string()).describe("Daily tasks assigned."),
         goalsSet: z.array(z.string()).describe("Goals set (short and long-term)."),
         mantraProvided: z.string().optional().describe("Mantra provided, if any."),
-    }).optional().describe("Session summary, only provided during closing phase."),
+    }).optional().describe("Session summary. You MUST provide this during the 'closing_check' phase."),
 });
 type AgentChatOutput = z.infer<typeof AgentChatOutputSchema>;
 
@@ -86,7 +86,7 @@ const agentChatFlow = ai.defineFlow(
 4.  **MANTRA ASSIGNMENT:** When providing mantras, you MUST populate the 'mantra' object.
 5.  **CLOSING PROTOCOL:** This is non-negotiable.
     -   Set \`sessionPhase\` to 'closing_check'.
-    -   Provide a full summary in the \`sessionSummary\` object.
+    -   You MUST provide a full summary in the \`sessionSummary\` object during this phase.
     -   Ask the user: "Before we close, is there anything else you'd like to discuss?"
     -   If they say no, set \`sessionPhase\` to 'closed', deliver your closing statement, and STOP. Do not ask more questions.
 6.  **CALENDAR TOOL:** You can use the \`createCalendarEvent\` tool to schedule tasks for the user, but always ask for permission first.`,
