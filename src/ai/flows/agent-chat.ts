@@ -65,7 +65,7 @@ const AgentChatOutputSchema = z.object({
         coreWounds: z.array(z.string()).describe("Core wounds explored."),
         triggersIdentified: z.array(z.string()).describe("Triggers mapped."),
         tasksAssigned: z.array(z.string()).describe("Daily tasks assigned."),
-        goalsSet: z.array(z.string()).describe("Goals set (short and long-term)."),
+        goalsSet: z-array(z.string()).describe("Goals set (short and long-term)."),
         mantraProvided: z.string().optional().describe("Mantra provided, if any."),
     }).optional().describe("Session summary. You MUST provide this during the 'closing_check' phase."),
 });

@@ -296,7 +296,7 @@ export default function AgentChatPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [agent, agentId, currentRoadmap, user, userName, toast]);
+  }, [agent, agentId, currentRoadmap, user, userName, toast, sessionPhase]);
 
   const handleOptionClick = (option: string, originalQuestion: string, proposedTask?: ProposedTask) => {
     const userMessage: ChatMessage = { role: 'user', content: option };
@@ -416,7 +416,7 @@ export default function AgentChatPage() {
         handleSaveNote();
       }
     };
-  }, [handleSaveNote]);
+  }, [handleSaveNote, sessionPhase]);
 
   if (!agent) {
     notFound();
