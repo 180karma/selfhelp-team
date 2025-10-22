@@ -376,13 +376,16 @@ export default function AgentChatPage() {
         setShowQuestionnaire(true);
       } else if (history.length === 0 && !introSent && currentRoadmap) {
         setIntroSent(true);
-        // This resets the session when the page is loaded/reloaded.
-        setSessionPhase('opening'); 
-        handleAgentResponse(`Hello, this is a new session.`, []);
+        const nextModule = currentRoadmap.find(m => !m.completed);
+
+        if (nextModule) {
+           setHistory([{ role: 'model', content: `Hello ${userName || 'friend'}, I'm ${agent?.givenName.split(' ')[0]}. It's good to connect with you. I've reviewed your file and I'm here to support you.\n\nFor our session today, let's explore the topic of **'${nextModule.title}'**. To help me understand where you're at, I have just a couple of multiple-choice questions for you.` }]);
+           startModuleQuestionnaire(nextModule);
+        } else {
+             setHistory([{ role: 'model', content: `Welcome back, ${userName || 'friend'}! It looks like you have completed all the modules in your roadmap. That's a huge accomplishment! How can I help you today?` }]);
+        }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assessment, isLoadingAssessment, agentId, userName, currentRoadmap]);
   }, [assessment, isLoadingAssessment, introSent, currentRoadmap, history.length, userName, agent, startModuleQuestionnaire]);
 
 
@@ -664,5 +667,3 @@ export default function AgentChatPage() {
     </Card>
   );
 }
-
-    
